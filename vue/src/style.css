@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'system';
+    src: url('./assets/fonts/Poppins-Regular.ttf');
+}
+body, body *{
+    font-family: 'system';
+}
+textarea{
+    resize: none;
+}
+::-webkit-scrollbar{
+    width: 5px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #0a637397;
+}
+.df-page-bg{
+    background: #eeaeca;
+    background: radial-gradient(circle, rgba(238, 174, 202, 0.568) 0%, rgba(148,187,233,1) 100%);
+}
+.page-not-found-label{
+    font-size: 30px;
+    font-weight: 900;
+    /* -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #073f49; */
+    background: -webkit-linear-gradient(20deg,#33c6bc,#0f857d, #0a6373);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
