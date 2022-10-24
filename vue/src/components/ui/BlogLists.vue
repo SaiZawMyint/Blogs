@@ -1,8 +1,8 @@
 <template>
     <div class="flex flex-col p-2 max-w-[600px] mx-auto">
         <div v-for="data in store.state.blogs.data" class="border-2 border-gray-300 rounded-lg m-2 shadow flex flex-col overflow-hidden">
-            <div class="p-3 border-b-2 border-gray-300 flex items-center justify-between">
-                <router-link :to="{name: 'post',params:{id: data.id}}" class="flex">
+            <div class="p-2 border-b-2 border-gray-300 flex items-center justify-between">
+                <router-link :to="{name: 'post',params:{id: data.id}}" class="flex rounded hover:bg-gray-300/30 p-2">
                     <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-5 h-5">

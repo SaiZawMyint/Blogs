@@ -27,6 +27,9 @@ const routes = [
                 path: '/post/:id', name: 'post',component: Post
             },
             {
+                path: '/search' , name: 'search', component: Home
+            },
+            {
                 path: '/:catchAll(.*)',name: '404',component: NotFound
             }
         ]
@@ -68,29 +71,7 @@ const router = createRouter({
     routes
 })
 router.beforeEach((to,from,next)=>{
-    store.state.loadingScreen.data.show = true;
-    store.state.loadingScreen.data.title = 'Loading'
-    store.dispatch('currentUser').then(()=>{
-        store.state.loadingScreen.data.show = false
-        //for page
-        if (store.state.user.token) {
-            //this is home's sub page
-            if (to.name == 'home') {
-                store.state.page.sub = false
-            } else if(from.name == undefined    ){
-                store.state.page.sub = false
-            }
-            else {
-                store.state.page.sub = true
-            }
-            //top page 
-            if (to.name == 'top' || to.name == 'home') {
-                store.state.page.history.data = {}
-                store.state.page.history.route = {}
-            }
-        }
-    })
-
+    normalize(to,from)
     //for auth
     if (to.meta.requiresAuth && !store.state.user.token) {
         next({ name: 'login' })
@@ -111,4 +92,45 @@ router.beforeEach((to,from,next)=>{
 
 })
 
+function normalize(to,from){
+    store.state.loadingScreen.data.show = true;
+    store.state.loadingScreen.data.title = 'Loading'
+    store.dispatch('currentUser').then(()=>{
+        store.state.loadingScreen.data.show = false
+        //for page
+        if (store.state.user.token) {
+            //this is home's sub page
+            if (to.name == 'home') {
+                store.dispatch('getBlogs').then(()=>{
+                    store.state.page.sub = false
+                    store.state.page.search.is = false
+                    store.state.page.search.data = {s:''}
+                })
+                
+            } else if(from.name == undefined){
+                store.state.page.sub = false
+                store.state.page.search.is = false
+                store.state.page.search.data = { s: '' }
+            }
+            else {
+                store.state.page.sub = true
+                if(to.name != 'search'){
+                    store.state.page.search.is = false
+                }else{
+                    store.dispatch('searchBlogs',store.state.page.search.data).then(()=>{
+                        store.state.page.search.is = true
+                    })
+                    
+                }
+            }
+            //top page 
+            if (to.name == 'top' || to.name == 'home') {
+                store.state.page.history.data = {}
+                store.state.page.history.route = {}
+            }
+        }
+    }).catch(err=>{
+        store.state.loadingScreen.data.show = false
+    })
+}
 export default router

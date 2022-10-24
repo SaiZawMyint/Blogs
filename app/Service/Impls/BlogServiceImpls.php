@@ -74,4 +74,10 @@ class BlogServiceImpls implements BlogService{
         }
         return $data;
     }
+
+    public function search($search)
+    {
+        $blogs = Blogs::where('del_flag','!=',true)->where('title','LIKE','%'.$search.'%')->get();
+        return $this->reponseData($blogs);
+    }
 }

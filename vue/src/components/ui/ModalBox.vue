@@ -66,22 +66,6 @@ function closeModal(e){
   opacity: 0;
   transform: translateY(30px);
 }
-
-
-.modal{
-    top: 0;
-    left: 0;
-    z-index: 999;
-    box-shadow: inset 0 1px 0 0 hsl(0deg 0% 100% / 5%);
-}
-.modal-box{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-}
 .close-modal{
     display: none;
     transition: all .4s cubic-bezier(0.075, 0.82, 0.165, 1);

@@ -1,6 +1,10 @@
+import { useRouter } from 'vue-router'
 import {createStore} from 'vuex'
 import axiosClient from '../axios'
 import {blogsData, isLiked} from '../js/blogs.js'
+import router from '../router'
+
+const route = useRouter()
 
 const userModule = {
     state: ()=>({
@@ -20,8 +24,10 @@ const userModule = {
         ) {
             return axiosClient.post('/login', user)
                 .then(({ data }) => {
-                    commit('setUser', data)
+                    if(data.ok)commit('setUser', data)
                     return data;
+                }).catch(err=>{
+                    return {ok:false,error: err.response.data.message}
                 })
         },
         logout({ commit }) {
@@ -32,8 +38,11 @@ const userModule = {
                 })
         },
         currentUser({commit}){
+            if(!store.state.user.token) return false
             return axiosClient.get('/me').then((res)=>{
                 commit('storeUser',res.data.data)
+            }).catch(err=>{
+                router.push({name:'login'})
             })
         }
     },
@@ -80,6 +89,12 @@ const blogs = {
         },
         getBlogs({commit}){
             return axiosClient.get('/blogs').then((res)=>{
+                if(res.data.ok) commit('put',res.data)
+                return res.data
+            })
+        },
+        searchBlogs({commit},data){
+            return axiosClient.get(`/blogs/search?s=${data.s}`).then((res)=>{
                 if(res.data.ok) commit('put',res.data)
                 return res.data
             })
@@ -208,6 +223,10 @@ const post = {
 const page ={
     state: ()=>({
         sub: false,
+        search: {
+            data: {s:''},
+            is: false
+        },
         history:{
             data:{},
             route:{}

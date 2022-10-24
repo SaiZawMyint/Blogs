@@ -80,4 +80,22 @@ class PostController extends Controller
             "data" => $upd['data']
         ]);
     }
+
+    public function searchBlog(Request $request){
+        if(array_key_exists('s',$request->all())){
+            return response([
+                'ok'=>true,
+                'code'=>200,
+                'message'=>"Search blogs success!",
+                'uid'=>$this->user->id,
+                'data'=> $this->blogservice->search($request['s'])
+            ]);
+        }else{
+            return response([
+                'ok'=>false,
+                'code'=>450,
+                'message'=>'Required parameter!'
+            ]);
+        }
+    }
 }

@@ -5,4 +5,10 @@
     <router-view></router-view>
   </div>
 </div>
+<LoadingScreen v-if="store.state.loadingScreen.data.show"></LoadingScreen>
 </template>
+<script setup>
+import { useStore } from 'vuex';
+import LoadingScreen from './lightui/LoadingScreen.vue';
+const store = useStore()
+</script>

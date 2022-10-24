@@ -78,14 +78,21 @@ const user = {
   'remember': false
 }
 function login(){
+  store.state.loadingScreen.data = {
+    show: true,
+    title: 'Processing...'
+  }
   store.dispatch('login',user).then((res)=>{
     if(!res.ok){
       errorData(res)
-    }
-    router.push({
+      store.state.loadingScreen.data = {
+        show: false,
+      }
+    }else{
+      router.push({
         name: 'home'
       })
-   
+    }
   }).catch((err)=>{
     errorData({ok:false,error: 'Invalid email address or passowrd!'})
   })

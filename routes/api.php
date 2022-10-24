@@ -29,10 +29,10 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/blogs',[PostController::class,'createBlog']);
     Route::get('/blogs',[PostController::class,'getPosts']);
 
+    Route::get('/blogs/search',[PostController::class, 'searchBlog']);
+
     Route::get('/blogs/{id}',[PostController::class,'getBlog']);
     Route::post('/blogs/{id}',[PostController::class,'updateBlog']);
-
-
 
     //reactions
     Route::post('/blogs/{id}/comment',[ReactionController::class,'comment']);
