@@ -18,6 +18,8 @@ const userModule = {
                 .then(({ data }) => {
                     commit('setUser', data)
                     return data;
+                }).catch(err=>{
+                    return {ok:false,error: err.response.data.message}
                 })
         },
         login({ commit }, user,

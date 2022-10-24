@@ -8,7 +8,7 @@
     </div>
     <form class="mt-8 space-y-6" @submit.prevent="register">
       <div v-if="error" class="flex items-center justify-between px-2 py-3 bg-red-100 text-red-500 rounded">
-      {{error.error}}
+      <span class="max-w-[70%]">{{error.error}}</span>
       <span @click="error = null" class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
@@ -62,9 +62,10 @@
   
 </template>
 <script setup>
-import store from '../store'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import {ref} from 'vue'
+const store = useStore();
 let error = ref()
   const user={
     name: '',
@@ -74,17 +75,20 @@ let error = ref()
   }
   const router = useRouter()
   function register(){
+    store.state.loadingScreen.data = {
+      show: true,
+      title: 'Creating Your Account...'
+    }
     store.dispatch('register',user)
     .then((res)=>{
       if(!res.ok){
         errorData(res)
-      }
-      if('errors' in res){
-        errorData(res)
+        store.state.loadingScreen.data = {
+          show: false,
+        }
       }else{
         router.push({name:'home'})
       }
-      
     }).catch(err=>{
       errorData({ok:false,error: 'Registration failed!'})
     })
