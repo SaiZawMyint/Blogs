@@ -48,6 +48,10 @@ npm run dev
 ```
 Open the browser and start the project.
 
+Join our Postman team to manage all APIs
+
+https://solar-trinity-410124.postman.co/workspace/New-Team-Workspace~9aae7a64-023d-4a07-adea-f9eb640555f3/collection/20806942-0f54d37b-94c8-47d6-84be-efb192204b97?action=share&creator=20806942
+
 # Thanks You..
 ----------
 
