@@ -11,6 +11,7 @@ A single page application with restfull performance using the following framewor
 | Vuex | State managements |
 | Vue router | Page actions, Page history |
 | Axios | Data managements & API |
+| JavaScript | Frontend functions |
 | Tailwind CSS | Designs |
 | Heroicons | svg, icons
 
