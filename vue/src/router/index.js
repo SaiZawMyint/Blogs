@@ -101,12 +101,10 @@ function normalize(to,from){
         if (store.state.user.token) {
             //this is home's sub page
             if (to.name == 'home') {
-                store.dispatch('getBlogs').then(()=>{
-                    store.state.page.sub = false
-                    store.state.page.search.is = false
-                    store.state.page.search.data = {s:''}
-                })
-                
+                store.dispatch('getBlogs');
+                store.state.page.sub = false
+                store.state.page.search.is = false
+                store.state.page.search.data = { s: '' }
             } else if(from.name == undefined){
                 store.state.page.sub = false
                 store.state.page.search.is = false

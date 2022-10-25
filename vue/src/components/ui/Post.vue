@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-center" v-if="store.state.user.data.id == data.user_id">
-                    <button @click="postdelete(data.id)"
+                    <button @click="alert"
                         class="w-8 h-8 ml-2 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full hover:bg-red-600/60">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-4 h-4">
@@ -98,12 +98,37 @@
             </div>
         </div>
     </div>
+    <!--Blog Delete alert box-->
+    <Transition name="alert">
+        <AlertBoxVue title="Delete Blogs" v-if="store.state.alertBox.show">
+            <template v-slot:icon>
+                <div
+                    class="w-10 h-10 mt-7 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+            </template>
+            <template v-slot:content>
+                <p class="p-2 text-center text-red-400">Are you sure?</p>
+            </template>
+            <template v-slot:footer>
+                <div class="flex items-center justify-center my-2 text-sm pt-3">
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="store.state.alertBox.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 bg-red-500 hover:bg-red-300 text-white" @click="postdelete(data.id)">Delete</button>
+                </div>
+            </template>
+        </AlertBoxVue>
+    </Transition>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
+import AlertBoxVue from '../lightui/AlertBox.vue';
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
@@ -127,14 +152,18 @@ const comment = function(id){
         inputData.value.comment = ''
     })
 }
+const alert = function(){
+    store.state.alertBox.show = true
+}
 const postdelete = function(id){
     store.state.notification.data = {
         show: true,
         message: 'Deleting Blog...',
         done: false
     }
+    store.state.alertBox.show = false
     store.dispatch('updateBlog',{id: id, data:{"del_flag":true},delete: true}).then((res)=>{
-        itech().wait(2000, function () {
+        itech().wait(4000, function () {
             store.state.notification.data = {
                 show: true,
                 message: "Blog delete success",

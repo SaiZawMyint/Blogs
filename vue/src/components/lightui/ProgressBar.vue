@@ -19,7 +19,7 @@ defineProps({
     cursor: pointer;
 }
 .progress{
-    transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all .7s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 }
 .label{

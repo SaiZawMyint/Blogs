@@ -17,11 +17,11 @@
                     <img src="../assets/img/logo.svg" class="w-full h-full" alt="">
                 </router-link>
             </div>
-            <div class="flex px-2 items-center justify-center" v-if="!store.state.page.sub || store.state.page.search.is">
+            <div class="flex px-2 items-center justify-center"
+                v-if="!store.state.page.sub || store.state.page.search.is">
                 <input type="text" placeholder="Search Blogs" v-model="store.state.page.search.data.s"
                     class="appearance-none block bg-white-100 text-gray-800 border-[#0000004c] rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white">
-                <button
-                @click="search"
+                <button @click="search"
                     class="w-8 h-8 flex items-center justify-center rounded-full mx-2 bg-[#0000004c] hover:bg-[#0000002b]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
@@ -90,15 +90,15 @@
     <Transition>
         <Notification v-if="store.state.notification.data.show"></Notification>
     </Transition>
+    
 </template>
 <script setup>
 import { useStore } from 'vuex';
 import ModalBoxVue from './ui/ModalBox.vue';
 import CreateBlogVue from './ui/CreateBlog.vue';
-import { useRoute, useRouter } from 'vue-router';
+import {  useRouter } from 'vue-router';
 import LoadingScreen from './lightui/LoadingScreen.vue';
 import Notification from './lightui/Notification.vue';
-import { ref } from 'vue';
 
 const store = useStore()
 const router = useRouter()
@@ -131,6 +131,7 @@ const search = function(){
         router.push({name: 'search'})
     })
 }
+
 </script>
 <style>
 .slide-left-enter-active,
@@ -151,5 +152,25 @@ const search = function(){
 .fade-enter-from,
 .fade-leave-to{
   opacity: 0;
+}
+.alert-enter-active {
+    animation: alert 0.5s;
+}
+.alert-leave-active {
+    animation: alert 0.5s reverse;
+}
+
+@keyframes alert {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 </style>

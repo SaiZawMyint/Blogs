@@ -1,10 +1,8 @@
-import { useRouter } from 'vue-router'
 import {createStore} from 'vuex'
 import axiosClient from '../axios'
 import {blogsData, isLiked} from '../js/blogs.js'
 import router from '../router'
 
-const route = useRouter()
 
 const userModule = {
     state: ()=>({
@@ -286,6 +284,12 @@ const notification ={
         data: {}
     })
 }
+const alertBox ={
+    state: ()=>({
+        data:{},
+        show: false
+    })
+}
 const store = createStore({
     modules:{
         user: userModule,
@@ -295,7 +299,8 @@ const store = createStore({
         page: page,
         profile: profile,
         loadingScreen: loadingScreen,
-        notification: notification
+        notification: notification,
+        alertBox: alertBox
     }
 })
 
