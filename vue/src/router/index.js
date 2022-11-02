@@ -8,6 +8,8 @@ import Login from '../views/Login.vue';
 import Registeration from '../views/Registeration.vue';
 import Post from '../components/ui/Post.vue'
 import NotFound from '../components/ui/NotFound.vue'
+import MessageLayout from '../components/ui/MessageLayout.vue';
+import NotificationLayout from '../components/ui/NotificationLayout.vue';
 
 import store from "../store";
 import { blog_data, routeHistory } from "../js/blogs";
@@ -46,6 +48,30 @@ const routes = [
             }
         ]
 
+    },
+    {
+        path: '/chat',
+        name: 'chat',
+        redirect: '/chat/top',
+        meta: {requiresAuth: true, parent: 'chat'},
+        component: Layout,
+        children: [
+            {
+                path: '/chat/top', name: 'chat-top', component: MessageLayout
+            }
+        ]
+    },
+    {
+        path: '/notifications',
+        name: 'notifications',
+        redirect: '/notifications/all',
+        meta: {requiresAuth: true, parent: 'notifications'},
+        component: Layout,
+        children: [
+            {
+                path: '/notifications/all', name: 'notifications-top', component: NotificationLayout
+            }
+        ]
     },
     {
         path: '/auth',
