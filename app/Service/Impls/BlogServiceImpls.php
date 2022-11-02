@@ -1,6 +1,7 @@
 <?php
 namespace App\Service\Impls;
 
+use App\DAO\BlogDAO;
 use App\Models\Blogs;
 use App\Models\User;
 use App\Service\BlogService;
@@ -8,18 +9,20 @@ use App\Service\ReactionService;
 
 class BlogServiceImpls implements BlogService{
 
-    public ReactionService $reactionservice;
-    public $user;
+    private ReactionService $reactionservice;
+    private BlogDAO $blogDao;
+    private $user;
 
-    public function __construct(ReactionService $service)
+    public function __construct(BlogDAO $bdao,ReactionService $service)
     {
         $this->reactionservice = $service;
         $this->user = auth('sanctum')->user();
+        $this->blogDao= $bdao;
     }
 
     public function getAll(){
-        $blogs = Blogs::where('del_flag','!=',true)->orderBy('created_at', 'desc')->get();
-        return $this->reponseData($blogs);
+        
+        return $this->reponseData($this->blogDao->getAll());
     }
     public function getMyBlogs()
     {
@@ -27,18 +30,16 @@ class BlogServiceImpls implements BlogService{
         return $this->reponseData($blogs);
     }
     public function get($id){
-        $blogs = Blogs::where('id','=',$id)->where('del_flag','!=',true)->orderBy('created_at', 'desc')->get();
+        $blogs = $this->blogDao->getById($id);
         if(count($blogs) == 0){
             return [];
         }
         return $this->reponseData($blogs)[0];
     }
     public function create($data){
-        $user = User::find($this->user->id);
         $blog = new Blogs;
-        $blog->title = $data['title'];
         $blog = Blogs::create([
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'title' => $data['title'],
             'body' => $data['body'],
             'like_count' => 0,

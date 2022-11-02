@@ -69,7 +69,7 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/notifications/all', name: 'notifications-top', component: NotificationLayout
+                path: '/notifications/all', name: 'notifications-all', component: NotificationLayout
             }
         ]
     },
@@ -110,6 +110,13 @@ router.beforeEach((to,from,next)=>{
         routeHistory(to, from)
         next()
     }
+    //get notification data
+    else if(to.name == 'notifications-all'){
+        store.dispatch('loadNotification').then(()=>{
+            routeHistory(to, from)
+            next()
+        });
+    }
     //else
     else {
         routeHistory(to, from)
@@ -121,9 +128,14 @@ router.beforeEach((to,from,next)=>{
 function normalize(to,from){
     store.state.loadingScreen.data.show = true;
     store.state.loadingScreen.data.title = 'Loading'
-    store.dispatch('currentUser').then(()=>{
+    Promise.all([
+        store.dispatch('currentUser'),
+        store.dispatch('hasUnseen')
+    ])
+    .finally(()=>{
         store.state.loadingScreen.data.show = false
         //for page
+
         if (store.state.user.token) {
             //this is home's sub page
             if (to.name == 'home') {
@@ -153,7 +165,8 @@ function normalize(to,from){
                 store.state.page.history.route = {}
             }
         }
-    }).catch(err=>{
+    })
+    .catch(()=>{
         store.state.loadingScreen.data.show = false
     })
 }

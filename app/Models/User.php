@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -15,12 +14,14 @@ class User extends Authenticatable
 
 
     public function notifications(){
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Notifications::class);
     }
 
     public function blogs(){
         return $this->hasMany(Blogs::class);
     }
+
+    
 
     /**
      * The attributes that are mass assignable.

@@ -1,57 +1,92 @@
 <?php
 namespace App\Service\Impls;
 
+use App\DAO\BlogDAO;
+use App\DAO\NotificationsDAO;
 use App\Models\Notifications;
+use App\Models\User;
+use App\Service\BlogService;
 use App\Service\NotificationService;
 use App\Service\UserService;
 
 class NotificationImpls implements NotificationService{
 
     private $user;
+    private NotificationsDAO $notiDao;
     private UserService $userservice;
+    private BlogDAO $blogDao;
 
-    public function __construct(UserService $service)
+    public function __construct(NotificationsDAO $notiDao,UserService $uservice,BlogDAO $bdao)
     {
         $this->user = auth('sanctum')->user();
-        $this->userservice = $service;
+        $this->notiDao = $notiDao;
+        $this->userservice = $uservice;
+        $this->blogDao=$bdao;
     }
 
     public function get(){
-        $data = Notifications::where('user_id','=',$this->user->id)->orderBy('id','DESC');
-        return $data;
+        $data = $this->notiDao->get();
+
+        return $this->notificationResponseData($data);
     }
     public function add($data,$type){
-        $noti = Notifications::create([
-            'user_id'=>$data['userId'],
-            'sender_id'=>$this->user->id,
-            'blogs_id'=>$data['blogs_id'],
-            'type'=>$type,
-            'message'=> $this->notificationMessage($type,$data),
-            'seen'=>false
-        ]);
+        $data['type'] = $type;
+        $data['message'] = $this->notificationMessage($data);
+        $noti = $this->notiDao->create($data);
         return $noti;
     }
     public function seen($id){
-
+        $data = [
+            'id'=>$id,
+            'seen'=>true
+        ];
+        $noti = $this->notiDao->update($data);
+        return $noti;
     }
+
+    public function hasUnseen(): bool
+    {
+        $unseen = $this->notiDao->hasUnseen();
+        return $unseen;
+    }
+
     public function remove($id){
 
     }
 
-    private function notificationMessage($type,$data){
+    private function notificationMessage($data){
         $msg = '';
-        $curuser = $this->userservice->get($data['userId']);
-        switch($type){
+        switch($data['type']){
             case 'like':
-                    $msg = $curuser->name." react to your blog.";
+                    $msg = $this->user->name." react to your blog.";
                 break;
             case 'comment':
-                    $msg = $curuser->name." comment to your blog";
+                    $msg = $this->user->name." comment to your blog.";
                 break;
             case 'event':
                     $msg = $data['event_message'];
                 break;
         }
         return $msg;
+    }
+
+    private function notificationResponseData($data){
+        $response = [];
+        foreach($data as $d){
+            $sender = $this->userservice->get($d->sender_id);
+            $blog =$this->blogDao->getById($d->blogs_id)[0];
+            array_push($response,[
+                'sender_name'=>$sender->name,
+                'sender_id'=>$sender->id,
+                'message'=>$d->message,
+                'type'=>$d->type,
+                'blogs_title'=> $blog->title,
+                'blogs_id'=>$blog->id,
+                'seen'=>$d->seen == 1,
+                'time'=>$d->created_at,
+                'nid'=>$d->id
+            ]);
+        }
+        return $response;
     }
 }

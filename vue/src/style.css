@@ -6,6 +6,9 @@
     font-family: 'system';
     src: url('./assets/fonts/Poppins-Regular.ttf');
 }
+:root{
+    --unseen-noti-color: #F84F31;
+}
 body, body *{
     font-family: 'system';
 }
@@ -49,4 +52,13 @@ textarea{
     position: absolute;
     bottom: 0px;
     right: 0px;
+}
+.unseen-noti{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--unseen-noti-color);
+    border-radius: 50%;
 }

@@ -100,7 +100,7 @@
     </div>
     <!--Blog Delete alert box-->
     <Transition name="alert">
-        <AlertBoxVue title="Delete Blogs" v-if="store.state.alertBox.show">
+        <AlertBoxVue title="Delete Blogs" v-if="alertBox.show" :show="alertBox.show" @on-close="alertBox.show = false">
             <template v-slot:icon>
                 <div
                     class="w-10 h-10 mt-7 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full">
@@ -116,7 +116,7 @@
             </template>
             <template v-slot:footer>
                 <div class="flex items-center justify-center my-2 text-sm pt-3">
-                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="store.state.alertBox.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="alertBox.show = false">Cancel</button>
                     <button class="px-3 py-2 rounded mx-2 bg-red-500 hover:bg-red-300 text-white" @click="postdelete(data.id)">Delete</button>
                 </div>
             </template>
@@ -152,8 +152,13 @@ const comment = function(id){
         inputData.value.comment = ''
     })
 }
+
+const alertBox = ref({
+    show: false
+})
+
 const alert = function(){
-    store.state.alertBox.show = true
+    alertBox.value.show = true
 }
 const postdelete = function(id){
     store.state.notification.data = {
@@ -161,7 +166,7 @@ const postdelete = function(id){
         message: 'Deleting Blog...',
         done: false
     }
-    store.state.alertBox.show = false
+    alertBox.value.show = false
     store.dispatch('updateBlog',{id: id, data:{"del_flag":true},delete: true}).then((res)=>{
         itech().wait(4000, function () {
             store.state.notification.data = {

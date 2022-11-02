@@ -54,9 +54,74 @@ export const blog_data = {
     updated_at: "",
     user_id: 0
 }
+export function notificationData(data = []){
+    let result = []
+    let tempData = {
+        name: 'Blogs',
+        message: 'Please confirm your email account!',
+        type: 'event',
+        time: 'now',
+        action: function(){
+            alert('Account confirmation!')
+        }
+    }
+    data.forEach((d)=>{
+        result.push({
+            name: d.sender_name
+        })
+    })
+
+}
+export function findDataFromArrayById(id = 0,data = []){
+    let index = data.findIndex(d=> d.nid == id)
+    console.log(data,id,index)
+    return {
+        index: index,
+        data: Object.assign({},data[index])
+    }
+}
+export function clearAllFromStore(){
+    store.state.user.data = {}
+    store.state.modalBox = {
+        data: {
+                
+        },
+        step: {
+        },
+        input: {
+            title: '',
+            body: ''
+        }
+    }
+    store.state.blogs = {
+        data:[],
+        createfn: null
+    }
+    store.state.page = {
+        sub: false,
+        search: {
+            data: {s:''},
+            is: false
+        },
+        history:{
+            data:{},
+            route:{}
+        },
+        
+    }
+    store.state.profile = {
+        data:{},
+        blogs:[]
+    }
+    store.state.loadingScreen = {data: {}}
+    store.state.notification = {data: {}}
+    store.state.alertBox = {data:{},show: false}
+    store.state.userNotification = {data: [],hasUnseen:false}
+}
 export default{
     blogsData: blogsData,
     isLiked: isLiked,
     blog_data: blog_data,
-    getString: getString
+    getString: getString,
+    findDataFromArrayById: findDataFromArrayById
 }

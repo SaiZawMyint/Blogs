@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
 import axiosClient from '../axios'
-import {blogsData, isLiked} from '../js/blogs.js'
+import {blogsData, clearAllFromStore, findDataFromArrayById, isLiked} from '../js/blogs.js'
 import router from '../router'
 
 
@@ -51,6 +51,7 @@ const userModule = {
             state.data = {}
             state.token = null
             sessionStorage.removeItem('TOKEN')
+            clearAllFromStore()
         },
         setUser: (state, data) => {
             state.data = data.user
@@ -290,6 +291,44 @@ const alertBox ={
         show: false
     })
 }
+const userNotification = {
+    state: ()=>({
+        data: [],
+        hasUnseen:false
+    }),
+    actions:{
+        loadNotification({commit}){
+            return axiosClient.get('/notifications/get').then((res)=>{
+                if(res.data.ok) commit('putNoti',res.data.data)
+                return res.data
+            })
+        },
+        seen({commit},id){
+            return axiosClient.post(`/notifications/${id}/seen`).then(res=>{
+                if(res.data.ok) commit('seen',{id: id,status: true})
+                return res.data
+            })
+        },
+        hasUnseen({commit}){
+            return axiosClient.get(`/notifications/unseen`).then(res=>{
+                if(res.data.ok) commit('putUnseen',res.data.data)
+                return res.data
+            })
+        }
+    },
+    mutations:{
+        putNoti: (state,data)=>{
+            state.data = data
+        },
+        seen: (state,data)=>{
+            let finddata = findDataFromArrayById(data.id,state.data)
+            state.data[finddata.index].seen = true
+        },
+        putUnseen: (state,data)=>{
+            state.hasUnseen = data
+        }
+    }
+}
 const store = createStore({
     modules:{
         user: userModule,
@@ -300,7 +339,8 @@ const store = createStore({
         profile: profile,
         loadingScreen: loadingScreen,
         notification: notification,
-        alertBox: alertBox
+        alertBox: alertBox,
+        userNotification: userNotification
     }
 })
 

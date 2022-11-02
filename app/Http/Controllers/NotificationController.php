@@ -22,6 +22,7 @@ class NotificationController extends Controller
             'ok'=>true,
             'code'=>200,
             'message'=>'Get notification success!',
+            'uid'=>$this->user->id,
             'data'=>$this->notificationservice->get()
         ]);
     }
@@ -32,6 +33,24 @@ class NotificationController extends Controller
             'code'=> 200,
             'message' => 'Notification sent success!',
             'data' => $this->notificationservice->add($request->all(),$type)
+        ]);
+    }
+
+    public function seen($id){
+        return response([
+            'ok'=>true,
+            'code'=>200,
+            'uid'=>$this->user->id,
+            'data'=>$this->notificationservice->seen($id)
+        ]);
+    }
+
+    public function hasUnseen(){
+        return response([
+            'ok'=>true,
+            'code'=>200,
+            'uid'=>$this->user->id,
+            'data'=>$this->notificationservice->hasUnseen()
         ]);
     }
 }
