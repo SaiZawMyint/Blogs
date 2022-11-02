@@ -26,7 +26,7 @@ class Reactions extends Model
 
     protected $fillable = [
         'user_id',
-        'blog_id',
+        'blogs_id',
         'type',
         'comments',
         'del_flag'

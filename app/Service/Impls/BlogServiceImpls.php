@@ -2,6 +2,7 @@
 namespace App\Service\Impls;
 
 use App\Models\Blogs;
+use App\Models\User;
 use App\Service\BlogService;
 use App\Service\ReactionService;
 
@@ -33,7 +34,9 @@ class BlogServiceImpls implements BlogService{
         return $this->reponseData($blogs)[0];
     }
     public function create($data){
-        $user = auth('sanctum')->user();
+        $user = User::find($this->user->id);
+        $blog = new Blogs;
+        $blog->title = $data['title'];
         $blog = Blogs::create([
             'user_id' => $user->id,
             'title' => $data['title'],
@@ -78,6 +81,7 @@ class BlogServiceImpls implements BlogService{
     public function search($search)
     {
         $blogs = Blogs::where('del_flag','!=',true)->where('title','LIKE','%'.$search.'%')->get();
+
         return $this->reponseData($blogs);
     }
 }

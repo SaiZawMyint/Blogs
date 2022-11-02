@@ -2,7 +2,9 @@
 namespace App\Service\Impls;
 
 use App\Models\Blogs;
+use App\Models\Notifications;
 use App\Models\Reactions;
+use App\Service\NotificationService;
 use App\Service\ReactionService;
 use App\Service\UserService;
 
@@ -59,6 +61,8 @@ class ReactionServiceImpls implements ReactionService{
                     ->delete();
         }else{
             $blog->reactions()->save($reaction);
+            $notification = new Notifications;
+            
         }
         
         return [
