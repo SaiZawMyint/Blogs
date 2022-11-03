@@ -50,7 +50,6 @@ function create(){
         done: false
     }
     store.dispatch('createBlog', store.state.modalBox.input).then((res) => {
-        
         if (res.ok) {
             store.state.modalBox.data.loading = false
             if (router.currentRoute.value.name != 'home') {
@@ -97,7 +96,6 @@ function update(id){
     if (store.state.modalBox.data.loading || store.state.modalBox.data.deleting) return false
     store.state.modalBox.data.loading = true
     store.state.modalBox.data.show = false
-
     store.state.notification.data = {
         show: true,
         message: 'Updating blog...',
@@ -106,7 +104,6 @@ function update(id){
     store.dispatch('updateBlog', { id: id, data: store.state.modalBox.input }).then((res) => {
         store.state.modalBox.data.loading = false
         store.state.modalBox.data.cancelBtn = null
-        console.log(res)
         itech().wait(2000, function () {
             store.state.notification.data = {
                 show: true,
@@ -123,6 +120,11 @@ function update(id){
             store.state.profile.blogs[index].title = res.title
             store.state.profile.blogs[index].body = res.body
             store.state.profile.blogs[index].updated_at = res.updated_at
+        }else{
+            let index = store.state.blogs.data.findIndex(b=>b.id == id)
+            store.state.blogs.data[index].title = res.title
+            store.state.blogs.data[index].body = res.body
+            store.state.blogs.data[index].updated_at = res.updated_at
         }
     })
 }

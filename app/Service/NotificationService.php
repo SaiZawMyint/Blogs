@@ -6,5 +6,5 @@ interface NotificationService{
     public function add($data,$type);
     public function seen($id);
     public function hasUnseen(): bool;
-    public function remove($id);
+    public function delete($id);
 }

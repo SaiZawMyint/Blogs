@@ -62,7 +62,7 @@
                 </div>
                 <div class="flex justify-center">
                     <button @click.stop="alert(d.nid)"
-                        class="w-6 h-6 rounded-full bg-gray-300/70 flex ml-1 items-center justify-center">
+                        class="w-6 h-6 rounded-full bg-gray-300/70 flex ml-1 items-center justify-center hover:bg-red-400 hover:text-gray-100">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-3 h-3">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -136,6 +136,24 @@ const alert = function(id){
     alertBox.value.targetId = id
 }
 const deleteNoti = function(){
-    console.log(alertBox.value.targetId )
+    store.state.notification.data = {
+        show: true,
+        message: 'Deleting notification...',
+        done: false
+    }
+    store.dispatch('deleteNoti',alertBox.value.targetId).then(res=>{
+        alertBox.value.show = false
+        itech().wait(2000, function () {
+            store.state.notification.data = {
+                show: true,
+                message: 'Delete notification success!',
+                done: true,
+                cls: 'show'
+            }
+        }, function () {
+            store.state.notification.data.cls = 'hide'
+            store.state.notification.data = {}
+        })
+    })
 }
 </script>

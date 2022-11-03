@@ -2,15 +2,18 @@
 namespace App\DAO\Impls;
 
 use App\DAO\BlogDAO;
+use App\DAO\NotificationsDAO;
 use App\Models\Blogs;
 
 class BlogDAOImpl implements BlogDAO{
 
     private $user;
+    private NotificationsDAO $notiDao;
 
-    public function __construct()
+    public function __construct(NotificationsDAO $ndao)
     {
         $this->user = auth('sanctum')->user();
+        $this->notiDao =$ndao;
     }
 
     public function getAll(){
@@ -43,6 +46,7 @@ class BlogDAOImpl implements BlogDAO{
         $message = "Update blog success!";
         if(array_key_exists('del_flag',$data)){
             $temp->reactions()->delete();
+            $this->notiDao->deleteByBlog($id);
             $message = "Delete blog success!";
         }
         return ['data'=>$temp,'message'=>$message];

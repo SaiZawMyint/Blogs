@@ -4,7 +4,7 @@
             <div class="w-[fit-content] h-full flex items-center">
                 <Transition name="slide-left">
                     <router-link :to="store.state.page.history.route"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c] mr-2"
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50 mr-2"
                         v-if="store.state.page.sub">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
@@ -20,9 +20,9 @@
             <div class="flex px-2 items-center justify-center"
                 v-if="!store.state.page.sub || store.state.page.search.is">
                 <input type="text" placeholder="Search Blogs" v-model="store.state.page.search.data.s"
-                    class="appearance-none block bg-white-100 text-gray-800 border-[#0000004c] rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white">
+                    class="appearance-none block bg-white-100 text-gray-800 border-2 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white">
                 <button @click="search"
-                    class="w-8 h-8 flex items-center justify-center rounded-full mx-2 bg-[#0000004c] hover:bg-[#0000002b]">
+                    class="w-8 h-8 flex items-center justify-center rounded-full mx-2 bg-gray-200 hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -30,7 +30,7 @@
                     </svg>
                 </button>
                 <button @click="store.state.modalBox.createfn"
-                    class="w-8 h-8 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -39,8 +39,8 @@
             </div>
             <div class="flex items-center justify-center">
                 <router-link :to="{name: 'home'}"
-                    :class="this.$route.meta.parent == 'top'?'bg-[#33c6bc89] text-gray-800':''"
-                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
+                    :class="this.$route.meta.parent == 'top'?'bg-[#33c6bc89] text-gray-800':'bg-gray-200'"
+                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full  hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -48,8 +48,8 @@
                     </svg>
                 </router-link>
                 <router-link :to="{name: 'notifications'}"
-                    :class="this.$route.meta.parent == 'notifications'?'bg-[#33c6bc89] text-gray-800':''"
-                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b] relative">
+                    :class="this.$route.meta.parent == 'notifications'?'bg-[#33c6bc89] text-gray-800':'bg-gray-200'"
+                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full  hover:bg-gray-200/50 relative">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -58,8 +58,8 @@
                     <span class="unseen-noti" v-if="store.state.userNotification.hasUnseen"></span>
                 </router-link>
                 <router-link :to="{name: 'me'}"
-                    :class="this.$route.meta.parent == 'me'?'bg-[#33c6bc89] text-gray-800':''"
-                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
+                    :class="this.$route.meta.parent == 'me'?'bg-[#33c6bc89] text-gray-800':'bg-gray-200'"
+                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full  hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -67,7 +67,7 @@
                     </svg>
                 </router-link>
                 <button @click="logout"
-                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
+                    class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -100,7 +100,9 @@
     <Transition>
         <Notification v-if="store.state.notification.data.show"></Notification>
     </Transition>
-    
+    <Transition name="fade">
+        <LoadingBar v-if="store.state.loadingBar.data.show"></LoadingBar>
+    </Transition>
 </template>
 <script setup>
 import { useStore } from 'vuex';
@@ -109,6 +111,7 @@ import CreateBlogVue from './ui/CreateBlog.vue';
 import {  useRouter } from 'vue-router';
 import LoadingScreen from './lightui/LoadingScreen.vue';
 import Notification from './lightui/Notification.vue';
+import LoadingBar from './lightui/LoadingBar.vue';
 
 const store = useStore()
 const router = useRouter()
@@ -164,16 +167,16 @@ const search = function(){
   opacity: 0;
 }
 .alert-enter-active {
-    animation: fade 0.5s;
+    animation: fade 0.3s;
 }
 .alert-leave-active {
-    animation: fade 0.5s reverse;
+    animation: fade 0.3s reverse;
 }
 .alert-enter-active .modal-box {
-    animation: alert 0.5s;
+    animation: alert 0.3s;
 }
 .alert-leave-active .modal-box {
-    animation: alert 0.5s reverse;
+    animation: alert 0.3s reverse;
 }
 @keyframes fade {
     from{

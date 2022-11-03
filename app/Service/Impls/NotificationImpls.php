@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Service\BlogService;
 use App\Service\NotificationService;
 use App\Service\UserService;
+use App\Utils\NotificationUtils;
 
 class NotificationImpls implements NotificationService{
 
@@ -30,7 +31,7 @@ class NotificationImpls implements NotificationService{
     }
     public function add($data,$type){
         $data['type'] = $type;
-        $data['message'] = $this->notificationMessage($data);
+        $data['message'] = NotificationUtils::notificationMessage($data,$this->user);
         $noti = $this->notiDao->create($data);
         return $noti;
     }
@@ -49,24 +50,8 @@ class NotificationImpls implements NotificationService{
         return $unseen;
     }
 
-    public function remove($id){
-
-    }
-
-    private function notificationMessage($data){
-        $msg = '';
-        switch($data['type']){
-            case 'like':
-                    $msg = $this->user->name." react to your blog.";
-                break;
-            case 'comment':
-                    $msg = $this->user->name." comment to your blog.";
-                break;
-            case 'event':
-                    $msg = $data['event_message'];
-                break;
-        }
-        return $msg;
+    public function delete($id){
+        return $this->notiDao->delete($id);
     }
 
     private function notificationResponseData($data){

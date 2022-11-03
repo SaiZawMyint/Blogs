@@ -47,7 +47,7 @@ class BlogServiceImpls implements BlogService{
     public function update($id,$data){
         $data = $this->blogDao->update($id,$data);
         return [
-            "data"=>$data['temp'],
+            "data"=>$data['data'],
             "message"=>$data['message']
         ];
     }

@@ -36,6 +36,13 @@ class NotificationsDAOImpl implements NotificationsDAO{
         return $noti == 1;
     }
 
+    public function deleteByBlog($blogid)
+    {
+        Notifications::where('user_id','=',$this->user->id)
+                            ->where('blogs_id','=',$blogid)
+                            ->delete();
+    }
+
     public function hasUnseen(): bool
     {
         $unseen = Notifications::where('user_id','=',$this->user->id)->where('seen','<>',true)->get();

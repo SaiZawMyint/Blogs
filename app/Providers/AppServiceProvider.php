@@ -6,8 +6,10 @@ use App\DAO\BlogDAO;
 use App\DAO\Impls\BlogDAOImpl;
 use App\DAO\Impls\NotificationsDAOImpl;
 use App\DAO\Impls\ReactionsDAOImpl;
+use App\DAO\Impls\UserDAOImpl;
 use App\DAO\NotificationsDAO;
 use App\DAO\ReactionsDAO;
+use App\DAO\UserDAO;
 use App\Service\BlogService;
 use App\Service\Impls\BlogServiceImpls;
 use App\Service\Impls\NotificationImpls;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NotificationService::class,NotificationImpls::class);
 
         //dao
+        $this->app->bind(UserDAO::class,UserDAOImpl::class);
         $this->app->bind(NotificationsDAO::class,NotificationsDAOImpl::class);
         $this->app->bind(BlogDAO::class,BlogDAOImpl::class);
         $this->app->bind(ReactionsDAO::class,ReactionsDAOImpl::class);

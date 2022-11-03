@@ -8,6 +8,7 @@
 }
 :root{
     --app-green-dark: #0a6373;
+    --app-light-loading-bar: #0db7df;
     --unseen-noti-color: #F84F31;
 }
 body, body *{
@@ -15,6 +16,9 @@ body, body *{
 }
 textarea{
     resize: none;
+}
+input:focus{
+    outline: none;
 }
 ::-webkit-scrollbar{
     width: 5px;
@@ -74,9 +78,35 @@ textarea{
     
 }
 .loading-bar::before{
+    content: '';
     position: absolute;
+    height: 100%;
     top: 0;
     left: 0;
     width: 20%;
-    background-color: var(--app-green-dark);
+    background-color: var(--app-light-loading-bar);
+    animation: loadingbar 1s linear infinite;
+    transition: all .4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+@keyframes loadingbar {
+    0% {
+    left:0%;
+    right:100%;
+    width:0%;
+    }
+    10% {
+    left:0%;
+    right:75%;
+    width:25%;
+    }
+    90% {
+    right:0%;
+    left:75%;
+    width:25%;
+    }
+    100% {
+    left:100%;
+    right:0%;
+    width:0%;
+    }
 }

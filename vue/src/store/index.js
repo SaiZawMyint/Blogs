@@ -112,6 +112,7 @@ const blogs = {
         },
         like: function({commit},id){
             return axiosClient.post(`/blogs/${id}/like`).then(res=>{
+                
                 if(res.data.ok) commit('putlike',{id: id,uid: res.data.uid,data:res.data.data})
                 return res.data.data
             })
@@ -134,7 +135,6 @@ const blogs = {
             }
         },
         updateBlog:(state,data)=>{
-            console.log(data)
             let index = state.data.findIndex((blog)=> blog.id == data.id)
             if(index > 0){
                 state.data[index].body = data.body
@@ -252,7 +252,6 @@ const profile = {
         },
         getMyBlogs({commit}){
             return axiosClient.get(`/me/blogs`).then(res=>{
-                console.log(res.data)
                 if(res.data.ok) commit('putBlogData',res.data)
                 return res.data;
             })
@@ -276,7 +275,12 @@ const profile = {
 const loadingScreen = {
     state: ()=>({
         data: {
-            
+        }
+    })
+}
+const loadingBar = {
+    state: ()=>({
+        data: {
         }
     })
 }
@@ -311,8 +315,13 @@ const userNotification = {
         },
         hasUnseen({commit}){
             return axiosClient.get(`/notifications/unseen`).then(res=>{
-                console.log(res.data)
                 if(res.data.ok) commit('putUnseen',res.data.data)
+                return res.data
+            })
+        },
+        deleteNoti({commit},id){
+            return axiosClient.post(`notifications/${id}/delete`).then((res)=>{
+                if(res.data.ok) commit('removeNoti',id)
                 return res.data
             })
         }
@@ -327,6 +336,10 @@ const userNotification = {
         },
         putUnseen: (state,data)=>{
             state.hasUnseen = data
+        },
+        removeNoti: (state,id)=>{
+            let finddata = findDataFromArrayById(id,state.data)
+            state.data.splice(finddata.index,1)
         }
     }
 }
@@ -339,6 +352,7 @@ const store = createStore({
         page: page,
         profile: profile,
         loadingScreen: loadingScreen,
+        loadingBar: loadingBar,
         notification: notification,
         alertBox: alertBox,
         userNotification: userNotification

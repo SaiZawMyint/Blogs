@@ -62,7 +62,7 @@
 
                 <div class="flex items-center">
                     <input v-model="inputData.comment" type="text" placeholder="Write comment here..."
-                        class="w-[70%] h-full appearence-none px-3 py-2 rounded-lg">
+                        class="w-[70%] h-full appearence-none px-3 py-2 rounded-lg border-2">
                     <button @click="comment(data.id)"
                         class="w-[35px] h-[35px]  mx-3 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

@@ -1,9 +1,10 @@
-<template v-if="store.state.modalBox.data.show">
+<template >
     <div class="fixed w-full h-full overflow-hidden backdrop-blur-sm modal flex items-center justify-center" @click="closeModalOut">
         <Transition name="slide-up">
             <div id="itech-modal-box"
-                class="border-gray-300 border-2 rounded-lg bg-gray-300 modal-box flex items-stretch overflow-hidden"
+                class="border-gray-200 border-2 rounded-lg bg-gray-100 modal-box flex items-stretch overflow-hidden"
                 @click.stop=""
+                v-if="store.state.modalBox.data.show"
                 :class="[store.state.modalBox.data.width, store.state.modalBox.data.height, store.state.modalBox.data.animation]">
                 <div class="text-white w-full p-2 flex flex-col">
                     <slot name="content">
@@ -54,15 +55,23 @@ function closeModal(e){
 <style>
 .slide-up-enter-active,
 .slide-up-leave-active {
-  transition: all 0.25s ease-out;
+  transition: all 0.5s ease-out;
 }
 
 .slide-up-enter-from {
   opacity: 0;
-  transform: translateY(-60px);
 }
 
 .slide-up-leave-to {
+  opacity: 0;
+}
+
+.slide-up-enter-from .modal-box {
+  opacity: 0;
+  transform: translateY(-60px);
+}
+
+.slide-up-leave-to .modal-box {
   opacity: 0;
   transform: translateY(-60px);
 }

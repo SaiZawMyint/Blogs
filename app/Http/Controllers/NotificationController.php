@@ -53,4 +53,13 @@ class NotificationController extends Controller
             'data'=>$this->notificationservice->hasUnseen()
         ]);
     }
+
+    public function delete($id){
+        return response([
+            'ok'=>true,
+            'code'=>200,
+            'uid'=>$this->user->id,
+            'data'=>$this->notificationservice->delete($id)
+        ]);
+    }
 }
