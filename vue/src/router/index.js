@@ -12,7 +12,7 @@ import MessageLayout from '../components/ui/MessageLayout.vue';
 import NotificationLayout from '../components/ui/NotificationLayout.vue';
 
 import store from "../store";
-import { blog_data, routeHistory } from "../js/blogs";
+import { blog_data, clearAllFromStore, routeHistory } from "../js/blogs";
 
 const routes = [
     {
@@ -97,45 +97,48 @@ const router = createRouter({
     routes
 })
 router.beforeEach((to,from,next)=>{
-    normalize(to,from)
-    //for auth
-    if (to.meta.requiresAuth && !store.state.user.token) {
-        next({ name: 'login' })
-    } else if (store.state.user.token && (to.name == 'login' || to.name == 'registeration')) {
-        next({ name: 'home' })
-    }
-    //for post
-    else if (from.name == 'post') {
-        store.state.post.data = blog_data
-        routeHistory(to, from)
-        next()
-    }
-    //get notification data
-    else if(to.name == 'notifications-all'){
-        store.dispatch('loadNotification').then(()=>{
+    normalize(to,from,next).then(()=>{
+        if (to.meta.requiresAuth && !store.state.user.token) {
+            next({ name: 'login' })
+        } else if (store.state.user.token && (to.name == 'login' || to.name == 'registeration')) {
+            next({ name: 'top' })
+        }
+        //for post
+        else if (from.name == 'post') {
+            store.state.post.data = blog_data
             routeHistory(to, from)
             next()
-        });
-    }
-    //else
-    else {
-        routeHistory(to, from)
-        next()
-    }
+        }
+        //get notification data
+        else if(to.name == 'notifications-all'){
+            store.dispatch('loadNotification').then(()=>{
+                routeHistory(to, from)
+                next()
+            });
+        }
+        //else
+        else {
+            routeHistory(to, from)
+            next()
+        }
+    })
+    //for auth
+    
 
 })
 
-function normalize(to,from){
+async function normalize(to,from,next){
     store.state.loadingScreen.data.show = true;
     store.state.loadingScreen.data.title = 'Loading'
-    Promise.all([
+
+    return Promise.all([
         store.dispatch('currentUser'),
         store.dispatch('hasUnseen')
     ])
     .finally(()=>{
+        //
         store.state.loadingScreen.data.show = false
         //for page
-
         if (store.state.user.token) {
             //this is home's sub page
             if (to.name == 'home') {
@@ -166,7 +169,12 @@ function normalize(to,from){
             }
         }
     })
-    .catch(()=>{
+    .catch((err)=>{
+        console.log(err.response.status)
+        if(err.response.status == 401){
+            sessionStorage.removeItem('TOKEN')
+            clearAllFromStore()
+        }
         store.state.loadingScreen.data.show = false
     })
 }

@@ -21,12 +21,11 @@ class BlogServiceImpls implements BlogService{
     }
 
     public function getAll(){
-        
         return $this->reponseData($this->blogDao->getAll());
     }
     public function getMyBlogs()
     {
-        $blogs = Blogs::where('user_id','=',$this->user->id)->where('del_flag','!=',true)->orderBy('created_at', 'desc')->get();
+        $blogs = $this->blogDao->getUserBlogs();
         return $this->reponseData($blogs);
     }
     public function get($id){
@@ -37,14 +36,7 @@ class BlogServiceImpls implements BlogService{
         return $this->reponseData($blogs)[0];
     }
     public function create($data){
-        $blog = new Blogs;
-        $blog = Blogs::create([
-            'user_id' => $this->user->id,
-            'title' => $data['title'],
-            'body' => $data['body'],
-            'like_count' => 0,
-            'del_flag' => false
-        ]);
+        $blog = $this->blogDao->create($data);
         return [
             'ok' => true,
             'message' => 'Create blogs success!',
@@ -53,19 +45,15 @@ class BlogServiceImpls implements BlogService{
         ];
     }
     public function update($id,$data){
-        Blogs::where('id','=',$id)->update($data);
-        $temp = Blogs::find($id);
-        $message = "Update blog success!";
-        if(array_key_exists('del_flag',$data)){
-            $temp->reactions()->delete();
-            $message = "Delete blog success!";
-        }
+        $data = $this->blogDao->update($id,$data);
         return [
-            "data"=>$temp,
-            "message"=>$message
+            "data"=>$data['temp'],
+            "message"=>$data['message']
         ];
     }
-    public function delete($id){}
+    public function delete($id){
+        
+    }
 
     private function reponseData($blogs){
         $data = [];

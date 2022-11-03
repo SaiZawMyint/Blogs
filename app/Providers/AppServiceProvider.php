@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\DAO\BlogDAO;
 use App\DAO\Impls\BlogDAOImpl;
 use App\DAO\Impls\NotificationsDAOImpl;
+use App\DAO\Impls\ReactionsDAOImpl;
 use App\DAO\NotificationsDAO;
+use App\DAO\ReactionsDAO;
 use App\Service\BlogService;
 use App\Service\Impls\BlogServiceImpls;
 use App\Service\Impls\NotificationImpls;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         //dao
         $this->app->bind(NotificationsDAO::class,NotificationsDAOImpl::class);
         $this->app->bind(BlogDAO::class,BlogDAOImpl::class);
+        $this->app->bind(ReactionsDAO::class,ReactionsDAOImpl::class);
     }
 
     /**

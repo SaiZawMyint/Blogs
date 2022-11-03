@@ -31,7 +31,10 @@ class NotificationsDAOImpl implements NotificationsDAO{
         $noti = Notifications::where('id','=',$data['id'])->update($data);
         return $noti;
     }
-    public function delete($id){}
+    public function delete($id){
+        $noti = Notifications::find($id)->delete();
+        return $noti == 1;
+    }
 
     public function hasUnseen(): bool
     {

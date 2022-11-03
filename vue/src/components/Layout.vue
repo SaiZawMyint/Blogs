@@ -164,12 +164,25 @@ const search = function(){
   opacity: 0;
 }
 .alert-enter-active {
-    animation: alert 0.5s;
+    animation: fade 0.5s;
 }
 .alert-leave-active {
+    animation: fade 0.5s reverse;
+}
+.alert-enter-active .modal-box {
+    animation: alert 0.5s;
+}
+.alert-leave-active .modal-box {
     animation: alert 0.5s reverse;
 }
-
+@keyframes fade {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
 @keyframes alert {
     0% {
         transform: scale(0);

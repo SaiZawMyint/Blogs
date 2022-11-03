@@ -1,6 +1,7 @@
 <?php
 namespace App\Service\Impls;
 
+use App\DAO\BlogDAO;
 use App\DAO\NotificationsDAO;
 use App\Models\Blogs;
 use App\Models\Notifications;
@@ -14,25 +15,19 @@ class ReactionServiceImpls implements ReactionService{
     public $user;
     public UserService $userservice;
     public NotificationService $notiService;
+    public BlogDAO $blogDao;
 
-    public function __construct(UserService $service,NotificationService $notiService)
+    public function __construct(UserService $service,NotificationService $notiService,BlogDAO $bdao)
     {
         $this->user = auth('sanctum')->user();
         $this->userservice = $service;
         $this->notiService = $notiService;
+        $this->blogDao = $bdao;
     }
 
     public function get($id,$type){
-        $blog = Blogs::find($id);
-        if($blog == null) return [];
-        if($type == 'comment'){
-            return $this->resposeReactionData($blog->comments);
-        }else if($type == 'like'){
-            return $this->resposeReactionData($blog->likes);
-        }else{
-            return [];
-        }
-        
+        $data = $this->blogDao->getReaction($id,$type);
+        return $this->resposeReactionData($data);
     }
     public function comment($data,$id){
         $blog = Blogs::find($id);
@@ -87,6 +82,11 @@ class ReactionServiceImpls implements ReactionService{
         ];
     }
 
+    public function delete($id,$type)
+    {
+        
+    }
+
     private function isUserLiked($id){
         return Reactions::where('user_id','=',$this->user->id)
                         ->where('blogs_id','=',$id)
@@ -112,4 +112,5 @@ class ReactionServiceImpls implements ReactionService{
         ];
         $this->notiService->add($data,$type);
     }
+
 }

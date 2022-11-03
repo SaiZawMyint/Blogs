@@ -26,7 +26,6 @@ class NotificationImpls implements NotificationService{
 
     public function get(){
         $data = $this->notiDao->get();
-
         return $this->notificationResponseData($data);
     }
     public function add($data,$type){
@@ -74,18 +73,20 @@ class NotificationImpls implements NotificationService{
         $response = [];
         foreach($data as $d){
             $sender = $this->userservice->get($d->sender_id);
-            $blog =$this->blogDao->getById($d->blogs_id)[0];
-            array_push($response,[
-                'sender_name'=>$sender->name,
-                'sender_id'=>$sender->id,
-                'message'=>$d->message,
-                'type'=>$d->type,
-                'blogs_title'=> $blog->title,
-                'blogs_id'=>$blog->id,
-                'seen'=>$d->seen == 1,
-                'time'=>$d->created_at,
-                'nid'=>$d->id
-            ]);
+            $b = $this->blogDao->getById($d->blogs_id);
+            if(count($b) > 0){
+                array_push($response,[
+                    'sender_name'=>$sender->name,
+                    'sender_id'=>$sender->id,
+                    'message'=>$d->message,
+                    'type'=>$d->type,
+                    'blogs_title'=> $b[0]->title,
+                    'blogs_id'=>$b[0]->id,
+                    'seen'=>$d->seen == 1,
+                    'time'=>$d->created_at,
+                    'nid'=>$d->id
+                ]);
+            }
         }
         return $response;
     }

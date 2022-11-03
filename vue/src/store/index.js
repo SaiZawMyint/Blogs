@@ -311,6 +311,7 @@ const userNotification = {
         },
         hasUnseen({commit}){
             return axiosClient.get(`/notifications/unseen`).then(res=>{
+                console.log(res.data)
                 if(res.data.ok) commit('putUnseen',res.data.data)
                 return res.data
             })
@@ -343,6 +344,5 @@ const store = createStore({
         userNotification: userNotification
     }
 })
-
 
 export default store

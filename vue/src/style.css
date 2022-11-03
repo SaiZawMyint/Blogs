@@ -7,6 +7,7 @@
     src: url('./assets/fonts/Poppins-Regular.ttf');
 }
 :root{
+    --app-green-dark: #0a6373;
     --unseen-noti-color: #F84F31;
 }
 body, body *{
@@ -41,10 +42,12 @@ textarea{
     box-shadow: inset 0 1px 0 0 hsl(0deg 0% 100% / 5%);
 }
 .modal-box{
-    position: fixed;
+    /* position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform-origin: center;
+    transform: translate(-50%,-50%); */
+    position: relative;
     transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
 }
@@ -61,4 +64,19 @@ textarea{
     height: 10px;
     background-color: var(--unseen-noti-color);
     border-radius: 50%;
+}
+.loading-bar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: .2vh;
+    
+}
+.loading-bar::before{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20%;
+    background-color: var(--app-green-dark);
 }

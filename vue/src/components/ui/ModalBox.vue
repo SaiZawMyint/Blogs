@@ -1,5 +1,5 @@
 <template v-if="store.state.modalBox.data.show">
-    <div class="fixed w-full h-full overflow-hidden backdrop-blur-sm modal" @click="closeModalOut">
+    <div class="fixed w-full h-full overflow-hidden backdrop-blur-sm modal flex items-center justify-center" @click="closeModalOut">
         <Transition name="slide-up">
             <div id="itech-modal-box"
                 class="border-gray-300 border-2 rounded-lg bg-gray-300 modal-box flex items-stretch overflow-hidden"
@@ -64,7 +64,7 @@ function closeModal(e){
 
 .slide-up-leave-to {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(-60px);
 }
 .close-modal{
     display: none;

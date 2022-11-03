@@ -1,6 +1,7 @@
 <template v-if="store.state.loadingScreen.data.show">
-    <div :class="!store.state.loadingScreen.data.spec ? 'bg-gray-200/50':''" class="fixed w-full flex-col items-center justify-center h-full overflow-hidden backdrop-blur-sm loading">
-        <div class="comp-view ">
+    <div :class="!store.state.loadingScreen.data.spec ? 'bg-gray-200/50':''" class="fixed w-full h-full overflow-hidden backdrop-blur-sm loading">
+        <div class="loading-bar bg-gray-300" v-if="!store.state.loadingScreen.data.noloading"></div>
+        <!-- <div class="comp-view ">
             <div class="w-full h-full flex-col items-center justify-center">
             <button v-if="store.state.loadingScreen.data.icon" v-html="store.state.loadingScreen.data.icon" class="w-full flex items-center justify-center m-0">
             </button>
@@ -12,7 +13,7 @@
                 <div class="circle f5"></div>
             </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script setup>
