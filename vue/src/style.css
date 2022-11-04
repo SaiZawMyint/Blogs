@@ -20,11 +20,14 @@ textarea{
 input:focus{
     outline: none;
 }
+.header{
+    z-index: 990;
+}
 ::-webkit-scrollbar{
     width: 5px;
 }
 ::-webkit-scrollbar-thumb{
-    background-color: #0a637397;
+    background-color: #0f7b8f5f;
 }
 .df-page-bg{
     background: #eeaeca;

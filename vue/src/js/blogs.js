@@ -40,6 +40,20 @@ export function getString(obj){
     }
     return str
 }
+
+export function commentData(comments=[],id=0){
+    if (comments.length == 0) return []
+    let copy = Object.assign([], comments);
+    for (let i = 0; i < copy.length; i++) {
+        if(copy[i].user_id == id){
+            copy[i]['isMe'] = true
+        }else{
+            copy[i]['isMe'] = false
+        }
+    }
+    return copy
+}
+
 export const blog_data = {
     body: "",
     comments: 0,
@@ -123,5 +137,6 @@ export default{
     isLiked: isLiked,
     blog_data: blog_data,
     getString: getString,
-    findDataFromArrayById: findDataFromArrayById
+    findDataFromArrayById: findDataFromArrayById,
+    commentData: commentData
 }

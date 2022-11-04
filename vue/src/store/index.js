@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
 import axiosClient from '../axios'
-import {blogsData, clearAllFromStore, findDataFromArrayById, isLiked} from '../js/blogs.js'
+import {blogsData, clearAllFromStore, commentData, findDataFromArrayById, isLiked} from '../js/blogs.js'
 import router from '../router'
 
 
@@ -199,7 +199,7 @@ const post = {
                 body: data.data.blogs.body,
                 comments: data.data.comments.length,
                 created_at: data.data.blogs.created_at,
-                data: { like: data.data.likes, comment: data.data.comments },
+                data: { like: data.data.likes, comment: commentData(data.data.comments,data.data.blogs.user_id) },
                 del_flag: data.data.blogs.del_flag,
                 id: data.data.blogs.id,
                 isliked: isLiked(data.uid, data.data.likes),
@@ -232,7 +232,6 @@ const page ={
             data:{},
             route:{}
         },
-        
     }),
     actions: {},
     mutations: {}
@@ -342,6 +341,13 @@ const userNotification = {
             state.data.splice(finddata.index,1)
         }
     }
+}
+const pagination = {
+    state: ()=>({
+        current: 0,
+        page: 0,
+        size: 0
+    })
 }
 const store = createStore({
     modules:{

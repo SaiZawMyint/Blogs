@@ -97,6 +97,15 @@
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
                                 </td>
                             </tr>
+                            <tr v-if="store.state.profile.blogs.length == 0">
+                                <td colspan="5" class="text-center py-2">
+                                    You have not post any blogs yet! <br>
+                                    <button class="px-3 py-2 rounded bg-gray-200 hover:bg-gray-200/60 mt-2"
+                                    @click="store.state.modalBox.createfn">
+                                        Create
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

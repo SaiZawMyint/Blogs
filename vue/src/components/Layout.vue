@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed p-3 w-full backdrop-blur-sm bg-gray-200/30">
+    <div class="fixed p-3 w-full backdrop-blur-sm bg-gray-200/30 header">
         <div class="w-[80%] flex items-center justify-between mx-auto">
             <div class="w-[fit-content] h-full flex items-center">
                 <Transition name="slide-left">
@@ -19,16 +19,18 @@
             </div>
             <div class="flex px-2 items-center justify-center"
                 v-if="!store.state.page.sub || store.state.page.search.is">
-                <input type="text" placeholder="Search Blogs" v-model="store.state.page.search.data.s"
-                    class="appearance-none block bg-white-100 text-gray-800 border-2 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white">
-                <button @click="search"
-                    class="w-8 h-8 flex items-center justify-center rounded-full mx-2 bg-gray-200 hover:bg-gray-200/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                    </svg>
-                </button>
+                <form class="flex px-2 items-center" @submit.prevent="search">
+                    <input type="text"  placeholder="Search Blogs" v-model="store.state.page.search.data.s"
+                        class="appearance-none block bg-white-100 text-gray-800 border-2 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white">
+                    <button type="submit"
+                        class="w-8 h-8 flex items-center justify-center rounded-full ml-2 bg-gray-200 hover:bg-gray-200/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </button>
+                </form>
                 <button @click="store.state.modalBox.createfn"
                     class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
