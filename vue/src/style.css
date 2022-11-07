@@ -1,3 +1,5 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +10,8 @@
 }
 :root{
     --app-green-dark: #0a6373;
+    --app-green: #0f857d;
+    --app-green-opacity: #0f857d92;
     --app-light-loading-bar: #0db7df;
     --unseen-noti-color: #F84F31;
 }
@@ -112,4 +116,25 @@ input:focus{
     right:0%;
     width:0%;
     }
+}
+.p-data-icon{
+    top: 10px;
+    left:10px;
+    z-index: 2;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.btn{
+    background-color: var(--app-green);
+    color: #d4d4d4;
+    transition: all .4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.btn:hover{
+    background-color: var(--app-green-opacity);
+}
+.text-green{
+    color: var(--app-green);
 }

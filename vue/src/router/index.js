@@ -11,6 +11,8 @@ import NotFound from '../components/ui/NotFound.vue'
 import MessageLayout from '../components/ui/MessageLayout.vue';
 import NotificationLayout from '../components/ui/NotificationLayout.vue';
 
+import AccountInformation from '../components/AccountInfos/AccountInformation.vue'
+
 import store from "../store";
 import { blog_data, clearAllFromStore, routeHistory } from "../js/blogs";
 
@@ -90,7 +92,11 @@ const routes = [
             }
         ]
     },
-    
+    {
+        path: '/accounts',
+        name: 'accounts',
+        component: AccountInformation
+    }
 ]
 const router = createRouter({
     history: createWebHistory(),

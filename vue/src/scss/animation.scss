@@ -1,0 +1,105 @@
+
+$animator: 'left';
+$directions: 'top','left','right','bottom';
+$units: px;
+body{
+    overflow-x: hidden;
+}
+@function oppositeDir($dir){
+    $result: '';
+    @if $dir == left{
+        $result: 'right'
+    }
+    @if $dir == right{
+        $result: 'left'
+    }
+    @if $dir == top{
+        $result: 'bottom'
+    }
+    @if $dir == bottom{
+        $result: 'top'
+    }
+    
+    @return $result;
+}
+
+@function millisecond($second){
+    @return calc($second / 10);
+}
+
+@function convertUnit($num,$str){
+    @return #{$num}#{$str};
+}
+
+.animate-block{
+    position: absolute;
+    
+}
+
+@each $direction in $directions {
+    @for $i from 1 through 50{
+        .itech-a\:#{$direction}-#{$i}-full{
+            animation: #{$direction}full #{millisecond($i)}s 1 cubic-bezier(0.075, 0.82, 0.165, 1);
+            &.reverse{
+                animation: #{$direction}full-revert #{millisecond($i)}s 1 cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+        }
+    }
+}
+@each $direction in $directions {
+    @for $i from 1 through 50{
+        @keyframes #{$direction}full {
+           from{
+                #{$direction}: -100%;
+                opacity: 0;
+                transform: scale(0);
+           }
+        }
+        @keyframes #{$direction}full-revert {
+            to{
+                 #{$direction}: -100%;
+                 opacity: 0;
+                 transform: scale(0);
+            }
+         }
+    }
+}
+@each $direction in $directions{
+    @for $i from 1 through 50 {
+        $count: 0;
+        @each $unit in $units{
+            @for $c from 1 through 10 {
+                $rest: #{$c * 10}#{$unit};
+                .itech-a\:#{$direction}-#{$i}-\[#{$rest}\] {
+                    animation: #{$direction}#{$rest} #{millisecond($i)}s 1 cubic-bezier(0.19, 1, 0.22, 1)
+                    // animation: testanimation 5s infinite;                 
+                }
+            }
+        }
+    }
+}
+
+
+@each $direction in $directions{
+    @for $i from 1 through 50{
+        @each $unit in $units{
+            @for $c from 1 through 10 {
+                $rest: #{$c * 10}#{$unit};
+                @keyframes #{$direction}#{$rest} {
+                    0% {
+                        #{$direction}: ('-'+$rest);
+                        opacity: 0;
+                        transform: scale(0);
+                    }
+                   
+                }
+            }
+            
+        }
+    }
+}
+@keyframes shake {
+    from{
+        transform: rotate(45deg) scale(1);
+    }
+}
