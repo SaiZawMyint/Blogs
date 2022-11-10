@@ -36,7 +36,11 @@ class ReactionController extends Controller
     public function comment(Request $request,$id){
         return response($this->reactionservice->comment($request['comment'],$id));
     }
+    public function deleteComment($id,$com_id){
+        return response($this->reactionservice->delete($id,$com_id,'comment'));
+    }
     public function like($id){
         return response($this->reactionservice->like($id));
     }
+
 }

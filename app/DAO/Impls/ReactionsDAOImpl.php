@@ -24,7 +24,11 @@ class ReactionsDAOImpl implements ReactionsDAO{
     }
     public function get($id){}
     public function update($id,$data){}
-    public function delete($id){}
+    public function delete($blog_id,$id,$type){
+        $blog = Blogs::find($blog_id);
+        return $blog->reactions()->where('id','=',$id)
+                            ->where('type','=',$type)->delete();
+    }
     public function like($id)
     {
         $blog = Blogs::find($id);

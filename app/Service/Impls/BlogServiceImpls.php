@@ -30,10 +30,10 @@ class BlogServiceImpls implements BlogService{
     }
     public function get($id){
         $blogs = $this->blogDao->getById($id);
-        if(count($blogs) == 0){
+        if(!$blogs){
             return [];
         }
-        return $this->reponseData($blogs)[0];
+        return $this->reponseData([$blogs])[0];
     }
     public function create($data){
         $blog = $this->blogDao->create($data);

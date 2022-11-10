@@ -55,12 +55,30 @@ class ReactionServiceImpls implements ReactionService{
         ];
     }
 
-    public function delete($id,$type)
+    public function delete($blog_id,$id,$type)
     {
-        
+        $blog = $this->blogDao->getById($blog_id);
+        if(!$blog){
+            return [
+                "ok" => false,
+                "code" => 404,
+                "message" => "No blogs found!"
+            ];
+        }
+        $delete_status = $this->reactionDao->delete($blog_id,$id,$type);
+        $message = $delete_status == 1 ? "Delete message successful!":"No comment found with this id!";
+        return [
+            "ok"=>true,
+            "code"=> 200,
+            "message"=>$message,
+            "uid" => $this->user->id,
+            "data"=> $delete_status == 1
+        ];
     }
 
-    
+    private function checkForExist(){
+
+    }
 
     private function resposeReactionData($reactions){
         $data = [];

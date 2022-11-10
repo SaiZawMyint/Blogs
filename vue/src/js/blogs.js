@@ -68,24 +68,7 @@ export const blog_data = {
     updated_at: "",
     user_id: 0
 }
-export function notificationData(data = []){
-    let result = []
-    let tempData = {
-        name: 'Blogs',
-        message: 'Please confirm your email account!',
-        type: 'event',
-        time: 'now',
-        action: function(){
-            alert('Account confirmation!')
-        }
-    }
-    data.forEach((d)=>{
-        result.push({
-            name: d.sender_name
-        })
-    })
 
-}
 export function findDataFromArrayById(id = 0,data = []){
     let index = data.findIndex(d=> d.nid == id)
     console.log(data,id,index)
