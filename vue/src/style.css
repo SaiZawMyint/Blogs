@@ -10,12 +10,9 @@
 }
 :root{
     --app-green-dark: #0a6373;
-<<<<<<< HEAD
     --app-green: #0f857d;
     --app-green-opacity: #0f857d92;
-=======
     --app-green-classic: #1ba39a;
->>>>>>> origin/develop
     --app-light-loading-bar: #0db7df;
     --unseen-noti-color: #F84F31;
     --light-white-color: #dce8ff;
