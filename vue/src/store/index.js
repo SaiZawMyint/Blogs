@@ -191,6 +191,12 @@ const post = {
                 if(res.data.ok) commit('comment',res.data)
                 return res.data.data
             })
+        },
+        deleteComment: function({commit},data){
+            return axiosClient.delete(`/blogs/${data.blogId}/comment/${data.id}`).then(res=>{
+                if(res.data.ok) commit('deleteCommentState',data)
+                return res.data
+            })
         }
     },
     mutations: {
@@ -216,8 +222,15 @@ const post = {
             state.data.likes = data.data.length
         },
         comment: (state,data)=>{
-            state.data.data.comment = data.data
+            state.data.data.comment = commentData(data.data,data.uid) 
             state.data.comments = data.data.length
+        },
+        deleteCommentState: (state,data)=>{
+            let index = state.data.data.comment.findIndex((c)=>c.id == data.id)
+            if(index > -1){
+                state.data.data.comment.splice(index,1)
+            }
+            state.data.comments -=1
         }
     }
 }
@@ -297,7 +310,8 @@ const alertBox ={
 const userNotification = {
     state: ()=>({
         data: [],
-        hasUnseen:false
+        hasUnseen:false,
+        unseencount: 0
     }),
     actions:{
         loadNotification({commit}){
@@ -327,7 +341,16 @@ const userNotification = {
     },
     mutations:{
         putNoti: (state,data)=>{
+
+            let unseen_count = 0
+            for(let x of data){
+                if(!x.seen){
+                    unseen_count++
+                }
+            }
             state.data = data
+            state.unseencount = unseen_count
+            console.log(state)
         },
         seen: (state,data)=>{
             let finddata = findDataFromArrayById(data.id,state.data)

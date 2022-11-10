@@ -10,10 +10,15 @@
 }
 :root{
     --app-green-dark: #0a6373;
+<<<<<<< HEAD
     --app-green: #0f857d;
     --app-green-opacity: #0f857d92;
+=======
+    --app-green-classic: #1ba39a;
+>>>>>>> origin/develop
     --app-light-loading-bar: #0db7df;
     --unseen-noti-color: #F84F31;
+    --light-white-color: #dce8ff;
 }
 body, body *{
     font-family: 'system';
@@ -67,6 +72,10 @@ input:focus{
     bottom: 0px;
     right: 0px;
 }
+.float-icon.r-gap-2{
+    right: -3px;
+    bottom: -3px;
+}
 .unseen-noti{
     position: absolute;
     top: 0px;
@@ -75,6 +84,10 @@ input:focus{
     height: 10px;
     background-color: var(--unseen-noti-color);
     border-radius: 50%;
+}
+.noti-color-bg{
+    background-color: var(--app-green-classic);
+    color: var(--light-white-color);
 }
 .loading-bar{
     position: fixed;

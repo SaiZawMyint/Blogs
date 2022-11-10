@@ -26,7 +26,7 @@ class BlogDAOImpl implements BlogDAO{
         return $blogs;
     }
     public function getById($id){
-        $blogs = Blogs::where('id','=',$id)->where('del_flag','!=',true)->orderBy('created_at', 'desc')->get();
+        $blogs = Blogs::where('id','=',$id)->where('del_flag','!=',true)->orderBy('created_at', 'desc')->first();
         return $blogs;
     }
     public function create($data){

@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->group(function(){
     //reactions
     Route::post('/blogs/{id}/comment',[ReactionController::class,'comment']);
     Route::get('/blogs/{id}/comment',[ReactionController::class,'getComments']);
+    Route::delete('/blogs/{id}/comment/{com_id}', [ReactionController::class,'deleteComment']);
+    
     Route::post('/blogs/{id}/like',[ReactionController::class,'like']);
     Route::get('/blogs/{id}/like',[ReactionController::class,'getLikes']);
 
