@@ -3,36 +3,14 @@ import './style.css'
 import App from './App.vue'
 import store from './store'
 import './scss/animation.scss'
+import './itech.css'
 
 import router from './router'
+import itech from './js/itech'
 
 createApp(App)
 .use(router)
 .use(store)
 .mount('#app')
 
-window.itech = function(select){
-    select = select instanceof Element ? select: document.querySelector(select)
-    return {
-        wait: function(time,action,callback){
-            let id = null
-            let p = 0
-            clearInterval(id)
-            action()
-            id = setInterval(function(){
-                if(p > 0){
-                    clearInterval(id)
-                    callback()
-                }
-                p++
-            },time)
-        },
-        find: function (el, cls) {
-            while ((el = el.parentElement) && !el.classList.contains(cls));
-            return el;
-        },
-        autoReload: async function(){
-            store.dispatch('');
-        }
-    }
-}
+window.itech = itech();
