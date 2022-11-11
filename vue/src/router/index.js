@@ -10,6 +10,7 @@ import Post from '../components/ui/Post.vue'
 import NotFound from '../components/ui/NotFound.vue'
 import MessageLayout from '../components/ui/MessageLayout.vue';
 import NotificationLayout from '../components/ui/NotificationLayout.vue';
+import CreateBlogWidget from '../components/ui/Widgets/CreateBlogWidget.vue'
 
 import AccountInformation from '../components/AccountInfos/AccountInformation.vue'
 
@@ -32,6 +33,9 @@ const routes = [
             },
             {
                 path: '/search' , name: 'search', component: Home
+            },
+            {
+                path: '/create' , name: 'create', component: CreateBlogWidget
             },
             {
                 path: '/:catchAll(.*)',name: '404',component: NotFound

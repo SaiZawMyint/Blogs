@@ -148,3 +148,6 @@ input::-webkit-inner-spin-button {
 .text-green{
     color: var(--app-green);
 }
+.text-green-dark{
+    color: var(--app-green-dark);
+}

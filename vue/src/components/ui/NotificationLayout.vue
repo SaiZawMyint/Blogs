@@ -1,6 +1,6 @@
 <template>
     <div class="w-full pt-4 max-w-[600px] mx-auto relative">
-        <div class="w-full m-2 py-1 flex items-center sticky top-[65px] rounded backdrop-blur-sm bg-white-100/30">
+        <div class="w-full m-2 py-1 flex items-center sticky top-[62px] rounded backdrop-blur-sm bg-white-100/70 z-10">
             <button class="w-8 h-8 rounded-full bg-gray-200/40 flex items-center justify-center mr-2 relative">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                     class="w-4 h-4">
