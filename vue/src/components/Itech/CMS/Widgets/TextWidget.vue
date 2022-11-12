@@ -1,10 +1,14 @@
 <template>
     <div class="flex flex-col m-2 rounded itech-cms-text-editor border-2" tabindex="-1">
-        <div contenteditable="true" class="p-2 focus:outline-none relative te" :class="font"
+        <div contenteditable="true" class="p-2 focus:outline-none relative te placeholder:text-slate-400" :class="font"
             @contextmenu.prevent="contextMenuHaldler"
-            id="te">
+            ref="contexts"
+            v-html="context"
+            @focusout="updateText"
+            id="te"
+            data-placeholder="Enter text here">
         </div>
-        <div v-if="editorData.show" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded-br flex items-center justify-end">
+        <div v-if="editorData.show" @mousedown.prevent="" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded-br flex items-center justify-end">
             <div class="flex items-center justify-end">
                 <button class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
                     <i class="fa-solid fa-rotate-left text-sm"></i>
@@ -19,7 +23,7 @@
                             d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                     </svg>
                 </button>
-                <button class="m-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="deleteHandler">
+                <button class="m-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="deleteHandler" @mousedown.prevent="">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -33,13 +37,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import itech from '../../../../js/itech';
+
 const props = defineProps({
     font: {
         type: String,
         default: 'font-sans'
+    },
+    context: {
+        type: String
     }
 })
+const contexts = ref()
 const editorData = ref({
     show: false,
     currentColor: '#3333333',
@@ -53,7 +63,7 @@ const editorData = ref({
         allText: ''
     }
 })
-const emits = defineEmits(['contextMenu','delete'])
+const emits = defineEmits(['contextMenu','delete','changes'])
 const contextMenuHaldler = function(){
     editorData.value.show = !editorData.value.show
     emits('contextMenu')
@@ -61,8 +71,18 @@ const contextMenuHaldler = function(){
 const deleteHandler = function(){
     emits('delete')
 }
-
-
+const updateText = function(){
+    let data = {
+        classes: "p-2 te",
+        styles: ""
+    }
+    let html = itech().cms().generated(contexts.value, data.classes,data.styles)
+    emits('changes',{from: 'text',context:html,org: contexts.value.innerHTML})
+    editorData.value.show = false
+}
+onMounted(()=>{
+    updateText()
+})
 </script>
 <style>
 

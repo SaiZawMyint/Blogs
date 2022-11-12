@@ -7,7 +7,7 @@
             <div class="flex items-center justify-center">
                 <slot name="icon"></slot>
             </div>
-            <div class="p-2">
+            <div class="p-2 max-h-[500px] overflow-auto">
                 <slot name="content"></slot>
             </div>
             <slot name="footer"></slot>

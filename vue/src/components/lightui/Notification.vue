@@ -20,6 +20,7 @@
 </template>
 <script setup>
 import { useStore } from 'vuex';
+import itech from '../../js/itech';
 const store = useStore()
 function closeNoti(){
     itech().wait(30,function(){

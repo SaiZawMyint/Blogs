@@ -111,6 +111,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import AlertBoxVue from '../lightui/AlertBox.vue';
+import itech from '../../js/itech';
 const store = useStore()
 const router = useRouter()
 const props = defineProps({

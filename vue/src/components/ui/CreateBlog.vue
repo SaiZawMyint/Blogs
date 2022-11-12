@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col w-full h-full p-2">
-        <div class="flex flex-wrap -mx-3 mb-6">
+        <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" for="grid-first-name">
                     Title
                 </label>
                 <div class="flex items-center justify-center w-full">
-                    <input v-model="store.state.modalBox.input.title"
+                    <input v-model="inputData.title"
                         class="appearance-none block w-full bg-white-100 text-gray-800 border rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white"
                         id="grid-tile" type="text" placeholder="Title">
                     <Listbox v-model="selectedType">
@@ -20,16 +20,16 @@
                             <transition leave-active-class="transition duration-100 ease-in"
                                 leave-from-class="opacity-100" leave-to-class="opacity-0">
                                 <ListboxOptions
-                                    class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                    <ListboxOption v-slot="{ active, selected }" v-for="person in type" class="overflow-x-hidden w-auto"
-                                        :key="person.id" :value="person" as="template">
+                                    class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                    <ListboxOption v-slot="{ active, selected }" v-for="person in type"
+                                        class="overflow-x-hidden w-auto" :key="person.id" :value="person" as="template">
                                         <li :class="[
                                             active ? 'bg-green-100 text-amber-900' : 'text-gray-900',
                                             'relative cursor-pointer select-none flex items-center justify-center text-green-dark',
                                             ]">
                                             <div class="py-1">
                                                 <div class="w-6 h-6 flex items-center justify-center rounded-full"
-                                                v-html="person.icon">
+                                                    v-html="person.icon">
                                                 </div>
                                             </div>
                                         </li>
@@ -42,18 +42,42 @@
                 <p class="text-red-400 text-sm" v-if="error!=null && error.title">{{error.title}}</p>
             </div>
         </div>
-        <div class="flex flex-wrap -mx-3 mb-6">
+        <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3">
-                <Template></Template>
-                <p class="text-red-400 text-sm" v-if="error!=null && error.body">{{error.body}}</p>
+                <Template title="Create Your Blog" :autosave="false" @created="cmsModule" :cms-data="cmsModuleData"></Template>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap mb-6">
+            <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
+                <button class="px-2 py-1 btn rounded-lg" @click="renderPreview">Create</button>
             </div>
         </div>
     </div>
+    <Transition name="alert">
+        <AlertBox title="Preview" width="50%" v-if="alertBox.show" :show="alertBox.show" @on-close="alertBox.show = false">
+            <template v-slot:content>
+                <div class="flex flex-wrap mb-6 mx-auto overflow-auto">
+                    <div class="w-full md:w-1/1 px-3" v-html="preview"></div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex items-center justify-center my-2 text-sm pt-3">
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="alertBox.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white" @click="commentdelete()">Upload</button>
+                </div>
+            </template>
+        </AlertBox>
+    </Transition>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import AlertBox from '../lightui/AlertBox.vue';
+import itech from '../../js/itech';
+import json from '../Itech/CMS/template.json'
+import itechObject from '../../js/itech-objects';
 
 import {
   Listbox,
@@ -62,24 +86,30 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import Template from '../Itech/CMS/Template.vue';
-
+const alertBox = ref({
+    show: false
+})
 const type = [
     {
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 01-1.161.886l-.143.048a1.107 1.107 0 00-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 01-1.652.928l-.679-.906a1.125 1.125 0 00-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 00-8.862 12.872M12.75 3.031a9 9 0 016.69 14.036m0 0l-.177-.529A2.25 2.25 0 0017.128 15H16.5l-.324-.324a1.453 1.453 0 00-2.328.377l-.036.073a1.586 1.586 0 01-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 01-5.276 3.67m0 0a9 9 0 01-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25" />
-                </svg>`,
+        icon: `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
+        </svg>
+        `,
         id: 0
     },
     { 
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                </svg>`,
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
+        </svg>
+        `,
         id: 1
     },
     { 
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-            </svg>`,
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46" />
+        </svg>
+        `,
         id: 2
     }
 ]
@@ -90,6 +120,31 @@ const route = useRoute()
 const store = useStore()
 const error = ref()
 const refId = store.state.modalBox.data.refId
+const inputData = ref({
+    title: '',
+    blogs: ''
+})
+
+const preview = ref()
+const cmsData = ref();
+const cmsModuleData = ref([])
+const cmsModule = function(data){
+    cmsData.value = data
+}
+
+const renderPreview = function(){
+    let blogtypeicon = selectedType.value.icon
+    let title = inputData.value.title.trim().length == 0 ? `<span class='text-red-400'>Please insert title</span>`: inputData.value.title
+    let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
+    let template = itech().cms().blogTemplate(title,blogtypeicon,data)
+    preview.value = template
+    alertBox.value.show = true
+}
+console.log(json)
+inputData.value.title = json.title
+selectedType.value = type[itechObject(type).find(json.type, "id")]
+cmsModuleData.value = json.body
+
 store.state.modalBox.data.ok = function(){
     store.state.modalBox.data.create ? create() :
         store.state.modalBox.data.update ? update(refId) : null

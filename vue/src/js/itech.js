@@ -1,10 +1,53 @@
+import itechObject from "./itech-objects";
+
 const itech = function(){
     return {
-        textEditor: function(cmd, value = null){
+        cms: function(){
+            return {
+                /**
+                 * 
+                 * @param {Element} context 
+                 * @param {String | null} classes 
+                 * @param {String | null} styles 
+                 * @returns html string
+                 */
+                generated: function(context,classes,styles){
+                    return new CMS(context,classes,styles).html()
+                },
+                /**
+                 * 
+                 * @param {Array} templateData 
+                 * @param {String} customTemplateHTML 
+                 */
+                wrappedTemplate: function(templateData=[],customTemplateHTML=''){
+                    let temp = `<div class="w-full">`;
+                    templateData.forEach(d=>{
+                        temp += d
+                    })
+                    temp += `</div>`;
+                    return temp
+                },
+                blogTemplate: function(title,icon,blog){
+                    let date = itechObject().date(new Date(),true).format('dd,mm yy').withTime('h:m:s a')
+                    return `<div class='w-full flex flex-col rounded bg-gray-100'>
+                                <div class="flex border-b-2 p-3">
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]">
+                                        ${icon}
+                                    </div>
+                                    <div class="px-2 flex flex-col">
+                                        <h3>${title}</h3>
+                                        <i class="text-[.7em]">${date}</i>
+                                    </div>
+                                </div>
+                                ${blog}
+                            </div>`
+                }
+            }
+        },
+        textEditor: function(cmd, value = true){
             document.execCommand(cmd,false,value)
         },
         richText: function(text){
-
             return {
                 affilation: function(){
                     if(this.isValidLink()){
@@ -32,6 +75,23 @@ const itech = function(){
                 p++
             },time)
         }
+    }
+}
+class CMS{
+    /**
+     * 
+     * @param {Element} target 
+     * @param {String} classes 
+     * @param {String} styles 
+     */
+    constructor(target,classes,styles){
+        this.target = target
+        this.classes = classes
+        this.styles = styles
+    }
+    html(){
+        let tag = this.target.tagName.toLowerCase()
+        return `<${tag} class='${this.classes}' style='${this.styles}'>${this.target.innerHTML}</${tag}>`
     }
 }
 export default itech;
