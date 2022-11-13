@@ -26,19 +26,19 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/home',name: 'home', component: Home
+                path: '/home',name: 'home', component: Home, meta: {view: 'normal'}
             },
             {
-                path: '/post/:id', name: 'post',component: Post
+                path: '/post/:id', name: 'post',component: Post, meta: {view: 'large'}
             },
             {
-                path: '/search' , name: 'search', component: Home
+                path: '/search' , name: 'search', component: Home, meta: {view: 'normal'}
             },
             {
-                path: '/create' , name: 'create', component: CreateBlogWidget
+                path: '/create' , name: 'create', component: CreateBlogWidget, meta: {view: 'normal'}
             },
             {
-                path: '/:catchAll(.*)',name: '404',component: NotFound
+                path: '/:catchAll(.*)',name: '404',component: NotFound, meta: {view: 'normal'}
             }
         ]
     },
@@ -50,7 +50,7 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/me/profile', name: 'profile', component: Profile
+                path: '/me/profile', name: 'profile', component: Profile, meta: {view: 'normal'}
             }
         ]
 
@@ -63,7 +63,7 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/chat/top', name: 'chat-top', component: MessageLayout
+                path: '/chat/top', name: 'chat-top', component: MessageLayout, meta: {view: 'normal'}
             }
         ]
     },
@@ -75,7 +75,7 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/notifications/all', name: 'notifications-all', component: NotificationLayout
+                path: '/notifications/all', name: 'notifications-all', component: NotificationLayout, meta: {view: 'normal'}
             }
         ]
     },
@@ -138,18 +138,27 @@ router.beforeEach((to,from,next)=>{
 })
 
 async function normalize(to,from,next){
+    
     if(from.name == 'login' || from.name == 'registeration') 
         store.state.loadingScreen.data.show = true
     else 
         store.state.loadingBar.data.show = true
 
     if(to.name != 'login' && to.name != 'registeration'){
-        console.log('come here')
         return Promise.all([
             store.dispatch('currentUser'),
             store.dispatch('hasUnseen')
         ])
         .finally(()=>{
+            if (to.meta) {
+                if ('view' in to.meta) {
+                    if (to.meta['view'] == 'large') {
+                        store.state.page.view = 'lg:w-[100%] md:w-[100%] sm:w-[100%]'
+                    } else if (to.meta['view'] == 'normal') {
+                        store.state.page.view = 'lg:w-[60%] md:w-[100%] sm:w-[100%]'
+                    }
+                }
+            }
             //
             if (from.name == 'login' || from.name == 'registeration')
                 store.state.loadingScreen.data.show = false

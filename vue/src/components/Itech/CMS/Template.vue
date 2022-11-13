@@ -168,7 +168,7 @@ const editorData = ref({
 })
 
 const saveStatus = ref(false)
-
+const cmsModuleData = ref([])
 const props = defineProps({
     title: {
         type: String,
@@ -211,7 +211,11 @@ const deleteCurrent = function(index){
     imgProps.value.splice(index,1)
     textPorps.value.splice(index,1)
     cmsModules.value.splice(index,1)
+    cmsModuleData.value.splice(index,1)
     document.getElementById('chooseImageInp').value = null
+    if(props.autosave){
+        save()
+    }
 }
 
 const chooseColor = function(ele){
@@ -238,37 +242,45 @@ const addLink = function(){
 const addImage = function (e){
     const [file] = e.target.files
     if (file) {
-        let data = ''
         var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
-            data = reader.result
-            console.log(data)
-            addImageVue(data)
+            addImageVue(reader.result)
         };
-        
     }
 }
 
 const changes = function(data,index){
-    if(data.from == 'text'){
+    if(data.editor == 'text'){
         textPorps.value[index] = {
             context: data.org
+        }
+        if(data.context.length > 0){
+            cmsModuleData.value[index] = {
+                "editor": "text",
+                "context": data.context
+            }
+        }
+    }else if(data.editor == 'image'){
+        cmsModuleData.value[index] = {
+            "editor":"image",
+            "src": data.src,
+            "view": data.view,
+            "imgFill": data.imgFill
         }
     }
     cmsModules.value[index] = data.context
     saveStatus.value = true
     if(props.autosave){
-        console.log(data,index)
         save()
     }
 }
 
-const emits = defineEmits(['created'])
+const emits = defineEmits(['module'])
 const save = function(){
     saveStatus.value = false
     let template = itech().cms().wrappedTemplate(cmsModules.value)
-    emits('created',template)
+    emits('module',{template:template, data: cmsModuleData.value})
 }
 const loadFromData = function(data= new Array()){
     data.forEach((d)=>{

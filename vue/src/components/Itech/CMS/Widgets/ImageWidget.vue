@@ -111,12 +111,18 @@ const centerFit = function(){
 }
 const changes = function(ele = contexts.value){
     let data = {
-        classes: `image-wrap ie  ${editorData.value.imgFill}`,
+        classes: `image-wrap ie ${editorData.value.imgFill}`,
         styles: ""
     }
     img.value.classList.add(editorData.value.imgFill)
     let html = itech().cms().generated(ele, data.classes,data.styles)
-    emits('changes',{from:'img',context:`<div class='p-2 flex w-full ${editorData.value.view}'>${html}</div>`})
+    emits('changes', {
+        editor: 'image',
+        context: `<div class='p-2 flex w-full ${editorData.value.view}'>${html}</div>`,
+        src: props.src,
+        view: editorData.value.view,
+        imgFill: editorData.value.imgFill
+    })
 }
 const triggerReplace = function(){
     replaceImgInput.value.click()

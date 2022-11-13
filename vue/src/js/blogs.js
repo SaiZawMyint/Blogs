@@ -1,4 +1,7 @@
+import { intersectionWith } from "lodash"
 import store from "../store"
+import defaultProps from './app.properties'
+import itechObject from './itech-objects'
 
 export function blogsData(id,x){
     let blogs = x.blogs
@@ -115,11 +118,17 @@ export function clearAllFromStore(){
     store.state.alertBox = {data:{},show: false}
     store.state.userNotification = {data: [],hasUnseen:false}
 }
+export function getBlogTypeIcon(id){
+    const type = Object.assign([],defaultProps)
+    const selectedtype = type[itechObject(type).find(id,'id')]
+    return  selectedtype.icon
+}
 export default{
     blogsData: blogsData,
     isLiked: isLiked,
     blog_data: blog_data,
     getString: getString,
     findDataFromArrayById: findDataFromArrayById,
-    commentData: commentData
+    commentData: commentData,
+    getBlogTypeIcon: getBlogTypeIcon
 }

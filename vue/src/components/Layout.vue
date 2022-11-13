@@ -81,7 +81,8 @@
 
         </div>
     </div>
-    <div class="content-view pt-[60px] lg:w-[60%] md:w-[100%] sm:w-[100%] mx-auto">
+    <div class="content-view pt-[60px]  mx-auto"
+    :class="store.state.page.view">
         <router-view></router-view>
     </div>
     <Transition name="slide-up">
@@ -110,13 +111,14 @@
 import { useStore } from 'vuex';
 import ModalBoxVue from './ui/ModalBox.vue';
 import CreateBlogVue from './ui/CreateBlog.vue';
-import {  useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import LoadingScreen from './lightui/LoadingScreen.vue';
 import Notification from './lightui/Notification.vue';
 import LoadingBar from './lightui/LoadingBar.vue';
 
 const store = useStore()
 const router = useRouter()
+
 const defaultdata = {
     title: 'Create Blog',
     width: 'w-[50%]',
@@ -147,6 +149,7 @@ const search = function(){
     })
 }
 
+import { ref } from 'vue';
 </script>
 <style>
 .slide-left-enter-active,

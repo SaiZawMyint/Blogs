@@ -42,10 +42,10 @@
 }
 .itech-helper-slide-right-enter-active,
 .itech-helper-slide-right-leave-active {
-  transition: all .2s ease-out;
+  transition: all .5s cubic-bezier(1, 0.82, 0.165, 1);
 }
 
 .itech-helper-slide-right-enter-from,
 .itech-helper-slide-right-leave-to{
-  right: -30px
+  right: -35px
 }

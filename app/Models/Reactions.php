@@ -16,12 +16,12 @@ class Reactions extends Model
 
     public function getCreatedAtAttribute()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['created_at'])->format('d-m-Y h:m A');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['created_at'])->format('m-d-Y h:m A');
     }
 
     public function getUpdatedAtAttribute()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['updated_at'])->format('d-m-Y h:m A');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['updated_at'])->format('m-d-Y h:m A');
     }
 
     protected $fillable = [

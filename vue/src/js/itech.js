@@ -41,6 +41,9 @@ const itech = function(){
                                 </div>
                                 ${blog}
                             </div>`
+                },
+                previewTemplate: function(data = []){
+                    return new CMS().previewTemplate(data)
                 }
             }
         },
@@ -61,6 +64,9 @@ const itech = function(){
                     return (res !== null)
                 }
             }
+        },
+        "createRandomName":function(prefix = ''){
+            return  prefix.replaceAll(' ','')+"-"+ (Math.random() + 1).toString(36).substring(2);
         },
         wait: function(time,action,callback){
             let id = null
@@ -92,6 +98,34 @@ class CMS{
     html(){
         let tag = this.target.tagName.toLowerCase()
         return `<${tag} class='${this.classes}' style='${this.styles}'>${this.target.innerHTML}</${tag}>`
+    }
+    previewTemplate(json = []){
+        let template = ``
+        let temp = ``
+        json.forEach((data)=>{
+            if('editor' in data){
+                switch(data['editor']){
+                    case 'text':{
+                        let context = 'context' in data ? data['context'] : ''
+                        temp += `<div class="p-2 te">${context}</div>`
+                    }
+                    break
+                    case 'image':{
+                        let view = 'view' in data ? data['view'] : 'justify-start'
+                        let imgFill = 'imgFill' in data ? data['imgFill'] : 'w-auto'
+                        let src = 'src' in data ? data['src'] : ''
+                        temp += `<div class="p-2 flex w-full ${view}">
+                                    <div class="image-wrap ie ${imgFill}">
+                                        <img alt="blog image" src='${src}'>
+                                    </div>
+                                </div>`
+                    }
+                    break
+                }
+            }
+        })
+        template = `<div class="w-full">${temp}</div>`
+        return template;
     }
 }
 export default itech;

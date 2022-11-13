@@ -76,8 +76,13 @@ const updateText = function(){
         classes: "p-2 te",
         styles: ""
     }
-    let html = itech().cms().generated(contexts.value, data.classes,data.styles)
-    emits('changes',{from: 'text',context:html,org: contexts.value.innerHTML})
+    let html = ``
+    let org = ``
+    if(contexts.value instanceof HTMLElement){
+        html = itech().cms().generated(contexts.value, data.classes,data.styles)
+        org = contexts.value.innerHTML
+    }
+    emits('changes',{editor: 'text',context:html, org: org})
     editorData.value.show = false
 }
 onMounted(()=>{

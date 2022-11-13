@@ -4,6 +4,7 @@ import {blogsData, clearAllFromStore, commentData, findDataFromArrayById, isLike
 import router from '../router'
 
 
+
 const userModule = {
     state: ()=>({
         data: {},
@@ -161,7 +162,7 @@ const post = {
         data:{
             body: "",
             comments: 0,
-            created_at: "",
+            created_at: new Date().toDateString(),
             data: { like: [], comment: [] },
             del_flag: 0,
             id: 0,
@@ -169,7 +170,8 @@ const post = {
             like_count: 0,
             likes: 0,
             title: "",
-            updated_at: "",
+            updated_at: new Date().toDateString(),
+            description: '',
             user_id: 0
         }
     }),
@@ -205,7 +207,7 @@ const post = {
                 body: data.data.blogs.body,
                 comments: data.data.comments.length,
                 created_at: data.data.blogs.created_at,
-                data: { like: data.data.likes, comment: commentData(data.data.comments,data.data.blogs.user_id) },
+                data: { like: data.data.likes, comment: commentData(data.data.comments,data.uid) },
                 del_flag: data.data.blogs.del_flag,
                 id: data.data.blogs.id,
                 isliked: isLiked(data.uid, data.data.likes),
@@ -213,7 +215,11 @@ const post = {
                 likes: data.data.likes.length,
                 title: data.data.blogs.title,
                 updated_at: data.data.blogs.updated_at,
+                description: data.data.blogs.description,
                 user_id: data.data.blogs.user_id
+            }
+            if('postData' in data.data){
+                state.data.postData = data.data.postData
             }
         },
         like: (state,data)=>{
@@ -245,6 +251,7 @@ const page ={
             data:{},
             route:{}
         },
+        view: 'lg:w-[60%] md:w-[100%] sm:w-[100%]'
     }),
     actions: {},
     mutations: {}

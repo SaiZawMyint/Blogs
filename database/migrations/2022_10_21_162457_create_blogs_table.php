@@ -18,8 +18,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class, 'user_id');
             $table->string('title');
-            $table->longText('body');
-            $table->integer('like_count')->default(0);
+            $table->integer('type')->default(0);
+            $table->longText('description');
+            $table->string('body');
             $table->boolean('del_flag')->default(false);
             $table->timestamps();
         });

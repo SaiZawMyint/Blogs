@@ -4,16 +4,11 @@
             class="border-2 border-gray-300 rounded-lg m-2 shadow flex flex-col overflow-hidden">
             <div class="p-2 border-b-2 border-gray-300 flex items-center justify-between">
                 <router-link :to="{name: 'post',params:{id: data.id}}" class="flex rounded hover:bg-gray-300/30 p-2">
-                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
-                        </svg>
-                    </div>
+                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]"
+                    v-html="getBlogTypeIcon(data.type)"></div>
                     <div class="px-2 flex flex-col">
                         <h3>{{data.title}}</h3>
-                        <i class="text-xs">{{data.created_at}}</i>
+                        <i class="text-xs">{{itechObject().date(data.created_at,true).format('dd,mm yy').withTime('h:m:s a')}}</i>
                     </div>
                 </router-link>
                 <div class="flex items-center justify-center" v-if="store.state.user.data.id == data.user_id">
@@ -28,7 +23,7 @@
                 </div>
             </div>
             <div class="w-full p-2">
-                <p class="ml-2 min-h-[50px]">{{data.body}}</p>
+                <p class="ml-2 min-h-[50px]">{{data.description}}</p>
             </div>
             <div class="px-4 py-2 flex border-t-2 border-gray-300">
                 <div class="p-2 bg-gray-200 rounded-lg flex mr-2">
@@ -77,6 +72,9 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { getBlogTypeIcon } from '../../js/blogs';
+import itech from '../../js/itech';
+import itechObject from '../../js/itech-objects';
 const store = useStore()
 const route = useRoute()
 const editBlog = function(id,title,body){

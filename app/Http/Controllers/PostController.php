@@ -39,7 +39,10 @@ class PostController extends Controller
     public function createBlog(Request $request){
         $validator = Validator::make($request->all(), [
             'title'=>'required',
-            'body'=>'required'
+            'description'=>'required',
+            'type'=>'required',
+            'body'=>'required',
+            'data'=> 'required'
         ]);
         if($validator->fails()){
             return response([

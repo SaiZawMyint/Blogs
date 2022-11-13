@@ -6,6 +6,7 @@ use App\Models\Blogs;
 use App\Models\User;
 use App\Service\BlogService;
 use App\Service\ReactionService;
+use Illuminate\Support\Facades\Storage;
 
 class BlogServiceImpls implements BlogService{
 
@@ -30,13 +31,20 @@ class BlogServiceImpls implements BlogService{
     }
     public function get($id){
         $blogs = $this->blogDao->getById($id);
+        
         if(!$blogs){
             return [];
         }
-        return $this->reponseData([$blogs])[0];
+        $filename = $blogs->body .'.json';
+
+        $path = storage_path('app/public/blogs')."/${filename}";
+        $json = json_decode(file_get_contents($path),true);
+
+        return $this->reponseData([$blogs],$json)[0];
     }
     public function create($data){
-        $blog = $this->blogDao->create($data);
+        $blog = $this->blogDao->create($data->only('title','type','description','body'));
+        Storage::disk('blogs')->put($data['body'].'.json', json_encode($data['data']));
         return [
             'ok' => true,
             'message' => 'Create blogs success!',
@@ -55,13 +63,14 @@ class BlogServiceImpls implements BlogService{
         
     }
 
-    private function reponseData($blogs){
+    private function reponseData($blogs,$extraData = []){
         $data = [];
         foreach($blogs as $blog){
             array_push($data,[
                 'blogs'=>$blog,
                 'likes'=>$this->reactionservice->get($blog->id,'like'),
                 'comments'=>$this->reactionservice->get($blog->id,'comment'),
+                'postData'=> count($extraData) > 0 ? $extraData : null
             ]);
         }
         return $data;

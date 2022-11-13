@@ -151,3 +151,6 @@ input::-webkit-inner-spin-button {
 .text-green-dark{
     color: var(--app-green-dark);
 }
+.fixed-rl-box{
+    height: calc(100% - 85px);
+}
