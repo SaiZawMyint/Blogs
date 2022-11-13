@@ -35,7 +35,8 @@ class BlogDAOImpl implements BlogDAO{
             'user_id' => $this->user->id,
             'title' => $data['title'],
             'body' => $data['body'],
-            'like_count' => 0,
+            'type' => $data['type'],
+            'description' => $data['description'],
             'del_flag' => false
         ]);
         return $blog;
