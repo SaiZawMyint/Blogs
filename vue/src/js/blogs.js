@@ -121,7 +121,7 @@ export function clearAllFromStore(){
 export function getBlogTypeIcon(id){
     const type = Object.assign([],defaultProps)
     const selectedtype = type[itechObject(type).find(id,'id')]
-    return  selectedtype.icon
+    return selectedtype ? selectedtype.icon : null
 }
 export default{
     blogsData: blogsData,

@@ -11,6 +11,7 @@ import NotFound from '../components/ui/NotFound.vue'
 import MessageLayout from '../components/ui/MessageLayout.vue';
 import NotificationLayout from '../components/ui/NotificationLayout.vue';
 import CreateBlogWidget from '../components/ui/Widgets/CreateBlogWidget.vue'
+import UpdateBlog from '../components/ui/UpdateBlog.vue'
 
 import AccountInformation from '../components/AccountInfos/AccountInformation.vue'
 
@@ -30,6 +31,9 @@ const routes = [
             },
             {
                 path: '/post/:id', name: 'post',component: Post, meta: {view: 'large'}
+            },
+            {
+                path: '/post/:id/edit', name: 'edit-post',component: UpdateBlog, meta: {view: 'normal'}
             },
             {
                 path: '/search' , name: 'search', component: Home, meta: {view: 'normal'}

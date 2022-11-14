@@ -3,22 +3,18 @@
         <div class="flex flex-col p-2 w-[30%] max-w-[600px] h-full fixed left-0">
             <div class="border-2 border-gray-300 rounded-lg m-2 shadow flex flex-col overflow-hidden">
                 <div class="p-3 border-b-2 border-gray-300 flex items-center justify-between">
-                    <div class="flex">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
-                            </svg>
+                    <div class="flex w-[60%]">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c] min-w-[40px]"
+                        v-html="getBlogTypeIcon(data.type)">
                         </div>
-                        <div class="px-2 flex flex-col">
-                            <h3>{{data.title}}</h3>
+                        <div class="px-2 flex flex-col w-full">
+                            <h3 class="truncate overflow-hidden">{{data.title}}</h3>
                             <i class="text-xs">{{convertDate(data.created_at)}}</i>
                         </div>
                     </div>
                     <div class="flex items-center justify-center" v-if="store.state.user.data.id == data.user_id">
                         <button @click="alert"
-                            class="w-8 h-8 ml-2 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full hover:bg-red-600/60">
+                            class="w-8 h-8 min-w-[30px] ml-2 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full hover:bg-red-600/60">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -183,6 +179,7 @@ import { useRoute, useRouter } from 'vue-router'
 import AlertBoxVue from '../lightui/AlertBox.vue';
 import itechObject from '../../js/itech-objects';
 import itech from '../../js/itech';
+import { getBlogTypeIcon } from '../../js/blogs';
 
 const store = useStore()
 const route = useRoute()

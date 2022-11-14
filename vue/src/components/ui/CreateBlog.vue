@@ -9,7 +9,7 @@
                     <input v-model="inputData.title"
                         class="appearance-none block w-full bg-white-100 text-gray-800 border rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white"
                         id="grid-tile" type="text" placeholder="Title">
-                    <Listbox v-model="selectedType">
+                    <Listbox v-model="inputData.type">
                         <div class="relative mx-2">
                             <ListboxButton
                                 class="relative w-full cursor-pointer rounded-lg bg-white p-1 text-left border-2 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -77,13 +77,11 @@
     </Transition>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
-import json from '../Itech/CMS/template.json'
-import itechObject from '../../js/itech-objects';
 import defaultProps from '../../js/app.properties'
 import {
   Listbox,
@@ -95,28 +93,32 @@ import Template from '../Itech/CMS/Template.vue';
 const alertBox = ref({
     show: false
 })
+const props = defineProps({
+    data: {
+        type: Object,
+        default: {
+            title: '',
+            description: '',
+            type: 0,
+            body: '',
+            data: []
+        }
+    }
+})
+
 const type = defaultProps
 const selectedType = ref(type[0])
 
 const router = useRouter()
-const route = useRoute()
 const store = useStore()
 const error = ref()
-const refId = store.state.modalBox.data.refId
-const inputData = ref({
-    title: '',
-    description: '',
-    type: 0,
-    body: '',
-    data: []
-})
+const inputData = ref(props.data) //props.jsonData
 
 const preview = ref()
 const cmsData = ref();
-const cmsModuleData = ref([])
+const cmsModuleData = ref(inputData.value.data) //
 const cmsModule = function(data){
     inputData.value.data = Object.assign([],data.data)
-    console.log(data)
     cmsData.value = data.template
 }
 
@@ -129,9 +131,6 @@ const renderPreview = function(){
     alertBox.value.show = true
 }
 
-inputData.value.title = json.title
-selectedType.value = type[itechObject(type).find(json.type, "id")]
-cmsModuleData.value = json.body
 const loading = ref(false)
 const startUpload = function(){
     if (loading.value) return false

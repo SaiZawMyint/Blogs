@@ -172,7 +172,8 @@ const post = {
             title: "",
             updated_at: new Date().toDateString(),
             description: '',
-            user_id: 0
+            user_id: 0,
+            type: 0
         }
     }),
     actions: {
@@ -214,6 +215,7 @@ const post = {
                 like_count: data.data.blogs.like_count,
                 likes: data.data.likes.length,
                 title: data.data.blogs.title,
+                type: data.data.blogs.type,
                 updated_at: data.data.blogs.updated_at,
                 description: data.data.blogs.description,
                 user_id: data.data.blogs.user_id

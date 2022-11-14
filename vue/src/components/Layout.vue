@@ -31,13 +31,13 @@
                         </svg>
                     </button>
                 </form>
-                <button @click="store.state.modalBox.createfn"
+                <router-link :to="{name: 'create'}"
                     class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                </button>
+                </router-link>
             </div>
             <div class="flex items-center justify-center">
                 <router-link :to="{name: 'home'}"
@@ -111,7 +111,7 @@
 import { useStore } from 'vuex';
 import ModalBoxVue from './ui/ModalBox.vue';
 import CreateBlogVue from './ui/CreateBlog.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import LoadingScreen from './lightui/LoadingScreen.vue';
 import Notification from './lightui/Notification.vue';
 import LoadingBar from './lightui/LoadingBar.vue';
@@ -149,7 +149,6 @@ const search = function(){
     })
 }
 
-import { ref } from 'vue';
 </script>
 <style>
 .slide-left-enter-active,
