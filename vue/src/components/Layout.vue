@@ -111,13 +111,14 @@
 import { useStore } from 'vuex';
 import ModalBoxVue from './ui/ModalBox.vue';
 import CreateBlogVue from './ui/CreateBlog.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import LoadingScreen from './lightui/LoadingScreen.vue';
 import Notification from './lightui/Notification.vue';
 import LoadingBar from './lightui/LoadingBar.vue';
 
 const store = useStore()
 const router = useRouter()
+const route = useRoute()
 
 const defaultdata = {
     title: 'Create Blog',
@@ -148,7 +149,6 @@ const search = function(){
         router.push({name: 'search'})
     })
 }
-
 </script>
 <style>
 .slide-left-enter-active,

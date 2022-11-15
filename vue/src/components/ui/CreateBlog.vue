@@ -56,7 +56,8 @@
 
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
-                <button class="px-2 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
+                <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2" @click="alertDelete">Delete</button>
+                <button class="px-3 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
             </div>
         </div>
     </div>
@@ -70,11 +71,36 @@
             <template v-slot:footer>
                 <div class="flex items-center justify-center my-2 text-sm pt-3">
                     <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="alertBox.show = false">Cancel</button>
-                    <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed" v-if="rule.disabled">Upload</button>
-                    <button class="px-3 py-2 rounded mx-2 btn text-white" v-else @click="startUpload">Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white"  v-if="!rule.disabled" @click="startUpload">Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed" v-else>Upload</button>
                 </div>
             </template>
         </AlertBox>
+    </Transition>
+     <Transition name="alert">
+        <AlertBoxVue title="Delete Blog" v-if="deleteBlog.show" :show="deleteBlog.show"
+            @on-close="deleteBlog.show = false">
+            <template v-slot:icon>
+                <div class="w-10 h-10 mt-7 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+            </template>
+            <template v-slot:content>
+                <p class="p-2 text-center text-red-400">Are you sure?</p>
+            </template>
+            <template v-slot:footer>
+                <div class="flex items-center justify-center my-2 text-sm pt-3">
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]"
+                        @click="deleteBlog.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 bg-red-500 hover:bg-red-300 text-white"
+                        @click="confirmDelete">Delete</button>
+                </div>
+            </template>
+        </AlertBoxVue>
     </Transition>
 </template>
 <script setup>
@@ -84,7 +110,7 @@ import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
 import defaultProps from '../../js/app.properties'
-
+import AlertBoxVue from '../lightui/AlertBox.vue';
 import {
   Listbox,
   ListboxButton,
@@ -123,9 +149,12 @@ const error = ref()
 const inputData = toRef(props, 'data') //props.jsonData
 const preview = ref()
 const cmsData = ref();
-
+const deleteBlog = ref({
+    show: false
+})
 const rule = ref({
-    disabled: false
+    disabled: false,
+    required: false
 })
 
 const cmsModule = function(data){
@@ -138,7 +167,7 @@ const renderPreview = function(){
     let title = inputData.value.title.trim().length == 0 ? `<span class='text-red-400'>Please insert title</span>`: inputData.value.title
     inputData.value.type = selectedType.value.id
     let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
-    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value
+    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value 
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
     preview.value = template
     alertBox.value.show = true
@@ -167,9 +196,10 @@ const startUpload = function(){
         
         if(res.ok){
             loading.value = false
-            if(props.options == 'Create'){
-                router.push({ name: 'home' })
-            }
+            // if(props.options == 'Create'){
+            //     router.push({ name: 'home' })
+            // }
+            router.push(store.state.page.history.route)
             itech().wait(2000, function () {
                 store.state.notification.data = {
                     show: true,
@@ -184,6 +214,31 @@ const startUpload = function(){
         }
     }).catch((err)=>{
         console.log(err)
+    })
+}
+const alertDelete = ()=>{
+    deleteBlog.value.show = true;
+}
+const confirmDelete = ()=>{
+    store.state.notification.data = {
+        show: true,
+        message: 'Deleting Blog...',
+        done: false
+    }
+    deleteBlog.value.show = false
+    store.dispatch('deleteBlog',props.id).then((res)=>{
+        itech().wait(4000, function () {
+            store.state.notification.data = {
+                show: true,
+                message: "Blog delete success",
+                done: true,
+                cls: 'show'
+            }
+        }, function () {
+            store.state.notification.data.cls = 'hide'
+            store.state.notification.data = {}
+        })
+        router.push({name: 'top'})
     })
 }
 </script>

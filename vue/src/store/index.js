@@ -104,10 +104,14 @@ const blogs = {
         updateBlog({commit},data){
             return axiosClient.post(`/blogs/${data.id}`,data.data).then((res)=>{
                 if (res.data.ok) {
-                    data.delete ?
-                        commit('deleteBlog', res.data.data)
-                        : commit('updateBlog', res.data.data)
+                    commit('updateBlog', res.data.data)
                 }
+                return res.data
+            })
+        },
+        deleteBlog({commit}, id){
+            return axiosClient.delete(`/blogs/${id}`).then((res)=>{
+                if(res.data.ok) commit('deleteBlog', id)
                 return res.data
             })
         },
@@ -143,8 +147,8 @@ const blogs = {
                 state.data[index].updated_at = data.updated_at
             }
         },
-        deleteBlog:(state,data)=>{
-            let index = state.data.findIndex((blog)=> blog.id == data.id)
+        deleteBlog:(state,id)=>{
+            let index = state.data.findIndex((blog)=> blog.id == id)
             state.data.splice(index,1)
         },
         putlike: (state,x)=>{
@@ -179,6 +183,7 @@ const post = {
     actions: {
         getBlogById({commit},id){
             return axiosClient.get(`/blogs/${id}`).then((res)=>{
+                console.log(res.data)
                 if(res.data.ok) commit('postdata',res.data)
                 return res.data
             })
@@ -223,6 +228,7 @@ const post = {
             if('postData' in data.data){
                 state.data.postData = data.data.postData
             }
+            console.log(state.data)
         },
         like: (state,data)=>{
             state.data.isliked = isLiked(data.uid,data.data)
@@ -359,7 +365,6 @@ const userNotification = {
             }
             state.data = data
             state.unseencount = unseen_count
-            console.log(state)
         },
         seen: (state,data)=>{
             let finddata = findDataFromArrayById(data.id,state.data)

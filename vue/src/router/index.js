@@ -117,12 +117,6 @@ router.beforeEach((to,from,next)=>{
         } else if (store.state.user.token && (to.name == 'login' || to.name == 'registeration')) {
             next({ name: 'top' })
         }
-        //for post
-        else if (from.name == 'post') {
-            store.state.post.data = blog_data
-            routeHistory(to, from)
-            next()
-        }
         //get notification data
         else if(to.name == 'notifications-all'){
             store.dispatch('loadNotification').then(()=>{
@@ -136,8 +130,6 @@ router.beforeEach((to,from,next)=>{
             next()
         }
     })
-    //for auth
-    
 
 })
 
@@ -150,8 +142,11 @@ async function normalize(to,from){
     if(to.name != 'login' && to.name != 'registeration'){
 
         let callData = [store.dispatch('currentUser'),store.dispatch('hasUnseen')]
-        if(to.name == 'edit-post'){
+        if(to.name == 'edit-post' || to.name == 'post'){
             callData.push(store.dispatch('getBlogById',to.params.id))
+        }
+        if(to.name == 'search'){
+            callData.push(store.dispatch('searchBlogs',store.state.page.search.data))
         }
         return Promise.all(callData)
         .finally(()=>{
@@ -187,15 +182,15 @@ async function normalize(to,from){
                     if(to.name != 'search'){
                         store.state.page.search.is = false
                     }else{
-                        store.dispatch('searchBlogs',store.state.page.search.data).then(()=>{
-                            store.state.page.search.is = true
-                        })
+                        store.state.page.search.is = true
                     }
                 }
                 //top page 
                 if (to.name == 'top' || to.name == 'home') {
                     store.state.page.history.data = {}
                     store.state.page.history.route = {}
+                }else{
+                    store.state.page.sub = true
                 }
             }
         })

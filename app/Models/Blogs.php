@@ -24,12 +24,12 @@ class Blogs extends Model
 
     public function getCreatedAtAttribute()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['created_at'])->format('m-d-Y h:m A');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['created_at'])->format('m-d-Y h:m:s A');
     }
 
     public function getUpdatedAtAttribute()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['updated_at'])->format('m-d-Y h:m A');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['updated_at'])->format('m-d-Y h:m:s A');
     }
 
     protected $fillable = [
@@ -41,4 +41,12 @@ class Blogs extends Model
         'type',
         'del_flag'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::deleting(function($blog){
+            $blog->reactions()->delete();
+        });
+    }
 }

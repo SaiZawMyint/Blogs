@@ -158,3 +158,13 @@ input::-webkit-inner-spin-button {
 .btn.disabled{
     background-color: var(--btn-disabled-color);
 }
+.btn.secondary{
+    background-color: var(--light-white-color);
+}
+.btn.delete{
+    background-color: var(--light-white-color);
+    color: var(--unseen-noti-color);
+}
+.btn.delete:hover{
+    background-color: #f0505059;
+}

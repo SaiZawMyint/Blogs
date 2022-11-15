@@ -58,8 +58,8 @@
         <div v-if="store.state.blogs.data.length == 0" class="p-4 flex flex-col items-center justify-center">
             <div v-if="route.name == 'home'" class="flex flex-col items-center justify-center">
                 <p class="italic text-gray-400 py-3">There is no blogs yet! Create a blogs to new feed!</p>
-                <button class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
-                    @click="store.state.modalBox.createfn">Create New Blogs</button>
+                <router-link :to="{name: 'create'}" class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
+                    >Create New Blogs</router-link>
             </div>
             <div v-if="route.name == 'search'" class="flex flex-col items-center justify-center">
                 <p class="italic text-gray-400 py-3">No search data found!</p>
@@ -73,57 +73,10 @@
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { getBlogTypeIcon } from '../../js/blogs';
-import itech from '../../js/itech';
 import itechObject from '../../js/itech-objects';
 const store = useStore()
 const route = useRoute()
-const editBlog = function(id,title,body){
-    store.state.modalBox.input.title = title
-        store.state.modalBox.input.body = body
-        store.state.modalBox.data = {
-            title: 'Update Blog',
-            width: 'w-[50%]',
-            height: 'h-[fit-content]',
-            show: true,
-            okBtn: 'Update',
-            closable: true,
-            cancelBtn: "Delete",
-            animation: 'slideDown',
-            create: false,
-            update: true,
-            refId: id,
-            cancel: function(){
-                if (store.state.modalBox.data.deleting || store.state.modalBox.data.loading) return false
-                store.state.modalBox.data.deleting = true
-                store.state.modalBox.data.show = false
-                store.state.notification.data = {
-                    show: true,
-                    message: 'Deleting Blog...',
-                    done: false
-                }
-                store.dispatch('updateBlog',{id: id, data:{"del_flag":true},delete: true}).then((res) => {
-                    store.state.modalBox.data.deleting = false
-                    store.state.modalBox.data.cancelBtn = null
-                    itech().wait(2000, function () {
-                        store.state.notification.data = {
-                            show: true,
-                            message: 'Blgs delete success',
-                            done: true,
-                            cls: 'show'
-                        }
-                    }, function () {
-                        store.state.notification.data.cls = 'hide'
-                        store.state.notification.data = {}
-                    })
-                })
-            }
-        }
 
-    // store.dispatch('getBlogById', id).then(res => {
-    //     console.log(res)
-        
-    // })
-}
 const like = function(id){
     store.dispatch('like',id);
 }

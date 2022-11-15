@@ -52,7 +52,9 @@ class BlogDAOImpl implements BlogDAO{
         }
         return ['data'=>$temp,'message'=>$message];
     }
-    public function delete($id){}
+    public function delete($id){
+        return Blogs::find($id)->delete();
+    }
 
     public function getReaction($id,$type){
         $blog = Blogs::find($id);
@@ -64,5 +66,9 @@ class BlogDAOImpl implements BlogDAO{
         }else{
             return [];
         }
+    }
+    public function search($search)
+    {
+        return Blogs::where('del_flag','!=',true)->where('title','LIKE','%'.$search.'%')->get();
     }
 }

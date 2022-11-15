@@ -69,7 +69,7 @@ class PostController extends Controller
             "message" => "Get blog data success!",
             "code" => 200,
             "uid"=> $this->user->id,
-            "data" => $this->blogservice->get($id)
+            "data" => $data
         ]);
     }
 
@@ -84,7 +84,30 @@ class PostController extends Controller
         ]);
     }
 
-    
+    public function deleteBlog($id){
+        if(!$id){
+            return response([
+                "ok"=>false,
+                "code"=>405,
+                "message"=>"Missing id."
+            ]);
+        }
+        $delBlog = $this->blogservice->delete($id);
+        if($delBlog['success']){
+            return response([
+                "ok"=>true,
+                "code"=> 201,
+                "message"=>$delBlog['message'],
+                "data"=>$delBlog['data']
+            ]);
+        }else{
+            return response([
+                "ok"=>true,
+                "code"=>100,
+                "message"=>"No blog deleted!"
+            ]);
+        }
+    }
 
     public function searchBlog(Request $request){
         if(array_key_exists('s',$request->all())){

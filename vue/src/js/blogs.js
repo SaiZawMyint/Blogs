@@ -17,14 +17,22 @@ export function isLiked(id,x){
     return index != -1
 }
 export function routeHistory(to,from){
-    if(!(to.name in store.state.page.history.data)){
-        store.state.page.history.route.name = from.name
-        if (from.params) store.state.page.history.route.params = from.params
-        store.state.page.history.data[to.name] = {name: from.name,params: from.params}
+    console.log(store.state.page.history.data)
+    if(from.name === undefined){
+        store.state.page.history.route = {
+            name: 'top'
+        }
     }else{
-        store.state.page.history.route = store.state.page.history.data[to.name]
-        delete store.state.page.history.data[from.name]
+        if(!(to.name in store.state.page.history.data)){
+            store.state.page.history.route.name = from.name
+            if (from.params) store.state.page.history.route.params = from.params
+            store.state.page.history.data[to.name] = {name: from.name,params: from.params}
+        }else{
+            store.state.page.history.route = store.state.page.history.data[to.name]
+            delete store.state.page.history.data[from.name]
+        }
     }
+    
 }
 export function calculateStatus(data = {posts:0,likes:0,comments: 0}){
     let result = {
@@ -65,11 +73,12 @@ export const blog_data = {
     del_flag: 0,
     id: 0,
     isliked: false,
-    like_count: 0,
     likes: 0,
     title: "",
     updated_at: "",
-    user_id: 0
+    user_id: 0,
+    type: 0,
+    desciption: ''
 }
 
 export function findDataFromArrayById(id = 0,data = []){

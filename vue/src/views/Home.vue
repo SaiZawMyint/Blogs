@@ -40,8 +40,11 @@
     </div>
 </template>
 <script setup>
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import BlogListsVue from '../components/ui/BlogLists.vue';
 const store = useStore()
-store.dispatch('getBlogs')
+const route = useRoute()
+if(route.name == 'home')
+    store.dispatch('getBlogs')
 </script>

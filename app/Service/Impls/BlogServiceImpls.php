@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Service\BlogService;
 use App\Service\ReactionService;
 use App\Utils\FileUtils;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Storage;
 
 class BlogServiceImpls implements BlogService{
@@ -40,10 +41,6 @@ class BlogServiceImpls implements BlogService{
 
         $path = storage_path('app/public/blogs')."/${filename}";
         
-        if(file_exists($path)){
-
-        }
-        
         $json = file_exists($path) ? json_decode(file_get_contents($path),true):[];
 
         return $this->reponseData([$blogs],$json)[0];
@@ -70,6 +67,28 @@ class BlogServiceImpls implements BlogService{
         ];
     }
     public function delete($id){
+        $blog = $this->blogDao->getById($id);
+        if($blog){
+            $filename = $blog->body.'.json';
+            if(file_exists($filename))
+                FileUtils::deleteDiskFile($filename);
+            return [
+                'success'=>true,
+                'message'=>'Delete blog success',
+                'data'=> $this->blogDao->delete($id)
+            ];
+
+        }else{
+            return [
+                'success'=>false
+            ];
+        }
+        // $deldata = $this->blogDao->delete($id);
+        // if($deldata['success']){
+
+        // }else{
+
+        // }
         
     }
 
@@ -88,8 +107,7 @@ class BlogServiceImpls implements BlogService{
 
     public function search($search)
     {
-        $blogs = Blogs::where('del_flag','!=',true)->where('title','LIKE','%'.$search.'%')->get();
-
+        $blogs = $this->blogDao->search($search);
         return $this->reponseData($blogs);
     }
 }

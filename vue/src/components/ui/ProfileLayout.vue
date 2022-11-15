@@ -73,8 +73,8 @@
                                 <th scope="col" class="py-3 px-6">
                                     Comments
                                 </th>
-                                <th scope="col" class="py-3 px-6 text-center">
-                                    <button class="px-3 py-2 bg-[#0f857d] hover:bg-[#33c6bc] rounded text-gray-200" @click="store.state.modalBox.createfn">Create</button>
+                                <th scope="col" class="py-2 px-4 text-center flex justify-center">
+                                    <router-link :to="{name: 'create'}" class="w-[fit-content] px-3 py-2 btn rounded block">Create</router-link>
                                 </th>
                             </tr>
                         </thead>
@@ -93,17 +93,20 @@
                                     {{data.comments}}
                                 </td>
                                 <td class="py-4 px-6 text-center">
-                                    <button @click="editBlog(data.id)"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                                    <router-link :to="{name: 'edit-post',params:{id: data.id}}"
+                                        class="font-medium text-blue-600 dark:text-blue-500  inline-block hover:underline">Edit</router-link>
+                                        |
+                                        <button @click="alert(data.id)"
+                                        class="font-medium text-red-600 dark:text-red-500 inline-block hover:underline">Delete</button>
                                 </td>
                             </tr>
                             <tr v-if="store.state.profile.blogs.length == 0">
                                 <td colspan="5" class="text-center py-2">
                                     You have not post any blogs yet! <br>
-                                    <button class="px-3 py-2 rounded bg-gray-200 hover:bg-gray-200/60 mt-2"
-                                    @click="store.state.modalBox.createfn">
+                                    <router-link :to="{name: 'create'}" class="px-3 inline-block py-2 rounded bg-gray-200 hover:bg-gray-200/60 mt-2"
+                                    >
                                         Create
-                                    </button>
+                                    </router-link>
                                 </td>
                             </tr>
                         </tbody>
@@ -113,12 +116,39 @@
             </div>
         </div>
     </div>
+    <Transition name="alert">
+        <AlertBoxVue title="Delete Blog" v-if="alertBox.show" :show="alertBox.show" @on-close="alertBox.show = false">
+            <template v-slot:icon>
+                <div class="w-10 h-10 mt-7 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </div>
+            </template>
+            <template v-slot:content>
+                <p class="p-2 text-center text-red-400">Are you sure?</p>
+            </template>
+            <template v-slot:footer>
+                <div class="flex items-center justify-center my-2 text-sm pt-3">
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]"
+                        @click="alertBox.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 bg-red-500 hover:bg-red-300 text-white"
+                        @click="postdelete">Delete</button>
+                </div>
+            </template>
+        </AlertBoxVue>
+    </Transition>
 </template>
 <script setup>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { calculateStatus } from '../../js/blogs';
 import ProgressBar from '../lightui/ProgressBar.vue';
+import AlertBoxVue from '../lightui/AlertBox.vue';
+import itech from '../../js/itech';
+
 const store = useStore()
 const progress = ref({posts:0,likes:0,comments: 0})
 const inputData = ref({name:'',email: ''})
@@ -128,53 +158,7 @@ store.dispatch('me').then(res=>{
         storeStatus(res.data)
     })
 })
-const editBlog = function(id){
-    store.dispatch('getBlogById', id).then(res => {
-        store.state.modalBox.input.title = res.data.blogs.title
-        store.state.modalBox.input.body = res.data.blogs.body
-        store.state.modalBox.data = {
-            title: 'Update Blog',
-            width: 'w-[50%]',
-            height: 'h-[fit-content]',
-            show: true,
-            okBtn: 'Update',
-            closable: true,
-            cancelBtn: "Delete",
-            animation: 'slideDown',
-            create: false,
-            update: true,
-            refId: id,
-            cancel: function(){
-                if (store.state.modalBox.data.deleting || store.state.modalBox.data.loading) return false
-                store.state.modalBox.data.deleting = true
-                store.state.modalBox.data.show = false
-                store.state.notification.data = {
-                    show: true,
-                    message: 'Deleting Blog...',
-                    done: false
-                }
-                store.dispatch('updateBlog',{id: id, data:{"del_flag":true},delete: true}).then((res) => {
-                    store.state.modalBox.data.deleting = false
-                    store.state.modalBox.data.cancelBtn = null
-                    store.dispatch('getMyBlogs').then((res)=>{
-                        storeStatus(res.data)
-                        itech().wait(2000, function () {
-                            store.state.notification.data = {
-                                show: true,
-                                message: 'Blgs delete success',
-                                done: true,
-                                cls: 'show'
-                            }
-                        }, function () {
-                            store.state.notification.data.cls = 'hide'
-                            store.state.notification.data = {}
-                        })
-                    })
-                })
-            }
-        }
-    })
-}
+
 function storeStatus(data){
     let posts = data.length;
     let likes = 0, comments = 0
@@ -190,5 +174,36 @@ function storeStatus(data){
     inputData.value.name = store.state.profile.data.name
     inputData.value.email = store.state.profile.data.email
     progress.value = calculateStatus(pdata)
+}
+
+const alertBox = ref({
+    show: false
+})
+const target = ref({id: 0})
+const alert = function(id){
+    target.value.id = id
+    alertBox.value.show = true
+}
+const postdelete = function(){
+    store.state.notification.data = {
+        show: true,
+        message: 'Deleting Blog...',
+        done: false
+    }
+    alertBox.value.show = false
+    store.dispatch('deleteBlog',target.value.id).then((res)=>{
+        itech().wait(4000, function () {
+            store.state.notification.data = {
+                show: true,
+                message: "Blog delete success",
+                done: true,
+                cls: 'show'
+            }
+        }, function () {
+            store.state.notification.data.cls = 'hide'
+            store.state.notification.data = {}
+        })
+        router.push({name: 'top'})
+    })
 }
 </script>
