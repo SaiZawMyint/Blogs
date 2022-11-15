@@ -141,18 +141,19 @@ router.beforeEach((to,from,next)=>{
 
 })
 
-async function normalize(to,from,next){
-    
+async function normalize(to,from){
     if(from.name == 'login' || from.name == 'registeration') 
         store.state.loadingScreen.data.show = true
     else 
         store.state.loadingBar.data.show = true
 
     if(to.name != 'login' && to.name != 'registeration'){
-        return Promise.all([
-            store.dispatch('currentUser'),
-            store.dispatch('hasUnseen')
-        ])
+
+        let callData = [store.dispatch('currentUser'),store.dispatch('hasUnseen')]
+        if(to.name == 'edit-post'){
+            callData.push(store.dispatch('getBlogById',to.params.id))
+        }
+        return Promise.all(callData)
         .finally(()=>{
             if (to.meta) {
                 if ('view' in to.meta) {

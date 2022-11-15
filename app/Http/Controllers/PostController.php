@@ -74,7 +74,7 @@ class PostController extends Controller
     }
 
     public function updateBlog(Request $request,$id){
-        $upd = $this->blogservice->update($id,$request->all());
+        $upd = $this->blogservice->update($id,$request);
         return response([
             "ok" => true,
             "code" => 201,
@@ -83,6 +83,8 @@ class PostController extends Controller
             "data" => $upd['data']
         ]);
     }
+
+    
 
     public function searchBlog(Request $request){
         if(array_key_exists('s',$request->all())){

@@ -50,13 +50,13 @@
         </div>
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3">
-                <Template title="Create Your Blog" :autosave="true" @module="cmsModule" :cms-data="cmsModuleData"></Template>
+                <Template title="Create Your Blog" :autosave="true" @module="cmsModule" :cms-data="inputData.data"></Template>
             </div>
         </div>
 
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
-                <button class="px-2 py-1 btn rounded-lg" @click="renderPreview">Create</button>
+                <button class="px-2 py-1 btn rounded-lg" @click="renderPreview">{{options}}</button>
             </div>
         </div>
     </div>
@@ -77,12 +77,13 @@
     </Transition>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, toRef } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
 import defaultProps from '../../js/app.properties'
+
 import {
   Listbox,
   ListboxButton,
@@ -94,6 +95,10 @@ const alertBox = ref({
     show: false
 })
 const props = defineProps({
+    id: {
+        type: Number,
+        default: 0
+    },
     data: {
         type: Object,
         default: {
@@ -103,20 +108,21 @@ const props = defineProps({
             body: '',
             data: []
         }
+    },
+    options: {
+        type: String,
+        default: 'Create'
     }
 })
-
 const type = defaultProps
 const selectedType = ref(type[0])
-
 const router = useRouter()
 const store = useStore()
 const error = ref()
-const inputData = ref(props.data) //props.jsonData
-
+const inputData = toRef(props, 'data') //props.jsonData
 const preview = ref()
 const cmsData = ref();
-const cmsModuleData = ref(inputData.value.data) //
+
 const cmsModule = function(data){
     inputData.value.data = Object.assign([],data.data)
     cmsData.value = data.template
@@ -136,16 +142,22 @@ const startUpload = function(){
     if (loading.value) return false
     loading.value = true
 
-    let filename = itech().createRandomName(store.state.user.data.name);
+    let filename = props.data.body == '' ? itech().createRandomName(store.state.user.data.name):props.data.body;
     inputData.value.type = selectedType.value.id
     inputData.value.body = filename
     
+    const message = props.options == "Create" ? "Creating blog...":
+                    props.options == "Update" ? "Updating blog...":
+                    "Processing..."
+
     store.state.notification.data = {
         show: true,
-        message: 'Creating blog...',
+        message: message,
         done: false
     }
-    store.dispatch('createBlog',inputData.value).then(res=>{
+    let request = (props.id == 0)?inputData.value:{id: props.id,data: inputData.value}
+    let requetURL = (props.id == 0)?'createBlog':'updateBlog'
+    store.dispatch(requetURL,request).then(res=>{
         if(res.ok){
             loading.value = false
             if (router.currentRoute.value.name != 'home') {

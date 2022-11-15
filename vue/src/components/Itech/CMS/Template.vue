@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import {  onMounted, ref } from 'vue';
+import {  onMounted, ref, toRef, watch, watchEffect } from 'vue';
 import { defineAsyncComponent, markRaw } from 'vue';
 import itech from '../../../js/itech.js'
 const cmsModules = ref([])
@@ -276,12 +276,13 @@ const changes = function(data,index){
     }
 }
 
-const emits = defineEmits(['module'])
+const emits = defineEmits(['module','changes'])
 const save = function(){
     saveStatus.value = false
     let template = itech().cms().wrappedTemplate(cmsModules.value)
     emits('module',{template:template, data: cmsModuleData.value})
 }
+const data = ref(props.cmsData)
 const loadFromData = function(data= new Array()){
     data.forEach((d)=>{
         if('editor' in d){
@@ -298,6 +299,7 @@ const loadFromData = function(data= new Array()){
         }
     })
 }
+
 onMounted(()=>{
     loadFromData(props.cmsData)
 })

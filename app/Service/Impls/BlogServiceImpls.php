@@ -6,6 +6,7 @@ use App\Models\Blogs;
 use App\Models\User;
 use App\Service\BlogService;
 use App\Service\ReactionService;
+use App\Utils\FileUtils;
 use Illuminate\Support\Facades\Storage;
 
 class BlogServiceImpls implements BlogService{
@@ -38,13 +39,20 @@ class BlogServiceImpls implements BlogService{
         $filename = $blogs->body .'.json';
 
         $path = storage_path('app/public/blogs')."/${filename}";
-        $json = json_decode(file_get_contents($path),true);
+        
+        if(file_exists($path)){
+
+        }
+        
+        $json = file_exists($path) ? json_decode(file_get_contents($path),true):[];
 
         return $this->reponseData([$blogs],$json)[0];
     }
     public function create($data){
         $blog = $this->blogDao->create($data->only('title','type','description','body'));
-        Storage::disk('blogs')->put($data['body'].'.json', json_encode($data['data']));
+
+        FileUtils::createDiskFile($data['body'].'.json',json_encode($data['data']));
+
         return [
             'ok' => true,
             'message' => 'Create blogs success!',
@@ -53,10 +61,12 @@ class BlogServiceImpls implements BlogService{
         ];
     }
     public function update($id,$data){
-        $data = $this->blogDao->update($id,$data);
+        $blog = $this->blogDao->update($id,$data->only('title','type','description','body'));
+        FileUtils::replaceDiskFile($data['body'].'.json',json_encode($data['data']));
         return [
             "data"=>$data['data'],
-            "message"=>$data['message']
+            "message"=>$data['message'],
+            "data"=>$blog
         ];
     }
     public function delete($id){
@@ -70,7 +80,7 @@ class BlogServiceImpls implements BlogService{
                 'blogs'=>$blog,
                 'likes'=>$this->reactionservice->get($blog->id,'like'),
                 'comments'=>$this->reactionservice->get($blog->id,'comment'),
-                'postData'=> count($extraData) > 0 ? $extraData : null
+                'postData'=> count($extraData) > 0 ? $extraData : []
             ]);
         }
         return $data;
