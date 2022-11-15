@@ -9,7 +9,7 @@
                     <input v-model="inputData.title"
                         class="appearance-none block w-full bg-white-100 text-gray-800 border rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white"
                         id="grid-tile" type="text" placeholder="Title">
-                    <Listbox v-model="inputData.type">
+                    <Listbox v-model="selectedType">
                         <div class="relative mx-2">
                             <ListboxButton
                                 class="relative w-full cursor-pointer rounded-lg bg-white p-1 text-left border-2 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -21,15 +21,15 @@
                                 leave-from-class="opacity-100" leave-to-class="opacity-0">
                                 <ListboxOptions
                                     class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                    <ListboxOption v-slot="{ active, selected }" v-for="person in type"
-                                        class="overflow-x-hidden w-auto" :key="person.id" :value="person" as="template">
+                                    <ListboxOption v-slot="{ active }" v-for="t in type"
+                                        class="overflow-x-hidden w-auto" :key="t.id" :value="t" as="template">
                                         <li :class="[
                                             active ? 'bg-green-100 text-amber-900' : 'text-gray-900',
                                             'relative cursor-pointer select-none flex items-center justify-center text-green-dark',
                                             ]">
                                             <div class="py-1">
                                                 <div class="w-6 h-6 flex items-center justify-center rounded-full"
-                                                    v-html="person.icon">
+                                                    v-html="t.icon">
                                                 </div>
                                             </div>
                                         </li>
@@ -56,7 +56,7 @@
 
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
-                <button class="px-2 py-1 btn rounded-lg" @click="renderPreview">{{options}}</button>
+                <button class="px-2 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
             </div>
         </div>
     </div>
@@ -70,7 +70,8 @@
             <template v-slot:footer>
                 <div class="flex items-center justify-center my-2 text-sm pt-3">
                     <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="alertBox.show = false">Cancel</button>
-                    <button class="px-3 py-2 rounded mx-2 btn text-white" @click="startUpload">Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed" v-if="rule.disabled">Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white" v-else @click="startUpload">Upload</button>
                 </div>
             </template>
         </AlertBox>
@@ -115,13 +116,17 @@ const props = defineProps({
     }
 })
 const type = defaultProps
-const selectedType = ref(type[0])
+const selectedType = ref(type[props.data.type])
 const router = useRouter()
 const store = useStore()
 const error = ref()
 const inputData = toRef(props, 'data') //props.jsonData
 const preview = ref()
 const cmsData = ref();
+
+const rule = ref({
+    disabled: false
+})
 
 const cmsModule = function(data){
     inputData.value.data = Object.assign([],data.data)
@@ -131,25 +136,26 @@ const cmsModule = function(data){
 const renderPreview = function(){
     let blogtypeicon = selectedType.value.icon
     let title = inputData.value.title.trim().length == 0 ? `<span class='text-red-400'>Please insert title</span>`: inputData.value.title
+    inputData.value.type = selectedType.value.id
     let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
+    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
     preview.value = template
     alertBox.value.show = true
 }
 
 const loading = ref(false)
+
 const startUpload = function(){
     if (loading.value) return false
     loading.value = true
-
     let filename = props.data.body == '' ? itech().createRandomName(store.state.user.data.name):props.data.body;
     inputData.value.type = selectedType.value.id
     inputData.value.body = filename
-    
+    alertBox.value.show = false
     const message = props.options == "Create" ? "Creating blog...":
                     props.options == "Update" ? "Updating blog...":
                     "Processing..."
-
     store.state.notification.data = {
         show: true,
         message: message,
@@ -158,9 +164,10 @@ const startUpload = function(){
     let request = (props.id == 0)?inputData.value:{id: props.id,data: inputData.value}
     let requetURL = (props.id == 0)?'createBlog':'updateBlog'
     store.dispatch(requetURL,request).then(res=>{
+        
         if(res.ok){
             loading.value = false
-            if (router.currentRoute.value.name != 'home') {
+            if(props.options == 'Create'){
                 router.push({ name: 'home' })
             }
             itech().wait(2000, function () {
@@ -179,5 +186,4 @@ const startUpload = function(){
         console.log(err)
     })
 }
-
 </script>

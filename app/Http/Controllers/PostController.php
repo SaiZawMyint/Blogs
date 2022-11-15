@@ -78,7 +78,7 @@ class PostController extends Controller
         return response([
             "ok" => true,
             "code" => 201,
-            "message" => $upd['message'],
+            "message" => $upd['data']['message'],
             "uid"=> $this->user->id,
             "data" => $upd['data']
         ]);

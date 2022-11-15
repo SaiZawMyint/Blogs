@@ -2,7 +2,7 @@
     <div class="p-2 relative border-2 m-2 flex overflow-hidden" :class="editorData.view"
         @contextmenu.prevent="editorData.helper.show = !editorData.helper.show"
         @mousedown="editorData.helper.show = false">
-        <div class="image-wrap overflow-hidden min-w-[100px]" :class="editorData.imgFill" ref="contexts">
+        <div class="image-wrap overflow-hidden min-w-[100px] min-h-[250px]" :class="editorData.imgFill" ref="contexts">
             <img alt="" class="w-full" ref="img">
         </div>
         <Transition name="itech-helper-slide-right">
@@ -119,7 +119,7 @@ const changes = function(ele = contexts.value){
     emits('changes', {
         editor: 'image',
         context: `<div class='p-2 flex w-full ${editorData.value.view}'>${html}</div>`,
-        src: props.src,
+        src: img.value.src,
         view: editorData.value.view,
         imgFill: editorData.value.imgFill
     })
@@ -129,9 +129,14 @@ const triggerReplace = function(){
 }
 const replaceImg = function(e){
     const [file] = e.target.files
+    
     if (file) {
-        img.value.src = URL.createObjectURL(file)
-        changes()
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            img.value.src = reader.result
+            changes()
+        };
     }
 }
 

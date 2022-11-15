@@ -108,7 +108,7 @@ const blogs = {
                         commit('deleteBlog', res.data.data)
                         : commit('updateBlog', res.data.data)
                 }
-                return res.data.data
+                return res.data
             })
         },
         like: function({commit},id){

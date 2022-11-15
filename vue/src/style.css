@@ -16,6 +16,7 @@
     --app-light-loading-bar: #0db7df;
     --unseen-noti-color: #F84F31;
     --light-white-color: #dce8ff;
+    --btn-disabled-color: #bcc0c7;
 }
 body, body *{
     font-family: 'system';
@@ -153,4 +154,7 @@ input::-webkit-inner-spin-button {
 }
 .fixed-rl-box{
     height: calc(100% - 85px);
+}
+.btn.disabled{
+    background-color: var(--btn-disabled-color);
 }

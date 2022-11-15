@@ -258,7 +258,7 @@ const changes = function(data,index){
         if(data.context.length > 0){
             cmsModuleData.value[index] = {
                 "editor": "text",
-                "context": data.context
+                "context": data.org
             }
         }
     }else if(data.editor == 'image'){
@@ -280,6 +280,7 @@ const emits = defineEmits(['module','changes'])
 const save = function(){
     saveStatus.value = false
     let template = itech().cms().wrappedTemplate(cmsModules.value)
+    console.log(cmsModuleData.value)
     emits('module',{template:template, data: cmsModuleData.value})
 }
 const data = ref(props.cmsData)
