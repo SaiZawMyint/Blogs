@@ -132,6 +132,14 @@ export function getBlogTypeIcon(id){
     const selectedtype = type[itechObject(type).find(id,'id')]
     return selectedtype ? selectedtype.icon : null
 }
+export function convertDate(date){
+    try{
+        return itechObject().date(date, true).format('dd,mm yy').withTime('h:mm:ss a')
+    }catch(err){
+        
+    }
+}
+
 export default{
     blogsData: blogsData,
     isLiked: isLiked,
@@ -139,5 +147,6 @@ export default{
     getString: getString,
     findDataFromArrayById: findDataFromArrayById,
     commentData: commentData,
-    getBlogTypeIcon: getBlogTypeIcon
+    getBlogTypeIcon: getBlogTypeIcon,
+    convertDate: convertDate
 }

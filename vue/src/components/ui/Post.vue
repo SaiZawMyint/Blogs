@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="w-full p-2">
-                    <p class="ml-2 min-h-[150px]">{{data.description}}</p>
+                    <p class="ml-2 min-h-[150px] max-h-[250px] overflow-y-auto">{{data.description}}</p>
                 </div>
                 <div class="px-4 py-2 flex border-t-2 border-gray-300">
                     <div class="p-2 bg-gray-200 rounded-lg flex mr-2">
@@ -186,9 +186,9 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
 import AlertBoxVue from '../lightui/AlertBox.vue';
-import itechObject from '../../js/itech-objects';
 import itech from '../../js/itech';
 import { getBlogTypeIcon } from '../../js/blogs';
+import {convertDate} from '../../js/blogs'
 
 const store = useStore()
 const route = useRoute()
@@ -277,11 +277,5 @@ const commentdelete = function(){
         console.log(res);
     })
 }
-const convertDate = function(date){
-    try{
-        return itechObject().date(date, true).format('dd,mm yy').withTime('h:mm:ss a')
-    }catch(err){
-        console.log(err)
-    }
-}
+
 </script>

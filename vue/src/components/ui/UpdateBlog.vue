@@ -14,20 +14,4 @@ const data = ref({
         body: store.state.post.data.body,
         data: store.state.post.data.postData,
     })
-
-// const route = useRoute()
-
-
-// const id = route.params.id
-
-// store.dispatch('getBlogById',id).then((res)=>{
-//     data.value = {
-//         title: store.state.post.data.title,
-//         description: store.state.post.data.description,
-//         type: store.state.post.data.type,
-//         body: store.state.post.data.body,
-//         data: store.state.post.data.postData
-//     }
-//     console.log(data.value)
-// })
 </script>

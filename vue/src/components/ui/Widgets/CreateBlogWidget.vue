@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col p-2 max-w-[80%] mx-auto">
+    <div class="flex flex-col p-2 w-full mx-auto">
         <form @submit.prevent="">
             <CreateBlog></CreateBlog>
         </form>

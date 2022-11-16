@@ -8,21 +8,21 @@
             id="te"
             data-placeholder="Enter text here">
         </div>
-        <div v-if="editorData.show" @mousedown.prevent="" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded-br flex items-center justify-end">
+        <div v-if="editorData.show" @mousedown.prevent="" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded flex items-center justify-end">
             <div class="flex items-center justify-end">
                 <button class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
-                    <i class="fa-solid fa-rotate-left text-sm"></i>
+                    <i class="fas fa-palette"></i>
                 </button>
-                <button class="relative ml-1 w-6 h-6 flex rotate-x-180 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
-                    <i class="fa-solid fa-rotate-right text-sm"></i>
-                </button>
-                <button class="ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="">
+                <!-- <button class="relative ml-1 w-6 h-6 flex rotate-x-180 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
+                    <i class="fa-solid fa-border-none"></i>
+                </button> -->
+                <!-- <button class="ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                     </svg>
-                </button>
+                </button> -->
                 <button class="m-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="deleteHandler" @mousedown.prevent="">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         class="w-4 h-4">
@@ -71,8 +71,9 @@ const contextMenuHaldler = function(){
 const deleteHandler = function(){
     emits('delete')
 }
+
 const updateText = function(){
-    let data = {
+    let data = { 
         classes: "p-2 te",
         styles: ""
     }

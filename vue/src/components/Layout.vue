@@ -1,6 +1,6 @@
 <template>
     <div class="fixed p-3 w-full backdrop-blur-sm bg-gray-200/30 header">
-        <div class="w-[80%] flex items-center justify-between mx-auto">
+        <div class="w-[90%] flex items-center justify-between mx-auto">
             <div class="w-[fit-content] h-full flex items-center">
                 <Transition name="slide-left">
                     <router-link :to="store.state.page.history.route"

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col p-2 max-w-[600px] mx-auto">
+    <div class="flex flex-col p-2 max-w-[600px] w-full mx-auto">
         <div v-for="data in store.state.blogs.data"
             class="border-2 border-gray-300 rounded-lg m-2 shadow flex flex-col overflow-hidden">
             <div class="p-2 border-b-2 border-gray-300 flex items-center justify-between">
