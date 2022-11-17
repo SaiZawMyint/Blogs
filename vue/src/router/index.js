@@ -7,7 +7,10 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue';
 import Registeration from '../views/Registeration.vue';
 import Post from '../components/ui/Post.vue'
-import NotFound from '../components/ui/NotFound.vue'
+//unbond page
+import NotFound from '../components/ui/Unbond/NotFound.vue'
+import PageBoken from '../components/ui/Unbond/PageBroken.vue'
+
 import MessageLayout from '../components/ui/MessageLayout.vue';
 import NotificationLayout from '../components/ui/NotificationLayout.vue';
 import CreateBlogWidget from '../components/ui/Widgets/CreateBlogWidget.vue'
@@ -43,6 +46,9 @@ const routes = [
             },
             {
                 path: '/:catchAll(.*)',name: '404',component: NotFound, meta: {view: 'normal'}
+            },
+            {
+                path: '/broken',name: 'nopermission',component: PageBoken, meta: {view: 'normal'}
             }
         ]
     },
@@ -124,6 +130,15 @@ router.beforeEach((to,from,next)=>{
                 next()
             });
         }
+        else if(to.name == 'edit-post'||from.name == 'edit-post'){
+            if(!store.state.post.permission){
+                store.state.page.errMessage = "Access denied!"
+                router.push({name: 'nopermission'})
+            }else{
+                routeHistory(to, from)
+                next()
+            }
+        }
         //else
         else {
             routeHistory(to, from)
@@ -142,8 +157,11 @@ async function normalize(to,from){
     if(to.name != 'login' && to.name != 'registeration'){
 
         let callData = [store.dispatch('currentUser'),store.dispatch('hasUnseen')]
-        if(to.name == 'edit-post' || to.name == 'post'){
+        if(to.name == 'post'){
             callData.push(store.dispatch('getBlogById',to.params.id))
+        }
+        if(to.name == 'edit-post'){
+            callData.push(store.dispatch('editionRequest',to.params.id))
         }
         if(to.name == 'search'){
             callData.push(store.dispatch('searchBlogs',store.state.page.search.data))

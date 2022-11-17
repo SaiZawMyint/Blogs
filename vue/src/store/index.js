@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
 import axiosClient from '../axios'
-import {blogsData, clearAllFromStore, commentData, findDataFromArrayById, isLiked} from '../js/blogs.js'
+import {blogsData, blog_data, clearAllFromStore, commentData, findDataFromArrayById, isLiked} from '../js/blogs.js'
 import router from '../router'
 
 
@@ -178,13 +178,20 @@ const post = {
             description: '',
             user_id: 0,
             type: 0
-        }
+        },
+        permission: false
     }),
     actions: {
         getBlogById({commit},id){
             return axiosClient.get(`/blogs/${id}`).then((res)=>{
-                console.log(res.data)
                 if(res.data.ok) commit('postdata',res.data)
+                return res.data
+            })
+        },
+        editionRequest({commit},id){
+            return axiosClient.get(`/blogs/${id}/edit`).then((res)=>{
+                if(res.data.ok) commit('postdata',res.data)
+                else commit('permissionLock')
                 return res.data
             })
         },
@@ -228,7 +235,11 @@ const post = {
             if('postData' in data.data){
                 state.data.postData = data.data.postData
             }
-            console.log(state.data)
+            state.permission = true
+        },
+        permissionLock: (state)=>{
+            state.data = blog_data
+            state.permission = false
         },
         like: (state,data)=>{
             state.data.isliked = isLiked(data.uid,data.data)
@@ -259,7 +270,8 @@ const page ={
             data:{},
             route:{}
         },
-        view: 'lg:w-[60%] md:w-[100%] sm:w-[100%]'
+        view: 'lg:w-[60%] md:w-[100%] sm:w-[100%]',
+        errMessage: 'Page Broken'
     }),
     actions: {},
     mutations: {}

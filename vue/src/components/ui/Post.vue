@@ -113,10 +113,10 @@
                     <i class="text-sm text-gray-300">No comments here</i>
                 </div>
             </div>
-            <div class="flex items-center">
-                <input v-model="inputData.comment" type="text" placeholder="Write comment here..."
+            <form @submit.prevent="comment(data.id)" class="flex items-center">
+                <input v-model="inputData.comment" name="comment" type="text" placeholder="Write comment here..."
                     class="w-[70%] h-full appearence-none px-3 py-2 rounded-lg border-2">
-                <button @click="comment(data.id)"
+                <button type="submit"
                     class="w-[35px] h-[35px]  mx-3 flex items-center justify-center rounded-full bg-[#0000004c] hover:bg-[#0000002b]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
@@ -124,7 +124,7 @@
                             d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                     </svg>
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 

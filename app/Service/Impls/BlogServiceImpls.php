@@ -2,6 +2,7 @@
 namespace App\Service\Impls;
 
 use App\DAO\BlogDAO;
+use App\DAO\UserDAO;
 use App\Models\Blogs;
 use App\Models\User;
 use App\Service\BlogService;
@@ -14,13 +15,16 @@ class BlogServiceImpls implements BlogService{
 
     private ReactionService $reactionservice;
     private BlogDAO $blogDao;
+    private UserDAO $userDao;
+    
     private $user;
 
-    public function __construct(BlogDAO $bdao,ReactionService $service)
+    public function __construct(BlogDAO $bdao,ReactionService $service, UserDAO $userdao)
     {
         $this->reactionservice = $service;
         $this->user = auth('sanctum')->user();
         $this->blogDao= $bdao;
+        $this->userDao = $userdao;
     }
 
     public function getAll(){
@@ -56,6 +60,15 @@ class BlogServiceImpls implements BlogService{
             'data' => $blog,
             'code' => 200
         ];
+    }
+    public function editRequest($id)
+    {
+        $blog = $this->userDao->getUserBlogById($id);
+        if($blog){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function update($id,$data){
         $blog = $this->blogDao->update($id,$data->only('title','type','description','body'));

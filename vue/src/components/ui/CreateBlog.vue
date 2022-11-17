@@ -20,7 +20,7 @@
                             <transition leave-active-class="transition duration-100 ease-in"
                                 leave-from-class="opacity-100" leave-to-class="opacity-0">
                                 <ListboxOptions
-                                    class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                    class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                     <ListboxOption v-slot="{ active }" v-for="t in type"
                                         class="overflow-x-hidden w-auto" :key="t.id" :value="t" as="template">
                                         <li :class="[
@@ -39,30 +39,80 @@
                         </div>
                     </Listbox>
                 </div>
-                <p class="text-red-400 text-sm" v-if="error!=null && error.title">{{error.title}}</p>
             </div>
-            <div class="w-full px-3 my-2 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" for="grid-first-name">
-                    Description
-                </label>
-                <textarea v-model="inputData.description" class="w-full text-gray-800 border-2 outline-none rounded p-2" cols="30" rows="5" placeholder="Write your description"></textarea>
+            <div class="w-full px-3 my-2 md:mb-0 flex justify-between">
+                <div class="w-[48%] border-2 rounded">
+                    <Transition name="fade" v-if="!cvchoose.is">
+                        <AnimateForm title="Choose Photo" :btn-show="false" width="w-[100%]" height="h-[300px]"
+                            top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
+                            bottom="bottom-view" :logo="{
+                            show: false
+                        }">
+                            <template v-slot:right>
+                                <div class="w-full mx-auto">
+                                    <img src="@img/blog-gallery.svg" alt="">
+                                </div>
+                            </template>
+                            <template v-slot:form>
+                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto"
+                                    @click="coverPhoto.click()">Choose Photo</button>
+                            </template>
+                        </AnimateForm>
+                    </Transition>
+                    <Transition name="fade" v-else>
+                        <AnimateForm :btn-show="false" width="w-[100%]" height="h-[300px]"
+                            top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
+                            bottom="bottom-view" :center="cvchoose.class" :logo="{
+                            show: false
+                        }" v-if="cvchoose.second">
+                            <template v-slot:center>
+                                <div class="h-full mx-auto">
+                                    <img ref="cv" src="@img/blog-gallery.svg" alt="" class="h-full">
+                                </div>
+                            </template>
+                            <template v-slot:form>
+                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto flex items-center justify-center" @click="coverPhoto.click()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                    </svg>
+                                    <span class="ml-2">Change Photo</span>
+                                </button>
+                            </template>
+                        </AnimateForm>
+                    </Transition>
+                    <input ref="coverPhoto" @change="selectedCP" type="file" hidden>
+                </div>
+                <div class="p-2 w-[50%] border-2 rounded overflow-hidden">
+                    <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2"
+                        for="grid-first-name">
+                        Description
+                    </label>
+                    <textarea v-model="inputData.description"
+                        class="w-full text-gray-800 outline-none h-full rounded p-2" cols="30" rows="5"
+                        placeholder="Write your description"></textarea>
+                </div>
             </div>
         </div>
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3">
-                <Template title="Create Your Blog" :autosave="true" @module="cmsModule" :cms-data="inputData.data"></Template>
+                <Template title="Create Your Blog" :autosave="true" @module="cmsModule"
+                    :cms-data="inputData.data"></Template>
             </div>
         </div>
 
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
-                <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2" @click="alertDelete">Delete</button>
+                <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2"
+                    @click="alertDelete">Delete</button>
                 <button class="px-3 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
             </div>
         </div>
     </div>
     <Transition name="alert">
-        <AlertBox title="Preview" width="50%" v-if="alertBox.show" :show="alertBox.show" @on-close="alertBox.show = false">
+        <AlertBox title="Preview" width="50%" v-if="alertBox.show" :show="alertBox.show"
+            @on-close="alertBox.show = false">
             <template v-slot:content>
                 <div class="flex flex-wrap mb-6 mx-auto overflow-auto">
                     <div class="w-full md:w-1/1 px-3" v-html="preview"></div>
@@ -70,14 +120,17 @@
             </template>
             <template v-slot:footer>
                 <div class="flex items-center justify-center my-2 text-sm pt-3">
-                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]" @click="alertBox.show = false">Cancel</button>
-                    <button class="px-3 py-2 rounded mx-2 btn text-white"  v-if="!rule.disabled" @click="startUpload">Upload</button>
-                    <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed" v-else>Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]"
+                        @click="alertBox.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white" v-if="!rule.disabled"
+                        @click="startUpload">Upload</button>
+                    <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed"
+                        v-else>Upload</button>
                 </div>
             </template>
         </AlertBox>
     </Transition>
-     <Transition name="alert">
+    <Transition name="alert">
         <AlertBoxVue title="Delete Blog" v-if="deleteBlog.show" :show="deleteBlog.show"
             @on-close="deleteBlog.show = false">
             <template v-slot:icon>
@@ -110,7 +163,9 @@ import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
 import defaultProps from '../../js/app.properties'
-import AlertBoxVue from '../lightui/AlertBox.vue';
+import AlertBoxVue from '../lightui/AlertBox.vue'; 
+import itechObject from '../../js/itech-objects'
+
 import {
   Listbox,
   ListboxButton,
@@ -118,6 +173,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import Template from '../Itech/CMS/Template.vue';
+import AnimateForm from '../Itech/AnimateForm.vue';
 const alertBox = ref({
     show: false
 })
@@ -145,10 +201,12 @@ const type = defaultProps
 const selectedType = ref(type[props.data.type])
 const router = useRouter()
 const store = useStore()
-const error = ref()
 const inputData = toRef(props, 'data') //props.jsonData
 const preview = ref()
 const cmsData = ref();
+
+const coverPhoto = ref();
+
 const deleteBlog = ref({
     show: false
 })
@@ -171,6 +229,32 @@ const renderPreview = function(){
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
     preview.value = template
     alertBox.value.show = true
+}
+
+const cv = ref()
+const cvchoose = ref({
+    is: false,
+    class: ['w-[100%]','min-w-[400px]'],
+    second: true
+})
+
+const selectedCP = function(e){
+    const [file] = e.target.files
+    if (file) {
+        
+        itech().wait(10,()=>{
+            cvchoose.value.second = false
+        },()=>{
+            cvchoose.value.second = true
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                cv.value.src = (reader.result)
+            };
+            cvchoose.value.is = true
+            
+        })
+    }
 }
 
 const loading = ref(false)
@@ -242,3 +326,22 @@ const confirmDelete = ()=>{
     })
 }
 </script>
+<style>
+.top-view{
+    top: 1rem;
+}
+.left-view{
+    
+    left: 0;
+}
+.right-view{
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+.bottom-view{
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+</style>

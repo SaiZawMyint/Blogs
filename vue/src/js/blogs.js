@@ -140,13 +140,28 @@ export function convertDate(date){
     }
 }
 
+export function seprateNoti(data = []){
+    let unseen =0, seen =0;
+    data.forEach(d=>{
+        if(d.seen){
+            seen ++
+        }else{
+            unseen ++
+        }
+    })
+    return {
+        unseen, seen
+    }
+}
+
 export default{
-    blogsData: blogsData,
-    isLiked: isLiked,
-    blog_data: blog_data,
-    getString: getString,
-    findDataFromArrayById: findDataFromArrayById,
-    commentData: commentData,
-    getBlogTypeIcon: getBlogTypeIcon,
-    convertDate: convertDate
+    blogsData,
+    isLiked,
+    blog_data,
+    getString,
+    findDataFromArrayById,
+    commentData,
+    getBlogTypeIcon,
+    convertDate,
+    seprateNoti: seprateNoti
 }

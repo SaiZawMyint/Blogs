@@ -87,6 +87,10 @@ input:focus{
     background-color: var(--app-green-classic);
     color: var(--light-white-color);
 }
+.noti-color-bg.seen{
+    background-color: var(--btn-disabled-color);
+    color: var(--app-green-dark);
+}
 .loading-bar{
     position: fixed;
     top: 0;

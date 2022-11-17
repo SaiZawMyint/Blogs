@@ -21,7 +21,13 @@ class User extends Authenticatable
         return $this->hasMany(Blogs::class);
     }
 
-    
+    public function getAllBlog(){
+        return $this->blogs()->orderBy('created_at','desc');
+    }
+
+    public function getBlogById($id){
+        return $this->blogs()->where('id','=',$id)->orderBy('created_at','desc')->first();
+    }
 
     /**
      * The attributes that are mass assignable.

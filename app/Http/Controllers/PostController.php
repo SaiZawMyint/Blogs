@@ -73,6 +73,21 @@ class PostController extends Controller
         ]);
     }
 
+    public function editBlogRequest($id){
+        $getRequest = $this->blogservice->editRequest($id);
+        if($getRequest){
+            return $this->getBlog($id);
+        }else{
+            return response([
+                "ok"=>false,
+                "code"=>403,
+                "message"=>"You doesn't have permission to edit this blog",
+                "data"=>[]
+            ]);
+        }
+        
+    }
+
     public function updateBlog(Request $request,$id){
         $upd = $this->blogservice->update($id,$request);
         return response([

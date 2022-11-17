@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/blogs/{id}',[PostController::class,'updateBlog']);
     Route::delete('/blogs/{id}',[PostController::class, 'deleteBlog']);
 
+    Route::get('/blogs/{id}/edit',[PostController::class, 'editBlogRequest']);
+
     //reactions
     Route::post('/blogs/{id}/comment',[ReactionController::class,'comment']);
     Route::get('/blogs/{id}/comment',[ReactionController::class,'getComments']);

@@ -1,6 +1,6 @@
 
 $animator: 'left';
-$directions: 'top','left','right','bottom';
+$directions: 'top','left','right','bottom','center';
 $units: px;
 body{
     overflow-x: hidden;
@@ -19,7 +19,9 @@ body{
     @if $dir == bottom{
         $result: 'top'
     }
-    
+    @if $dir == center{
+        $result: 'center'
+    }
     @return $result;
 }
 
@@ -33,7 +35,44 @@ body{
 
 .animate-block{
     position: absolute;
-    
+}
+.itech-center-blog{
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+}
+
+@for $i from 1 through 50{
+    .itech-a\:center-#{$i}{
+        animation: centerAnimation #{millisecond($i)}s 1 cubic-bezier(0.075, 0.82, 0.165, 1);
+        &.reverse{
+            animation: reverseCenter #{millisecond($i)}s 1 cubic-bezier(0.075, 0.82, 0.165, 1);;
+        }
+        &.reloadAnimation {
+            animation: reloadAnimation #{millisecond($i)}s 1 cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+    }
+}
+@keyframes centerAnimation {
+    from{
+        transform: translate(-50%,-50%) scale(0) ;
+        opacity: 0;
+    }
+}
+@keyframes reloadAnimation {
+    from{
+        transform: translate(-50%,-50%) scale(0) ;
+        opacity: 0;
+    }
+}
+@keyframes reverseCenter {
+    from{
+        transform: scale(1) translate(-50%,-50%);
+    }
+    to{
+        transform: scale(0) translate(-50%,-50%);
+    }
 }
 
 @each $direction in $directions {
@@ -98,8 +137,4 @@ body{
         }
     }
 }
-@keyframes shake {
-    from{
-        transform: rotate(45deg) scale(1);
-    }
-}
+
