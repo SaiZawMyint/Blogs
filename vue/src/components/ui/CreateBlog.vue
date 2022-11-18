@@ -54,8 +54,12 @@
                                 </div>
                             </template>
                             <template v-slot:form>
-                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto"
-                                    @click="coverPhoto.click()">Choose Photo</button>
+                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto flex items-center justify-center" @click="coverPhoto.click()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                        </svg>
+                                    <span class="ml-2 truncate">Choose Photo</span>
+                                </button>
                             </template>
                         </AnimateForm>
                     </Transition>
@@ -67,17 +71,15 @@
                         }" v-if="cvchoose.second">
                             <template v-slot:center>
                                 <div class="h-full mx-auto">
-                                    <img ref="cv" src="@img/blog-gallery.svg" alt="" class="h-full">
+                                    <img ref="cv" src="@img/blog-gallery.svg" alt="" class="w-full">
                                 </div>
                             </template>
                             <template v-slot:form>
                                 <button class="btn rounded-lg shadow px-3 py-2 mx-auto flex items-center justify-center" @click="coverPhoto.click()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                    </svg>
-                                    <span class="ml-2">Change Photo</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                      </svg>
+                                    <span class="ml-2 truncate">Change Photo</span>
                                 </button>
                             </template>
                         </AnimateForm>
@@ -94,15 +96,43 @@
                         placeholder="Write your description"></textarea>
                 </div>
             </div>
+            <div class="w-full px-3 my-2 md:mb-0 flex flex-col mt-4">
+                <div class="rounded-lg border-2 p-3">
+                    <h3>Outlines</h3>
+                    <div class="w-full flex items-center">
+                        <input type="text" class="px-2 py-2 rounded-lg border-2">
+                        <button class="btn px-1 py-2 rounded-lg shadow ml-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                              <span class="pr-2">Add</span>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 ml-2 hover:bg-gray-200/40 hover:shadow hover:border-2">
+                            <i class="fa-solid fa-question"></i>
+                        </button>
+                    </div>
+                    <div class="rounded-lg my-2 float-left">
+                        <button class="rounded-lg float-left m-1 border-2 px-1 py-1 w-[fit-content] flex items-center hover:bg-gray-100/20 hover:shadow hover:border-2"
+                        v-for="outline of inputData.outlines">
+                            <i class="fa-solid fa-link w-8 h-8 bg-gray-200/30 rounded-full flex items-center justify-center"></i>
+                            <span class="px-2 max-w-[200px] w-[120px] text-left">{{outline}}</span>
+                            <i class="fa-solid fa-xmark w-6 h-6 text-md text-red-600 bg-gray-200/30 rounded-full flex items-center justify-center hover:bg-gray-100/20 hover:shadow hover:border-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="flex flex-wrap mb-6">
             <div class="w-full md:w-1/1 px-3">
                 <Template title="Create Your Blog" :autosave="true" @module="cmsModule"
-                    :cms-data="inputData.data"></Template>
+                    :cms-data="inputData.data"
+                    height="h-[600px]"
+                    ></Template>
             </div>
         </div>
 
-        <div class="flex flex-wrap mb-6">
+        <div class="flex flex-wrap mb-6 sticky bottom-0 py-2 bg-gray-100/30 backdrop-blur-sm rounded shadow">
             <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
                 <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2"
                     @click="alertDelete">Delete</button>
@@ -164,7 +194,6 @@ import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
 import defaultProps from '../../js/app.properties'
 import AlertBoxVue from '../lightui/AlertBox.vue'; 
-import itechObject from '../../js/itech-objects'
 
 import {
   Listbox,
@@ -189,7 +218,14 @@ const props = defineProps({
             description: '',
             type: 0,
             body: '',
-            data: []
+            data: [],
+            cover: {
+                name: '',
+                data: ''
+            },
+            outlines: [
+                'test','test','test','test','test','test','test','test','test','test'
+            ]
         }
     },
     options: {
@@ -225,8 +261,9 @@ const renderPreview = function(){
     let title = inputData.value.title.trim().length == 0 ? `<span class='text-red-400'>Please insert title</span>`: inputData.value.title
     inputData.value.type = selectedType.value.id
     let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
-    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value 
+    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
+    console.log(inputData.value)
     preview.value = template
     alertBox.value.show = true
 }
@@ -241,7 +278,6 @@ const cvchoose = ref({
 const selectedCP = function(e){
     const [file] = e.target.files
     if (file) {
-        
         itech().wait(10,()=>{
             cvchoose.value.second = false
         },()=>{
@@ -250,9 +286,10 @@ const selectedCP = function(e){
             reader.readAsDataURL(file);
             reader.onload = function () {
                 cv.value.src = (reader.result)
+                inputData.value.cover.name = itech().createRandomName('blog-cv',"."+itech().file(file).extension())
+                inputData.value.cover.data = reader.result
             };
             cvchoose.value.is = true
-            
         })
     }
 }

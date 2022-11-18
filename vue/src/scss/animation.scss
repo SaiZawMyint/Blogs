@@ -38,9 +38,9 @@ body{
 }
 .itech-center-blog{
     position: absolute;
-    top: 0%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) scale(1);
+    transform: translate(-50%,-50%) scale(1);
 }
 
 @for $i from 1 through 50{

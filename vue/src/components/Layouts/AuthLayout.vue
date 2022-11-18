@@ -9,6 +9,6 @@
 </template>
 <script setup>
 import { useStore } from 'vuex';
-import LoadingScreen from './lightui/LoadingScreen.vue';
+import LoadingScreen from '../lightui/LoadingScreen.vue';
 const store = useStore()
 </script>

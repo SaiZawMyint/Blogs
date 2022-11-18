@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full rounded-lg flex flex-col justify-start overflow-hidden shadow">
+    <div :class="width,height" class="w-full rounded-lg flex flex-col justify-start overflow-hidden shadow pb-2">
         <div class="flex flex-col">
             <div class="px-2 py-1 bg-gray-300 flex items-center justify-between">
                 <span class="font-bold text-sm">{{title}}</span>
@@ -133,7 +133,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-full h-[400px] overflow-auto" id="itech-cms-target">
+        <div class="w-full h-full overflow-auto" id="itech-cms-target">
             <component v-for="(component, index) in components" :key="index" :is="component"
                 @delete="deleteCurrent(index)" v-bind="imgProps[index],textPorps[index]"
                 @changes="changes($event,index)" />
@@ -174,6 +174,14 @@ const props = defineProps({
     cmsData: {
         type: Array,
         default: []
+    },
+    width: {
+        type: String,
+        default: 'w-full'
+    },
+    height: {
+        type: String,
+        default: 'h-[500px]'
     }
 })
 const components = ref([]);

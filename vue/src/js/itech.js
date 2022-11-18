@@ -65,8 +65,18 @@ const itech = function(){
                 }
             }
         },
-        "createRandomName":function(prefix = ''){
-            return  prefix.replaceAll(' ','')+"-"+ (Math.random() + 1).toString(36).substring(2);
+        "createRandomName":function(prefix = '',tailing = ''){
+            return  prefix.replaceAll(' ','')+"-"+ (Math.random() + 1).toString(36).substring(2)+tailing.replaceAll(' ','');
+        },
+        file: function(file){
+            return {
+                extension: function(){
+                    if(file){
+                        let ftype = file.type
+                        return ftype.substring(ftype.indexOf('/')+1, ftype.length)
+                    }
+                }
+            }
         },
         wait: function(time,action,callback){
             let id = null

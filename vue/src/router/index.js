@@ -1,6 +1,6 @@
-import { createRouter,createWebHistory, useRoute } from "vue-router";
-import Layout from '../components/Layout.vue'
-import AuthLayout from '../components/AuthLayout.vue'
+import { createRouter,createWebHistory } from "vue-router";
+import Layout from '../components/Layouts/Layout.vue'
+import AuthLayout from '../components/Layouts/AuthLayout.vue'
 
 import Profile from '../views/Profile.vue'
 import Home from '../views/Home.vue'
@@ -19,7 +19,7 @@ import UpdateBlog from '../components/ui/UpdateBlog.vue'
 import AccountInformation from '../components/AccountInfos/AccountInformation.vue'
 
 import store from "../store";
-import { blog_data, clearAllFromStore, routeHistory } from "../js/blogs";
+import { clearAllFromStore, routeHistory } from "../js/blogs";
 
 const routes = [
     {
