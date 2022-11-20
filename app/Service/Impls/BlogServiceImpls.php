@@ -44,13 +44,26 @@ class BlogServiceImpls implements BlogService{
         $filename = $blogs->body .'.json';
 
         $path = storage_path('app/public/blogs')."/${filename}";
-        
+
+        $cvpath = storage_path('app/public/images') ."/". $blogs->cover;
         $json = file_exists($path) ? json_decode(file_get_contents($path),true):[];
 
-        return $this->reponseData([$blogs],$json)[0];
+        $cvdata = $blogs->cover ? FileUtils::getBase64Imgae($cvpath):'';
+
+        $extraData = [
+            "cover"=>$cvdata,
+            "post"=>$json
+        ];
+
+        return $this->reponseData([$blogs],$extraData)[0];
     }
     public function create($data){
-        $blog = $this->blogDao->create($data->only('title','type','description','body'));
+        if($data['cover'] && !empty($data['cover'])){
+            $filename = $this->generateFileName($data['cover']);
+            FileUtils::createImageFile($filename,$data['cover']);
+            $data['cover'] = $filename;
+        }
+        $blog = $this->blogDao->create($data->only('title','type','description','body','cover','outlines'));
 
         FileUtils::createDiskFile($data['body'].'.json',json_encode($data['data']));
 
@@ -122,5 +135,10 @@ class BlogServiceImpls implements BlogService{
     {
         $blogs = $this->blogDao->search($search);
         return $this->reponseData($blogs);
+    }
+
+    private function generateFileName($base64){
+        $extension = FileUtils::checkFileExtension(FileUtils::getExtension($base64));
+        return FileUtils::randomName(8).'.'.$extension;
     }
 }

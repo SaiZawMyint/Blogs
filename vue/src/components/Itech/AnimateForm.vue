@@ -1,5 +1,5 @@
 <template>
-    <div :class="width,height" class="relative mx-auto overflow-hidden">
+    <div :class="width,height,classes" class="relative mx-auto overflow-hidden">
         <div :class="data,top" class="animate-block itech-a:top-10-full z-10 px-2" v-if="title !=null">
             <h1 class="text-2xl font-bold text-shadow">{{title}}</h1>
         </div>
@@ -93,6 +93,10 @@ const props = defineProps({
     speed: {
         type: Number,
         default: 10
+    },
+    classes:{
+        type:String,
+        default: ''
     }
 })
 const emit = defineEmits(['onNext','onBack']);

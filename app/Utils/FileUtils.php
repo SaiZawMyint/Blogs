@@ -17,4 +17,43 @@ class FileUtils{
     {
         Storage::disk($storagename)->delete($filePath);
     }
+
+    //image creation
+    public static function createImageFile($filenameToSave,$base64,$storagename = 'images'){
+        $base64 = preg_replace('/data:image\/(.*?);base64,/','',$base64);
+        $base64 = str_replace(' ', '+', $base64);
+        Storage::disk($storagename)->put($filenameToSave,base64_decode($base64));
+    }
+
+    public static function checkFileExtension($extension){
+        if(str_contains($extension,'+')){
+            return substr($extension,0,strripos($extension,'+'));
+        }
+        return $extension;
+    }
+
+    public static function getExtension($base64){
+        preg_match("/data:image\/(.*?);/",$base64,$extension);
+        return $extension[1];
+    }
+
+    public static function randomName($length,$prefix =''){
+        // String of all alphanumeric character
+        $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+        return $prefix.''.substr(
+            str_shuffle($str_result),
+            0,
+            $length
+        );
+    }
+
+    public static function getBase64Imgae($path){
+        $extension = substr($path,strrpos($path,'.')+1,strlen($path));
+        $data = file_exists($path) ? 
+        base64_encode(file_get_contents($path)):
+        '';
+        if(strlen($data) > 0) return "data:image/${extension};base64,${data}";
+        return '';
+    }
 }

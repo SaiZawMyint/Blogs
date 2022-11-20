@@ -38,7 +38,9 @@ class BlogDAOImpl implements BlogDAO{
             'body' => $data['body'],
             'type' => $data['type'],
             'description' => $data['description'],
-            'del_flag' => false
+            'del_flag' => false,
+            'cover'=> $data['cover'],
+            'outlines'=>$data['outlines']
         ]);
         return $blog;
     }

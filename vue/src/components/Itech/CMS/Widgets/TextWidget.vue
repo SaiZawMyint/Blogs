@@ -10,9 +10,15 @@
         </div>
         <div v-if="editorData.show" @mousedown.prevent="" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded flex items-center justify-end">
             <div class="flex items-center justify-end">
-                <button class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
+                <button 
+                @click="showOutlines"
+                class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40 hover:shadow">
+                    <i class="fa-solid fa-hashtag text-[.7em]"></i>
+                </button>
+                <button class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40 hover:shadow">
                     <i class="fas fa-palette"></i>
                 </button>
+                
                 <!-- <button class="relative ml-1 w-6 h-6 flex rotate-x-180 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40">
                     <i class="fa-solid fa-border-none"></i>
                 </button> -->
@@ -23,7 +29,7 @@
                             d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                     </svg>
                 </button> -->
-                <button class="m-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40" @click.stop="deleteHandler" @mousedown.prevent="">
+                <button class="m-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40 hover:shadow" @click.stop="deleteHandler" @mousedown.prevent="">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -33,11 +39,11 @@
             </div>
         </div>
     </div>
-    <!-- <input type="text" ref="context"> -->
+    
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRef } from 'vue';
 import itech from '../../../../js/itech';
 
 const props = defineProps({
@@ -47,6 +53,14 @@ const props = defineProps({
     },
     context: {
         type: String
+    },
+    tag: {
+        type: String,
+        default: null
+    },
+    outlines: {
+        type: Array,
+        default: []
     }
 })
 const contexts = ref()
@@ -61,8 +75,11 @@ const editorData = ref({
             size: 1
         },
         allText: ''
-    }
+    },
+    tag: props.tag,
+    outlines: props.outlines
 })
+
 const emits = defineEmits(['contextMenu','delete','changes'])
 const contextMenuHaldler = function(){
     editorData.value.show = !editorData.value.show
@@ -74,18 +91,21 @@ const deleteHandler = function(){
 
 const updateText = function(){
     let data = { 
-        classes: "p-2 te",
-        styles: ""
+        classes: `p-2 te`,
+        styles: "",
+        id: editorData.value.tag
     }
     let html = ``
     let org = ``
     if(contexts.value instanceof HTMLElement){
-        html = itech().cms().generated(contexts.value, data.classes,data.styles)
+        html = itech().cms().generated(contexts.value, data.classes,data.styles,data.id)
         org = contexts.value.innerHTML
     }
-    emits('changes',{editor: 'text',context:html, org: org})
+    emits('changes',{editor: 'text',context:html, org: org, id: data.id})
     editorData.value.show = false
 }
+
+
 onMounted(()=>{
     updateText()
 })

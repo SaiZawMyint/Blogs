@@ -30,14 +30,15 @@
          * @return Index of find
          */
         find: (search,key)=>{
+            
             return iObj.find(search,key)
         },
         /**
          * Add value to object.
          * @param  {any} value 
          */
-        add: (value)=>{
-            return iObj.add(value)
+        add: (value,index)=>{
+            return iObj.add(value,index)
         },
         /**
          * Objects concatation
@@ -529,6 +530,7 @@ class IObject {
                     typeof object == 'object' ? Object.assign({},object) : null
     }
     find(search,key){
+        console.log(search)
         if(this.obj instanceof Array){
             if(key){
                 return this.obj.findIndex(s=> s[key] == search)
@@ -544,8 +546,8 @@ class IObject {
             }else{
                 let found = null
                 for(let k in this.obj){
-                    if(this.obj[k] == search){
-                        found = k
+                    if(k == search){
+                        found = this.obj[k]
                         break
                     }
                 }
@@ -553,14 +555,21 @@ class IObject {
             }
         }
     }
-    add(value) {
+    add(value,index) {
         if (this.obj instanceof Array) { 
-            this.obj.push(value); return this.obj 
+            if(index){
+                return this.obj.splice(index,0,value)
+            }else{
+                this.obj.push(value);
+                return this.obj 
+            }
+            
         }
         else if (this.obj instanceof String) return this.obj.concat(value)
         else if (this.obj instanceof Number) return this.obj += value
         else if (this.obj instanceof Object) return Object.assign(this.obj, value)
     }
+    
     concat(value){
         if (this.obj instanceof Array) { 
             if(!(value instanceof Array)) throw new Error("value must be an array.")

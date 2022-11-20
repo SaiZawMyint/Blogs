@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Service\BlogService;
+use App\Utils\FileUtils;
+use Error;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -140,5 +143,16 @@ class PostController extends Controller
                 'message'=>'Required parameter!'
             ]);
         }
+    }
+
+    public function testImageUpload(Request $request){
+        echo $request['data']['data'];
+        // $filename = "test";
+        // try{
+        //     FileUtils::createImageFile($filename,$request['data']);
+        //     return true;
+        // }catch(Error $e){
+        //     return response(['ok'=>false,'message'=>$e->getMessage()]);
+        // }
     }
 }

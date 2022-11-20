@@ -1,6 +1,6 @@
-import { intersectionWith } from "lodash"
 import store from "../store"
-import defaultProps from './app.properties'
+import {defaultProps} from './app.properties'
+import itech from "./itech"
 import itechObject from './itech-objects'
 
 export function blogsData(id,x){
@@ -78,7 +78,16 @@ export const blog_data = {
     updated_at: "",
     user_id: 0,
     type: 0,
-    desciption: ''
+    desciption: '',
+    outlines: [],
+    cover: {
+        name: '',
+        data: ''
+    },
+    postData:{
+        conver: '',
+        post: ''
+    }
 }
 
 export function findDataFromArrayById(id = 0,data = []){
@@ -128,8 +137,11 @@ export function clearAllFromStore(){
     store.state.userNotification = {data: [],hasUnseen:false}
 }
 export function getBlogTypeIcon(id){
+
     const type = Object.assign([],defaultProps)
+    console.log(type)
     const selectedtype = type[itechObject(type).find(id,'id')]
+    console.log(selectedtype)
     return selectedtype ? selectedtype.icon : null
 }
 export function convertDate(date){
@@ -153,7 +165,16 @@ export function seprateNoti(data = []){
         unseen, seen
     }
 }
-
+export function showNotification(before,after,delay = 1000){
+    itech().wait(delay,()=>{
+        store.state.notification.data = before
+    },()=>{
+        store.state.notification.data = after
+    })
+}
+export function generateOutlineId(outline = {id:0,name: ''}){
+    return outline.name.replaceAll(' ','').concat(`-${outline.id}`)
+}
 export default{
     blogsData,
     isLiked,
@@ -163,5 +184,7 @@ export default{
     commentData,
     getBlogTypeIcon,
     convertDate,
-    seprateNoti: seprateNoti
+    seprateNoti: seprateNoti,
+    showNotification: showNotification,
+    generateOutlineId
 }

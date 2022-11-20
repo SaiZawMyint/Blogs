@@ -118,7 +118,6 @@ body{
     }
 }
 
-
 @each $direction in $directions{
     @for $i from 1 through 50{
         @each $unit in $units{
@@ -134,6 +133,14 @@ body{
                 }
             }
             
+        }
+    }
+}
+@for $i from 1 through 4{
+    .itech-rotate-#{$i * 45}{
+        transition: transform .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+        &:hover{
+            transform: rotate(#{$i * 45}deg);
         }
     }
 }

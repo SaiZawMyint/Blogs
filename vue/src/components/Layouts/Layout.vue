@@ -1,21 +1,9 @@
 <template>
     <Header></Header>
     <div class="content-view pt-[60px]  mx-auto"
-    :class="store.state.page.view">
+    >
         <router-view></router-view>
     </div>
-    <Transition name="slide-up">
-        <ModalBoxVue v-if="store.state.modalBox.data.show">
-            <template v-slot:content>
-                <div class="flex flex-col w-full h-full">
-                    <div class="p-2 border-b-2 border-gray-200 text-left">
-                        <h3 class="text-2xl text-gray-800">{{store.state.modalBox.data.title}}</h3>
-                    </div>
-                    <CreateBlogVue></CreateBlogVue>
-                </div>
-            </template>
-        </ModalBoxVue>
-    </Transition>
     <Transition name="fade">
         <LoadingScreen v-if="store.state.loadingScreen.data.show"></LoadingScreen>
     </Transition>

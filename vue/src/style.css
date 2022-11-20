@@ -157,7 +157,7 @@ input::-webkit-inner-spin-button {
     color: var(--app-green-dark);
 }
 .fixed-rl-box{
-    height: calc(100% - 85px);
+    height: calc(100% - 65px);
 }
 .btn.disabled{
     background-color: var(--btn-disabled-color);
@@ -171,4 +171,7 @@ input::-webkit-inner-spin-button {
 }
 .btn.delete:hover{
     background-color: #f0505059;
+}
+.smooth-shadow{
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.114);
 }

@@ -82,11 +82,20 @@ const props = defineProps({
             view: 'justify-start',
             imgFill: 'w-auto'
         }
+    },
+    tag: {
+        type: String,
+        default: null
+    },
+    outlines: {
+        type: Array,
+        default: []
     }
 })
 const editorData = ref({
     view: props.editor.view,
     imgFill: props.editor.imgFill,
+    id: props.tag,
     helper: {
         show: false
     }
@@ -112,16 +121,18 @@ const centerFit = function(){
 const changes = function(ele = contexts.value){
     let data = {
         classes: `image-wrap ie ${editorData.value.imgFill}`,
-        styles: ""
+        styles: "",
+        id: editorData.value.id
     }
     img.value.classList.add(editorData.value.imgFill)
-    let html = itech().cms().generated(ele, data.classes,data.styles)
+    let html = itech().cms().generated(ele, data.classes,data.styles,data.id)
     emits('changes', {
         editor: 'image',
         context: `<div class='p-2 flex w-full ${editorData.value.view}'>${html}</div>`,
         src: img.value.src,
         view: editorData.value.view,
-        imgFill: editorData.value.imgFill
+        imgFill: editorData.value.imgFill,
+        id: data.id
     })
 }
 const triggerReplace = function(){

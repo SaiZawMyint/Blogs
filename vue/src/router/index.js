@@ -1,6 +1,7 @@
 import { createRouter,createWebHistory } from "vue-router";
 import Layout from '../components/Layouts/Layout.vue'
 import AuthLayout from '../components/Layouts/AuthLayout.vue'
+import DashboardLayout from '../components/Layouts/DashboardLayout.vue'
 
 import Profile from '../views/Profile.vue'
 import Home from '../views/Home.vue'
@@ -51,6 +52,12 @@ const routes = [
                 path: '/broken',name: 'nopermission',component: PageBoken, meta: {view: 'normal'}
             }
         ]
+    },
+    {
+        path: '/test',
+        name: 'largelayout',
+        meta: {requiresAuth: true,parent: 'top'},
+        component: DashboardLayout,
     },
     {
         path: '/me',
@@ -130,7 +137,7 @@ router.beforeEach((to,from,next)=>{
                 next()
             });
         }
-        else if(to.name == 'edit-post'||from.name == 'edit-post'){
+        else if(to.name == 'edit-post'|| from.name == 'edit-post'){
             if(!store.state.post.permission){
                 store.state.page.errMessage = "Access denied!"
                 router.push({name: 'nopermission'})

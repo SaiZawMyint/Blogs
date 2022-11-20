@@ -1,150 +1,163 @@
 <template>
-    <div class="flex flex-col w-full h-full p-2">
-        <div class="flex flex-col flex-wrap mb-6">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" for="grid-first-name">
-                    Title
-                </label>
-                <div class="flex items-center justify-center w-full">
-                    <input v-model="inputData.title"
-                        class="appearance-none block w-full bg-white-100 text-gray-800 border rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white"
-                        id="grid-tile" type="text" placeholder="Title">
-                    <Listbox v-model="selectedType">
-                        <div class="relative mx-2">
-                            <ListboxButton
-                                class="relative w-full cursor-pointer rounded-lg bg-white p-1 text-left border-2 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                <div class="w-5 h-5 flex items-center justify-center rounded-full  text-green-dark"
-                                    v-html="selectedType.icon">
-                                </div>
-                            </ListboxButton>
-                            <transition leave-active-class="transition duration-100 ease-in"
-                                leave-from-class="opacity-100" leave-to-class="opacity-0">
-                                <ListboxOptions
-                                    class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                    <ListboxOption v-slot="{ active }" v-for="t in type"
-                                        class="overflow-x-hidden w-auto" :key="t.id" :value="t" as="template">
-                                        <li :class="[
+    <DashboardLayout>
+        <template v-slot:leftPanel>
+            <div class="flex flex-col flex-wrap mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2"
+                        for="grid-first-name">
+                        Title
+                    </label>
+                    <div class="flex items-center justify-center w-full">
+                        <input v-model="inputData.title"
+                            class="appearance-none block w-full bg-white-100 text-gray-800 border rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white"
+                            id="grid-tile" type="text" placeholder="Title">
+                        <Listbox v-model="selectedType">
+                            <div class="relative mx-2">
+                                <ListboxButton
+                                    class="relative w-full cursor-pointer rounded-lg bg-white p-1 text-left border-2 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    <div class="w-5 h-5 flex items-center justify-center rounded-full  text-green-dark"
+                                        v-html="selectedType.icon">
+                                    </div>
+                                </ListboxButton>
+                                <transition leave-active-class="transition duration-100 ease-in"
+                                    leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                    <ListboxOptions
+                                        class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                        <ListboxOption v-slot="{ active }" v-for="t in type"
+                                            class="overflow-x-hidden w-auto" :key="t.id" :value="t" as="template">
+                                            <li :class="[
                                             active ? 'bg-green-100 text-amber-900' : 'text-gray-900',
                                             'relative cursor-pointer select-none flex items-center justify-center text-green-dark',
                                             ]">
-                                            <div class="py-1">
-                                                <div class="w-6 h-6 flex items-center justify-center rounded-full"
-                                                    v-html="t.icon">
+                                                <div class="py-1">
+                                                    <div class="w-6 h-6 flex items-center justify-center rounded-full"
+                                                        v-html="t.icon">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ListboxOption>
-                                </ListboxOptions>
-                            </transition>
+                                            </li>
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
+                    </div>
+                </div>
+                <DropMenu title="Cover Photo" :max="{height:'300px'}">
+                    <div class="p-2">
+                        <div class="flex justify-start">
+                            <button class="btn rounded-lg shadow px-3 py-2 flex items-center justify-center"
+                                @click="coverPhoto.click()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                                <span class="ml-2 truncate">Choose Photo</span>
+                            </button>
                         </div>
-                    </Listbox>
-                </div>
-            </div>
-            <div class="w-full px-3 my-2 md:mb-0 flex justify-between">
-                <div class="w-[48%] border-2 rounded">
-                    <Transition name="fade" v-if="!cvchoose.is">
-                        <AnimateForm title="Choose Photo" :btn-show="false" width="w-[100%]" height="h-[300px]"
-                            top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
-                            bottom="bottom-view" :logo="{
-                            show: false
-                        }">
-                            <template v-slot:right>
-                                <div class="w-full mx-auto">
-                                    <img src="@img/blog-gallery.svg" alt="">
-                                </div>
-                            </template>
-                            <template v-slot:form>
-                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto flex items-center justify-center" @click="coverPhoto.click()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                        </svg>
-                                    <span class="ml-2 truncate">Choose Photo</span>
-                                </button>
-                            </template>
-                        </AnimateForm>
-                    </Transition>
-                    <Transition name="fade" v-else>
-                        <AnimateForm :btn-show="false" width="w-[100%]" height="h-[300px]"
-                            top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
-                            bottom="bottom-view" :center="cvchoose.class" :logo="{
-                            show: false
-                        }" v-if="cvchoose.second">
-                            <template v-slot:center>
-                                <div class="h-full mx-auto">
-                                    <img ref="cv" src="@img/blog-gallery.svg" alt="" class="w-full">
-                                </div>
-                            </template>
-                            <template v-slot:form>
-                                <button class="btn rounded-lg shadow px-3 py-2 mx-auto flex items-center justify-center" @click="coverPhoto.click()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                      </svg>
-                                    <span class="ml-2 truncate">Change Photo</span>
-                                </button>
-                            </template>
-                        </AnimateForm>
-                    </Transition>
-                    <input ref="coverPhoto" @change="selectedCP" type="file" hidden>
-                </div>
-                <div class="p-2 w-[50%] border-2 rounded overflow-hidden">
-                    <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2"
-                        for="grid-first-name">
-                        Description
-                    </label>
-                    <textarea v-model="inputData.description"
-                        class="w-full text-gray-800 outline-none h-full rounded p-2" cols="30" rows="5"
-                        placeholder="Write your description"></textarea>
-                </div>
-            </div>
-            <div class="w-full px-3 my-2 md:mb-0 flex flex-col mt-4">
-                <div class="rounded-lg border-2 p-3">
-                    <h3>Outlines</h3>
-                    <div class="w-full flex items-center">
-                        <input type="text" class="px-2 py-2 rounded-lg border-2">
-                        <button class="btn px-1 py-2 rounded-lg shadow ml-3 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                              <span class="pr-2">Add</span>
-                        </button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 ml-2 hover:bg-gray-200/40 hover:shadow hover:border-2">
-                            <i class="fa-solid fa-question"></i>
-                        </button>
+                        <div class="w-full rounded">
+                            <Transition name="fade">
+                                <AnimateForm :btn-show="false" width="w-[100%]" height="h-[220px]"
+                                    top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
+                                    bottom="bottom-view" :center="cvchoose.class" :logo="{
+                                        show: false
+                                    }" v-if="cvchoose.second">
+                                    <template v-slot:center>
+                                        <div class="w-full mx-auto">
+                                            <img ref="cv" :src="data.cover.data" alt="" class="mx-auto"
+                                                :class="cvchoose.is || options == 'Update' ? 'w-full':'w-[90%]'">
+                                        </div>
+                                    </template>
+                                </AnimateForm>
+                            </Transition>
+                            <input ref="coverPhoto" @change="selectedCP" type="file" accept="image/*" hidden>
+                        </div>
                     </div>
-                    <div class="rounded-lg my-2 float-left">
-                        <button class="rounded-lg float-left m-1 border-2 px-1 py-1 w-[fit-content] flex items-center hover:bg-gray-100/20 hover:shadow hover:border-2"
-                        v-for="outline of inputData.outlines">
-                            <i class="fa-solid fa-link w-8 h-8 bg-gray-200/30 rounded-full flex items-center justify-center"></i>
-                            <span class="px-2 max-w-[200px] w-[120px] text-left">{{outline}}</span>
-                            <i class="fa-solid fa-xmark w-6 h-6 text-md text-red-600 bg-gray-200/30 rounded-full flex items-center justify-center hover:bg-gray-100/20 hover:shadow hover:border-2"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-wrap mb-6">
-            <div class="w-full md:w-1/1 px-3">
-                <Template title="Create Your Blog" :autosave="true" @module="cmsModule"
-                    :cms-data="inputData.data"
-                    height="h-[600px]"
-                    ></Template>
-            </div>
-        </div>
 
-        <div class="flex flex-wrap mb-6 sticky bottom-0 py-2 bg-gray-100/30 backdrop-blur-sm rounded shadow">
-            <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
-                <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2"
-                    @click="alertDelete">Delete</button>
-                <button class="px-3 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
+                </DropMenu>
+                <div class="w-full px-3 my-2 md:mb-0 flex flex-col justify-between">
+                    <div class="p-2 w-full border-2 rounded overflow-hidden">
+                        <label class="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2"
+                            for="grid-first-name">
+                            Description
+                        </label>
+                        <textarea v-model="inputData.description"
+                            class="w-full text-gray-800 outline-none h-full rounded p-2" cols="30" rows="5"
+                            placeholder="Write your description"></textarea>
+                    </div>
+                </div>
+                <DropMenu title="Outlines">
+                    <div class="w-full md:mb-0 flex flex-col">
+                        <div class="rounded-lg relative">
+                            <form @submit.prevent="addOutline"
+                                class="w-full bg-gray-200/30 p-2 backdrop-blur flex items-center sticky top-0">
+                                <input v-model="outline" type="text" class="px-2 py-2 text-sm rounded-lg border-2 w-[60%]"
+                                    placeholder="Add Outline">
+                                <button 
+                                type="submit"
+                                class="btn px-1 py-1 rounded-lg shadow ml-3 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span class="pr-2">Add</span>
+                                </button>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 ml-2 hover:bg-gray-200/40 hover:shadow hover:border-2">
+                                    <i class="fa-solid fa-question"></i>
+                                </button>
+                            </form>
+                            <div class="rounded-lg my-2 px-2">
+                                <button
+                                    class="rounded-lg mb-1 border-2 px-1 py-1 w-full flex items-center justify-between hover:bg-gray-100/20 hover:shadow hover:border-2"
+                                    v-for="(outline, index) of outlines">
+                                    <div class="flex items-center">
+                                        <i
+                                            class="fa-solid fa-hashtag text-gray-500 w-8 h-8 bg-gray-200/30 rounded-full flex items-center justify-center"></i>
+                                        <span class="px-2 truncate text-left">{{outline.name}}</span>
+                                    </div>
+                                    <button 
+                                    @click="removeOutline(index)"
+                                    class="w-6 h-6 text-md text-red-600 bg-gray-200/30 rounded-full flex items-center justify-center hover:bg-gray-100/20 hover:shadow hover:border-2 transition-all delay-100 hover:rotate-180">
+                                        <i class="fa-solid fa-xmark "></i>
+                                    </button>
+                                </button>
+                                <div class="w-full text-center text-sm text-gray-300 py-2" v-if="outlines.length == 0">
+                                    No outlines
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DropMenu>
             </div>
-        </div>
-    </div>
+        </template>
+        <template v-slot:base>
+            <div class="flex flex-col w-full h-full p-2">
+
+                <div class="flex flex-wrap mb-6">
+                    <div class="w-full md:w-1/1 px-3">
+                        <Template title="Create Your Blog" :autosave="true" @module="cmsModule"
+                            :cms-data="inputData.data" height="h-[550px]"></Template>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap sticky bottom-0 py-2 bg-gray-100/30 backdrop-blur-sm rounded">
+                    <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
+                        <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2"
+                            @click="alertDelete">Delete</button>
+                        <button class="px-3 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </DashboardLayout>
+
     <Transition name="alert">
         <AlertBox title="Preview" width="50%" v-if="alertBox.show" :show="alertBox.show"
             @on-close="alertBox.show = false">
             <template v-slot:content>
-                <div class="flex flex-wrap mb-6 mx-auto overflow-auto">
+                <div class="flex flex-wrap mb-6 mx-auto overflow-auto max-h-[500px] py-2">
                     <div class="w-full md:w-1/1 px-3" v-html="preview"></div>
                 </div>
             </template>
@@ -192,8 +205,12 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
-import defaultProps from '../../js/app.properties'
+import {defaultProps} from '../../js/app.properties'
 import AlertBoxVue from '../lightui/AlertBox.vue'; 
+import DashboardLayout from '../Layouts/DashboardLayout.vue';
+import DropMenu from '../Itech/DropDown/DropMenu.vue';
+import itechObject from '../../js/itech-objects';
+import {showNotification} from '../../js/blogs'
 
 import {
   Listbox,
@@ -220,11 +237,11 @@ const props = defineProps({
             body: '',
             data: [],
             cover: {
-                name: '',
+                name: '@img/blog-gallery.svg',
                 data: ''
             },
             outlines: [
-                'test','test','test','test','test','test','test','test','test','test'
+                
             ]
         }
     },
@@ -242,7 +259,7 @@ const preview = ref()
 const cmsData = ref();
 
 const coverPhoto = ref();
-
+console.log(props)
 const deleteBlog = ref({
     show: false
 })
@@ -263,9 +280,9 @@ const renderPreview = function(){
     let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
     rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
-    console.log(inputData.value)
     preview.value = template
     alertBox.value.show = true
+    
 }
 
 const cv = ref()
@@ -311,7 +328,18 @@ const startUpload = function(){
         message: message,
         done: false
     }
-    let request = (props.id == 0)?inputData.value:{id: props.id,data: inputData.value}
+    let outlinedata = store.state.cms.outlines.filter(o=> 'isUsed' in o && o['isUsed']);
+
+    let requestBody = {
+        title: inputData.value.title,
+        description: inputData.value.description,
+        type: inputData.value.type,
+        body: inputData.value.body,
+        data: inputData.value.data,
+        cover: inputData.value.cover.data,
+        outlines: JSON.stringify(outlinedata)
+    }
+    let request = (props.id == 0)?requestBody:{id: props.id,data: requestBody}
     let requetURL = (props.id == 0)?'createBlog':'updateBlog'
     store.dispatch(requetURL,request).then(res=>{
         
@@ -362,13 +390,49 @@ const confirmDelete = ()=>{
         router.push({name: 'top'})
     })
 }
+
+//outlines
+const outline = ref('')
+const outlines = store.state.cms.outlines
+const addOutline = ()=>{
+    if(outline.value.trim().length > 0){
+        let id = outlines.length + 1
+        if(itechObject(outlines).find(outline.value,'name') > -1){
+            showNotification(
+                {
+                    show: true,
+                    message: 'Outline already exist',
+                    done: true,
+                    error: true,
+                    cls: 'show'
+                },
+                {
+                    
+                },
+                4000
+            )
+           
+            return false
+        }
+        store.dispatch('addOutline',{
+            id: id,
+            name: outline.value
+        })
+        outline.value = ''
+    }
+}
+const removeOutline = (index)=>{
+    let id = store.state.cms.outlines[index].name.replaceAll(' ','').concat(`-${store.state.cms.outlines[index].id}`)
+    let ele = document.getElementById(id)
+    if(ele) ele.remove()
+    store.dispatch('deleteOutline',index)
+}
 </script>
 <style>
 .top-view{
     top: 1rem;
 }
 .left-view{
-    
     left: 0;
 }
 .right-view{

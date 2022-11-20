@@ -35,8 +35,10 @@ class Blogs extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'cover',
         'title',
         'description',
+        'outlines',
         'body',
         'type',
         'del_flag'

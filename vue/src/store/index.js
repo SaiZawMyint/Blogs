@@ -230,7 +230,9 @@ const post = {
                 type: data.data.blogs.type,
                 updated_at: data.data.blogs.updated_at,
                 description: data.data.blogs.description,
-                user_id: data.data.blogs.user_id
+                user_id: data.data.blogs.user_id,
+                outlines: JSON.parse(data.data.blogs.outlines),
+                cover: data.data.blogs.cover
             }
             if('postData' in data.data){
                 state.data.postData = data.data.postData
@@ -398,6 +400,27 @@ const pagination = {
         size: 0
     })
 }
+const cms = {
+    state: ()=>({
+        outlines: []
+    }),
+    actions: {
+        addOutline({commit},data){
+            commit('putOutline',data)
+        },
+        deleteOutline({commit},index){
+            commit('removeOutline',index)
+        }
+    },
+    mutations: {
+        putOutline: (state,data)=>{
+            state.outlines.push(data)
+        },
+        removeOutline: (state,index)=>{
+            state.outlines.splice(index,1)
+        }
+    }
+}
 const store = createStore({
     modules:{
         user: userModule,
@@ -410,7 +433,8 @@ const store = createStore({
         loadingBar: loadingBar,
         notification: notification,
         alertBox: alertBox,
-        userNotification: userNotification
+        userNotification: userNotification,
+        cms: cms
     }
 })
 
