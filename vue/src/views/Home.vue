@@ -45,7 +45,7 @@
                         <Transition name="fade">
                             <AnimateForm :btn-show="false" width="w-[100%]" height="h-[300px]"
                                 top="top-view mx-auto text-center w-full" left="left-view" right="right-view"
-                                bottom="bottom-view" center="center" :logo="{
+                                bottom="bottom-view" :logo="{
                                     show: false
                                 }">
                                 <template v-slot:center>
