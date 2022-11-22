@@ -83,25 +83,25 @@ const blogs = {
         createfn: null
     }),
     actions: {
-        createBlog({commit},data){
+        async createBlog({commit},data){
             return axiosClient.post('/blogs',data).then((res)=>{
                 if(res.data.ok)commit('add',res.data.data)
                 return res.data
             })
         },
-        getBlogs({commit}){
+        async getBlogs({commit}){
             return axiosClient.get('/blogs').then((res)=>{
                 if(res.data.ok) commit('put',res.data)
                 return res.data
             })
         },
-        searchBlogs({commit},data){
+        async searchBlogs({commit},data){
             return axiosClient.get(`/blogs/search?s=${data.s}`).then((res)=>{
                 if(res.data.ok) commit('put',res.data)
                 return res.data
             })
         },
-        updateBlog({commit},data){
+        async updateBlog({commit},data){
             return axiosClient.post(`/blogs/${data.id}`,data.data).then((res)=>{
                 if (res.data.ok) {
                     commit('updateBlog', res.data.data)
@@ -109,18 +109,17 @@ const blogs = {
                 return res.data
             })
         },
-        deleteBlog({commit}, id){
+        async deleteBlog({commit}, id){
             return axiosClient.delete(`/blogs/${id}`).then((res)=>{
                 if(res.data.ok) commit('deleteBlog', id)
                 return res.data
             })
         },
-        like: function({commit},id){
-            return axiosClient.post(`/blogs/${id}/like`).then(res=>{
-                
-                if(res.data.ok) commit('putlike',{id: id,uid: res.data.uid,data:res.data.data})
-                return res.data.data
-            })
+        like: async function({commit},id){
+            const res = await axiosClient.post(`/blogs/${id}/like`)
+            if (res.data.ok)
+                commit('putlike', { id: id, uid: res.data.uid, data: res.data.data })
+            return res.data.data
             
         }
     },
@@ -136,8 +135,9 @@ const blogs = {
         put: (state,data)=>{
             state.data = []
             for(let x of data.data){
-                state.data.push(blogsData(data.uid,x))
+                state.data.push(Object.assign({coverPhoto: x.cover},blogsData(data.uid,x)))
             }
+            console.log(data.data,store.state.blogs.data)
         },
         updateBlog:(state,data)=>{
             let index = state.data.findIndex((blog)=> blog.id == data.id)
@@ -182,32 +182,32 @@ const post = {
         permission: false
     }),
     actions: {
-        getBlogById({commit},id){
+        async getBlogById({commit},id){
             return axiosClient.get(`/blogs/${id}`).then((res)=>{
                 if(res.data.ok) commit('postdata',res.data)
                 return res.data
             })
         },
-        editionRequest({commit},id){
+        async editionRequest({commit},id){
             return axiosClient.get(`/blogs/${id}/edit`).then((res)=>{
                 if(res.data.ok) commit('postdata',res.data)
                 else commit('permissionLock')
                 return res.data
             })
         },
-        postlike({commit},id){
+        async postlike({commit},id){
             return axiosClient.post(`/blogs/${id}/like`).then(res=>{
                 if(res.data.ok) commit('like',{id: id,uid: res.data.uid,data:res.data.data})
                 return res.data.data
             })
         },
-        postComment({commit},data){
+        async postComment({commit},data){
             return axiosClient.post(`/blogs/${data.id}/comment`, data.data).then(res=>{
                 if(res.data.ok) commit('comment',res.data)
                 return res.data.data
             })
         },
-        deleteComment: function({commit},data){
+        deleteComment: async function({commit},data){
             return axiosClient.delete(`/blogs/${data.blogId}/comment/${data.id}`).then(res=>{
                 if(res.data.ok) commit('deleteCommentState',data)
                 return res.data
@@ -232,7 +232,7 @@ const post = {
                 description: data.data.blogs.description,
                 user_id: data.data.blogs.user_id,
                 outlines: JSON.parse(data.data.blogs.outlines),
-                cover: data.data.blogs.cover
+                cover: data.data.cover
             }
             if('postData' in data.data){
                 state.data.postData = data.data.postData
@@ -284,14 +284,14 @@ const profile = {
         blogs:[]
     }),
     actions: {
-        me({commit}){
+        async me({commit}){
             return axiosClient.get(`/me`).then(res=>{
                 
                 if(res.data.ok) commit('putMe',res.data.data)
                 return res.data
             })
         },
-        getMyBlogs({commit}){
+        async getMyBlogs({commit}){
             return axiosClient.get(`/me/blogs`).then(res=>{
                 if(res.data.ok) commit('putBlogData',res.data)
                 return res.data;
@@ -343,25 +343,25 @@ const userNotification = {
         unseencount: 0
     }),
     actions:{
-        loadNotification({commit}){
+        async loadNotification({commit}){
             return axiosClient.get('/notifications/get').then((res)=>{
                 if(res.data.ok) commit('putNoti',res.data.data)
                 return res.data
             })
         },
-        seen({commit},id){
+        async seen({commit},id){
             return axiosClient.post(`/notifications/${id}/seen`).then(res=>{
                 if(res.data.ok) commit('seen',{id: id,status: true})
                 return res.data
             })
         },
-        hasUnseen({commit}){
+        async hasUnseen({commit}){
             return axiosClient.get(`/notifications/unseen`).then(res=>{
                 if(res.data.ok) commit('putUnseen',res.data.data)
                 return res.data
             })
         },
-        deleteNoti({commit},id){
+        async deleteNoti({commit},id){
             return axiosClient.post(`notifications/${id}/delete`).then((res)=>{
                 if(res.data.ok) commit('removeNoti',id)
                 return res.data

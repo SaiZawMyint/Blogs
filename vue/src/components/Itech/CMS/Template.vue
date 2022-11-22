@@ -351,9 +351,9 @@ const addTag = function(e){
     selectedNode = selection
     if(store.state.cms.outlines.length > 0){
         outlinesData.value.error = false
-        rule.value.disabled = false
+        // rule.value.disabled = false
         outlinesData.value.data.forEach((d)=>{
-            let id = d.name.replaceAll(' ', '').concat(`-${d.id}`)
+            let id = d.name.replace(/[^a-zA-Z0-9]/g, '').concat(`-${d.id}`)
             let ele = document.getElementById(id)
             if(ele){
                 d.isUsed = true
@@ -363,7 +363,7 @@ const addTag = function(e){
             }
         })
     }else{
-        rule.value.disabled = true
+        // rule.value.disabled = true
         outlinesData.value.error = true
         outlinesData.value.message = store.state.cms.outlines.length > 0 ? "Please select text to add tag!":"To add tag, you need to create outline first!"
     }
@@ -375,11 +375,14 @@ const selectedLink = ref({
 })
 const changesHandler = function(data){
     if(data.id != null){
+        rule.value.disabled = false
         selectedLink.value.data = data
+    }else{
+        rule.value.disabled = true
     }
 }
 const addTagLine = function(){
-    let selectId = selectedLink.value.data.name.replaceAll(' ','').concat(`-${selectedLink.value.data.id}`)
+    let selectId = selectedLink.value.data.name.replace(/[^a-zA-Z0-9]/g, '').concat(`-${selectedLink.value.data.id}`)
     selectedLink.value.data.isUsed = true
     executeDoc('insertHTML',
     `<span class="rounded-lg itech-tag bg-gray-300/50 p-1 w-[fit-content]" id="${selectId}">${hashTag}<span>${selectedNode}</span></span>&nbsp;`)

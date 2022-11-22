@@ -73,7 +73,6 @@
                             <input ref="coverPhoto" @change="selectedCP" type="file" accept="image/*" hidden>
                         </div>
                     </div>
-
                 </DropMenu>
                 <div class="w-full px-3 my-2 md:mb-0 flex flex-col justify-between">
                     <div class="p-2 w-full border-2 rounded overflow-hidden">
@@ -146,7 +145,10 @@
                     <div class="w-full md:w-1/1 px-3 flex items-center justify-end">
                         <button v-if="options == 'Update'" class="px-3 py-2 btn delete text-gray-200 rounded-lg mx-2"
                             @click="alertDelete">Delete</button>
-                        <button class="px-3 py-2 btn rounded-lg" @click="renderPreview">{{options}}</button>
+                        <button class="px-3 py-2 btn rounded-lg" @click="renderPreview" v-if="!loading">{{options}}</button>
+                        <button class="px-3 py-2 rounded mx-2 btn text-white disabled cursor-not-allowed" v-else>
+                            {{options}}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -205,7 +207,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import AlertBox from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
-import {defaultProps} from '../../js/app.properties'
+import {defaultProps, galleryData} from '../../js/app.properties'
 import AlertBoxVue from '../lightui/AlertBox.vue'; 
 import DashboardLayout from '../Layouts/DashboardLayout.vue';
 import DropMenu from '../Itech/DropDown/DropMenu.vue';
@@ -237,8 +239,8 @@ const props = defineProps({
             body: '',
             data: [],
             cover: {
-                name: '@img/blog-gallery.svg',
-                data: ''
+                name: '',
+                data: galleryData
             },
             outlines: [
                 
@@ -259,7 +261,6 @@ const preview = ref()
 const cmsData = ref();
 
 const coverPhoto = ref();
-console.log(props)
 const deleteBlog = ref({
     show: false
 })
@@ -267,6 +268,10 @@ const rule = ref({
     disabled: false,
     required: false
 })
+
+if(props.options == "Create"){
+    inputData.value = {}
+}
 
 const cmsModule = function(data){
     inputData.value.data = Object.assign([],data.data)
@@ -282,7 +287,6 @@ const renderPreview = function(){
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
     preview.value = template
     alertBox.value.show = true
-    
 }
 
 const cv = ref()
@@ -328,7 +332,7 @@ const startUpload = function(){
         message: message,
         done: false
     }
-    let outlinedata = store.state.cms.outlines.filter(o=> 'isUsed' in o && o['isUsed']);
+    let outlinedata = store.state.cms.outlines.filter(o => 'isUsed' in o && o['isUsed']);
 
     let requestBody = {
         title: inputData.value.title,
@@ -422,7 +426,7 @@ const addOutline = ()=>{
     }
 }
 const removeOutline = (index)=>{
-    let id = store.state.cms.outlines[index].name.replaceAll(' ','').concat(`-${store.state.cms.outlines[index].id}`)
+    let id = store.state.cms.outlines[index].name.replace(/[^a-zA-Z0-9]/g, '').concat(`-${store.state.cms.outlines[index].id}`)
     let ele = document.getElementById(id)
     if(ele) ele.remove()
     store.dispatch('deleteOutline',index)

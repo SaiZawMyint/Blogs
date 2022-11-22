@@ -3,9 +3,6 @@ namespace App\Service\Impls;
 
 use App\DAO\BlogDAO;
 use App\DAO\NotificationsDAO;
-use App\Models\Notifications;
-use App\Models\User;
-use App\Service\BlogService;
 use App\Service\NotificationService;
 use App\Service\UserService;
 use App\Utils\NotificationUtils;
@@ -67,6 +64,7 @@ class NotificationImpls implements NotificationService{
                     'type'=>$d->type,
                     'blogs_title'=> $b->title,
                     'blogs_id'=>$b->id,
+                    'blogs_type'=>$b->type,
                     'seen'=>$d->seen == 1,
                     'time'=>$d->created_at,
                     'nid'=>$d->id

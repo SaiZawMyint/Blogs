@@ -15,18 +15,15 @@
     </Transition>
 </template>
 <script setup>
+import { onMounted } from 'vue';
 import { useStore } from 'vuex';
-import ModalBoxVue from '../ui/ModalBox.vue';
-import CreateBlogVue from '../ui/CreateBlog.vue';
-import { useRoute, useRouter } from 'vue-router';
 import LoadingScreen from '../lightui/LoadingScreen.vue';
 import Notification from '../lightui/Notification.vue';
 import LoadingBar from '../lightui/LoadingBar.vue';
 import Header from '../common/Header.vue';
+import AOS from 'aos'
 
 const store = useStore()
-const router = useRouter()
-const route = useRoute()
 
 const defaultdata = {
     title: 'Create Blog',
@@ -44,19 +41,10 @@ store.state.modalBox.createfn = function(){
     store.state.modalBox.data = Object.assign({},defaultdata)
     store.state.modalBox.data.show = true
     store.state.modalBox.input = {}
-    
 }
-const logout = function(){
-    store.dispatch('logout').then(()=>{
-        router.push({name: 'login'})
-    })
-}
-const search = function(){
-    store.dispatch('searchBlogs',store.state.page.search.data).then((res)=>{
-        store.state.page.search.is = true
-        router.push({name: 'search'})
-    })
-}
+onMounted(() => {
+    AOS.init()
+});
 </script>
 <style>
 .slide-left-enter-active,

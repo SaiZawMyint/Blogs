@@ -17,7 +17,7 @@ export function isLiked(id,x){
     return index != -1
 }
 export function routeHistory(to,from){
-    console.log(store.state.page.history.data)
+    console.log("Route history : ", store.state.page.history)
     if(from.name === undefined){
         store.state.page.history.route = {
             name: 'top'
@@ -92,7 +92,6 @@ export const blog_data = {
 
 export function findDataFromArrayById(id = 0,data = []){
     let index = data.findIndex(d=> d.nid == id)
-    console.log(data,id,index)
     return {
         index: index,
         data: Object.assign({},data[index])
@@ -139,9 +138,7 @@ export function clearAllFromStore(){
 export function getBlogTypeIcon(id){
 
     const type = Object.assign([],defaultProps)
-    console.log(type)
     const selectedtype = type[itechObject(type).find(id,'id')]
-    console.log(selectedtype)
     return selectedtype ? selectedtype.icon : null
 }
 export function convertDate(date){
@@ -173,7 +170,7 @@ export function showNotification(before,after,delay = 1000){
     })
 }
 export function generateOutlineId(outline = {id:0,name: ''}){
-    return outline.name.replaceAll(' ','').concat(`-${outline.id}`)
+    return outline.name.replace(/[^a-zA-Z0-9]/g, '').concat(`-${outline.id}`)
 }
 export default{
     blogsData,

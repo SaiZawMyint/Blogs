@@ -1,7 +1,6 @@
 import { createRouter,createWebHistory } from "vue-router";
 import Layout from '../components/Layouts/Layout.vue'
 import AuthLayout from '../components/Layouts/AuthLayout.vue'
-import DashboardLayout from '../components/Layouts/DashboardLayout.vue'
 
 import Profile from '../views/Profile.vue'
 import Home from '../views/Home.vue'
@@ -52,12 +51,6 @@ const routes = [
                 path: '/broken',name: 'nopermission',component: PageBoken, meta: {view: 'normal'}
             }
         ]
-    },
-    {
-        path: '/test',
-        name: 'largelayout',
-        meta: {requiresAuth: true,parent: 'top'},
-        component: DashboardLayout,
     },
     {
         path: '/me',
@@ -216,6 +209,10 @@ async function normalize(to,from){
                     store.state.page.history.route = {}
                 }else{
                     store.state.page.sub = true
+                }
+                //for outlines
+                if(to.name == "create"){
+                    store.state.cms.outlines = []
                 }
             }
         })

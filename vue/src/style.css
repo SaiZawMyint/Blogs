@@ -20,6 +20,7 @@
 }
 body, body *{
     font-family: 'system';
+    scroll-behavior: smooth;
 }
 textarea{
     resize: none;
@@ -32,6 +33,7 @@ input:focus{
 }
 ::-webkit-scrollbar{
     width: 5px;
+    height: 5px;
 }
 ::-webkit-scrollbar-thumb{
     background-color: #0f7b8f5f;
@@ -174,4 +176,13 @@ input::-webkit-inner-spin-button {
 }
 .smooth-shadow{
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.114);
+}
+.blog-cov{
+    overflow: hidden;
+}
+.blog-cov img{
+    transition: all .4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.blog-cov:hover > img{
+    transform: scale(1.2);
 }

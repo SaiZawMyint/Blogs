@@ -53,6 +53,7 @@ class FileUtils{
         $data = file_exists($path) ? 
         base64_encode(file_get_contents($path)):
         '';
+        $extension = $extension == 'svg' ? $extension . "+xml" : $extension;
         if(strlen($data) > 0) return "data:image/${extension};base64,${data}";
         return '';
     }

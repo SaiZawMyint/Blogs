@@ -58,7 +58,6 @@ const itech = function(){
             checkExecution(cmd)
             switch(cmd){
                 case 'bold': {
-                    
                     document.execCommand('insertHtml',false,createItechData('b',cmd))
                 } break
                 case 'italic': {

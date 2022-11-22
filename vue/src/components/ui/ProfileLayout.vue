@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full mt-2 flex-col">
+    <div class="w-full mt-2 flex-col max-w-[70%] mx-auto">
         <div class="w-full p-2 flex justify-between">
             <div class="p-2 w-[35%] flex flex-col rounded-lg shadow-lg border-2">
                 <div class="mx-auto w-[90px] h-[90px] rounded-full my-[20px]">
@@ -81,7 +81,10 @@
                         <tbody>
                             <tr class="bg-white border-b hover:bg-gray-50" v-for="data in store.state.profile.blogs">
                                 <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                    {{data.title}}
+                                    <router-link :to="{name: 'post',params:{id: data.id}}" class="text-[#0f857d]">
+                                        {{data.title}}
+                                    </router-link>
+                                    
                                 </th>
                                 <td class="py-4 px-6">
                                     {{data.created_at}}

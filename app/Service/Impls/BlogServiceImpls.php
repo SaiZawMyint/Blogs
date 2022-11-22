@@ -44,14 +44,10 @@ class BlogServiceImpls implements BlogService{
         $filename = $blogs->body .'.json';
 
         $path = storage_path('app/public/blogs')."/${filename}";
-
-        $cvpath = storage_path('app/public/images') ."/". $blogs->cover;
         $json = file_exists($path) ? json_decode(file_get_contents($path),true):[];
 
-        $cvdata = $blogs->cover ? FileUtils::getBase64Imgae($cvpath):'';
 
         $extraData = [
-            "cover"=>$cvdata,
             "post"=>$json
         ];
 
@@ -84,8 +80,29 @@ class BlogServiceImpls implements BlogService{
         }
     }
     public function update($id,$data){
-        $blog = $this->blogDao->update($id,$data->only('title','type','description','body'));
+        $b = $this->blogDao->getById($id);
+        
         FileUtils::replaceDiskFile($data['body'].'.json',json_encode($data['data']));
+
+        $cvpath = storage_path('app/public/images') ."/". $b->cover;
+        FileUtils::deleteDiskFile($cvpath,'images');
+
+        if($data['cover'] && !empty($data['cover'])){
+            $filename = $this->generateFileName($data['cover']);
+            FileUtils::createImageFile($filename,$data['cover']);
+            $data['cover'] = $filename;
+        }
+
+        $blog = $this->blogDao->update($id,
+        [
+            'title'=>$data['title'],
+            'type'=>$data['type'],
+            'description'=>$data['description'],
+            'body'=>$data['body'],
+            'cover'=>$data->cover,
+            'outlines'=>$data['outlines']
+        ]);
+
         return [
             "data"=>$data['data'],
             "message"=>$data['message'],
@@ -121,8 +138,12 @@ class BlogServiceImpls implements BlogService{
     private function reponseData($blogs,$extraData = []){
         $data = [];
         foreach($blogs as $blog){
+            $cvpath = storage_path('app/public/images') ."/". $blog->cover;
+            $cvdata = $blog->cover ? FileUtils::getBase64Imgae($cvpath):'';
+
             array_push($data,[
                 'blogs'=>$blog,
+                'cover'=>$cvdata,
                 'likes'=>$this->reactionservice->get($blog->id,'like'),
                 'comments'=>$this->reactionservice->get($blog->id,'comment'),
                 'postData'=> count($extraData) > 0 ? $extraData : []

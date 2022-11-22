@@ -83,11 +83,25 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 const store = useStore()
+const router = useRouter()
 const route = useRoute()
+
+const logout = function(){
+    store.dispatch('logout').then(()=>{
+        router.push({name: 'login'})
+    })
+}
+const search = function(){
+    store.dispatch('searchBlogs',store.state.page.search.data).then((res)=>{
+        store.state.page.search.is = true
+        router.push({name: 'search'})
+    })
+}
+
 </script>
 
 <style lang="scss" scoped>
