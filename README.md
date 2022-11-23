@@ -1,8 +1,8 @@
-<h1 align="center">BLOGS - Start Your Survey</h1>
+<h1 align="center">BLOG - Start Your Survey</h1>
 
 ## _Vue & Laravel RestFull API_
 
-A single page application with restfull performance using the following frameworks and libraries:
+A single page application with best performance using the following frameworks and libraries:
 
 | Frameworks & Libraries | Usage |
 | ------ | ------ |
@@ -11,12 +11,12 @@ A single page application with restfull performance using the following framewor
 | Vuex | State managements |
 | Vue router | Page actions, Page history |
 | Axios | Data managements & API |
-| JavaScript | Frontend functions |
+| JavaScript(itech.js) | Frontend functions |
 | Tailwind CSS | Designs |
 | Heroicons | svg, icons
 
 ## Project Descriptions
-All vue's components are pure which are not using any other special libraries like modal box, loading screen, notification bar and status bar. Support search, reaction to post & comments.
+Blog is a project for blog reading, writing and sharing web project. You can freely create your own society for better communications. Our ultimate goal is for  your to make learning, sharing experiences and building QA between professional and so on.
 
 ## Installation
 
