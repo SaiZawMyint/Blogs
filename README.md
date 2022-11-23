@@ -1,4 +1,5 @@
 <h1 align="center">BLOG - Start Your Survey</h1>
+You have stories to share: small stories, big stories, meaningful stories. But not knowing the exact steps to take, you've been hesitant to start a blog. Take a look on our service now!
 
 ## _Vue & Laravel RestFull API_
 
@@ -16,7 +17,7 @@ A single page application with best performance using the following frameworks a
 | Heroicons | svg, icons
 
 ## Project Descriptions
-Blog is a project for blog reading, writing and sharing web project. You can freely create your own society for better communications. Our ultimate goal is for  your to make learning, sharing experiences and building QA between professional and so on.
+Blog is a project for blog reading, writing and sharing web project. You can freely create your own society for better communications. Our ultimate goal is for you to investigate learning, sharing experiences and building QA between professional and so on.
 
 ## Installation
 
@@ -27,10 +28,14 @@ Install the dependencies and start the server.
 ```sh
 mkdir blogsProject
 cd blogsProject
+```
+
+```sh
 git clone https://github.com/SaiZawMyint/Blogs.git 
 cd Blogs
 ```
-After cloned the project now let start on testing project. Before runing the server, let set up the database. Simplily run the following command.
+
+After cloned the project now let start on testing project. Before runing the server, let set up the database.
 
 ```sh
 php artisan:migrate
@@ -44,6 +49,7 @@ php artisan serve
 
 After our api server started, open vue folder in terminal and follow the step.
 ```sh
+cd vue
 npm run dev
 ```
 Open the browser and start the project.
