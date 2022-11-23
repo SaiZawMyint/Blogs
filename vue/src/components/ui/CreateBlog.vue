@@ -341,7 +341,7 @@ const startUpload = function(){
         body: inputData.value.body,
         data: inputData.value.data,
         cover: inputData.value.cover.data,
-        outlines: JSON.stringify(outlinedata)
+        outlines: outlinedata
     }
     let request = (props.id == 0)?requestBody:{id: props.id,data: requestBody}
     let requetURL = (props.id == 0)?'createBlog':'updateBlog'
@@ -349,9 +349,7 @@ const startUpload = function(){
         
         if(res.ok){
             loading.value = false
-            // if(props.options == 'Create'){
-            //     router.push({ name: 'home' })
-            // }
+            //
             router.push(store.state.page.history.route)
             itech().wait(2000, function () {
                 store.state.notification.data = {

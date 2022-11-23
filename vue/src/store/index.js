@@ -12,16 +12,14 @@ const userModule = {
         emailVerify: false
     }),
     actions: {
-        register({ commit }, user) {
+        async register({ commit }, user) {
             return axiosClient.post('/register', user)
                 .then(({ data }) => {
                     commit('setUser', data)
                     return data;
-                }).catch(err=>{
-                    return {ok:false,error: err.response.data.message}
                 })
         },
-        login({ commit }, user,
+        async login({ commit }, user,
         ) {
             return axiosClient.post('/login', user)
                 .then(({ data }) => {
@@ -31,14 +29,14 @@ const userModule = {
                     return {ok:false,error: err.response.data.message}
                 })
         },
-        logout({ commit }) {
+        async logout({ commit }) {
             return axiosClient.post('/logout')
                 .then((res) => {
                     commit('logout')
                     return res
                 })
         },
-        currentUser({commit}){
+        async currentUser({commit}){
             if(!store.state.user.token) return false
             return axiosClient.get('/me').then((res)=>{
                 commit('storeUser',res.data.data)
@@ -120,7 +118,6 @@ const blogs = {
             if (res.data.ok)
                 commit('putlike', { id: id, uid: res.data.uid, data: res.data.data })
             return res.data.data
-            
         }
     },
     mutations:{

@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col p-2 w-full grid grid-cols-2 gap-4">
         <div v-for="data in store.state.blogs.data"
-            class="border-2 border-gray-300 rounded-lg m-2 shadow flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="4000">
+            class="border-2 border-gray-300 rounded-lg m-2 shadow-lg flex flex-col overflow-hidden" data-aos="fade-up" data-aos-duration="4000">
             <div class="border-b-2 border-gray-300 flex items-center justify-between">
                 <router-link :to="{name: 'post',params:{id: data.id}}" class="flex rounded p-2">
                     <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0000004c]"
@@ -22,9 +22,9 @@
                     </router-link>
                 </div>
             </div>
-            <router-link :to="{name: 'post',params:{id: data.id}}" class="w-full relative blog-cov h-[250px]">
-                <img :src="data.coverPhoto" :alt="data.title" class="min-h-[150px] w-full">
-                <div class="absolute p-2 bottom-0 bg-gray-100/60 backdrop-blur-sm w-full"> 
+            <router-link :to="{name: 'post',params:{id: data.id}}" class="w-full relative blog-cov h-[280px] overflow-hidden">
+                <img :src="data.coverPhoto" :alt="data.title" class="min-h-[180px] w-full float-blog-cv-photo">
+                <div class="absolute p-2 bottom-0 bg-gray-100/80 backdrop-blur-sm w-full"> 
                     <div class="line-clamp-3 text-gray-800">{{data.description}}</div>
                 </div>
             </router-link>
@@ -69,18 +69,6 @@
                     </button>
                     <span class="pl-2">0</span>
                 </div>
-            </div>
-        </div>
-        <div v-if="store.state.blogs.data.length == 0" class="p-4 flex flex-col items-center justify-center">
-            <div v-if="route.name == 'home'" class="flex flex-col items-center justify-center">
-                <p class="italic text-gray-400 py-3">There is no blogs yet! Create a blogs to new feed!</p>
-                <router-link :to="{name: 'create'}" class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
-                    >Create New Blogs</router-link>
-            </div>
-            <div v-if="route.name == 'search'" class="flex flex-col items-center justify-center">
-                <p class="italic text-gray-400 py-3">No search data found!</p>
-                <router-link :to="{name: 'home'}" class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
-                    >Back</router-link>
             </div>
         </div>
     </div>

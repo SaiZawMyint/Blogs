@@ -34,7 +34,7 @@
                     </div>
                     <div class="w-full h-full overflow-y-auto">
                         <div class="mb-2">
-                            <img :src="data.cover" alt="">
+                            <img :src="data.cover" alt="" class="min-w-full">
                             <div class="w-full p-2 -mt-8">
                                 <p class="p-2 rounded border-2 shadow-lg bg-gray-200/30 backdrop-blur">
                                     {{data.description}}

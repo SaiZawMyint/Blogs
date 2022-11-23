@@ -65,6 +65,18 @@
         <template v-slot:base>
             <div class="w-full">
                 <BlogListsVue></BlogListsVue>
+                <div v-if="store.state.blogs.data.length == 0" class="p-4 flex flex-col items-center justify-center">
+                    <div v-if="route.name == 'home'" class="flex flex-col items-center justify-center">
+                        <p class="italic text-gray-400 py-3">There is no blogs yet! Create a blogs to new feed!</p>
+                        <router-link :to="{name: 'create'}" class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
+                            >Create New Blogs</router-link>
+                    </div>
+                    <div v-if="route.name == 'search'" class="flex flex-col items-center justify-center">
+                        <p class="italic text-gray-400 py-3">No search data found!</p>
+                        <router-link :to="{name: 'home'}" class="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-200/40"
+                            >Back</router-link>
+                    </div>
+                </div>
             </div>
         </template>
     </DashboardLayout>

@@ -40,7 +40,8 @@ class BlogDAOImpl implements BlogDAO{
             'description' => $data['description'],
             'del_flag' => false,
             'cover'=> $data['cover'],
-            'outlines'=>$data['outlines']
+            'outlines'=> json_encode($data['outlines']),
+            'comment'=> key_exists('comment',$data) ? $data['comment'] : null
         ]);
         return $blog;
     }
@@ -73,5 +74,10 @@ class BlogDAOImpl implements BlogDAO{
     public function search($search)
     {
         return Blogs::where('del_flag','!=',true)->where('title','LIKE','%'.$search.'%')->get();
+    }
+
+    public function getBlogByComment($comment)
+    {
+        return Blogs::where('del_flag','!=',true)->where('comment','=',$comment)->first();
     }
 }

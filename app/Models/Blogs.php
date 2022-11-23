@@ -41,6 +41,7 @@ class Blogs extends Model
         'outlines',
         'body',
         'type',
+        'comment',
         'del_flag'
     ];
 

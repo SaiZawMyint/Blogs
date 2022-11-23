@@ -23,6 +23,7 @@ return new class extends Migration
             $table->longText('description');
             $table->longText('outlines')->nullable();
             $table->string('body');
+            $table->string('comment')->nullable();
             $table->boolean('del_flag')->default(false);
             $table->timestamps();
         });

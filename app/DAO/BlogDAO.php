@@ -10,4 +10,6 @@ interface BlogDAO{
     public function delete($id);
     public function getReaction($id,$type);
     public function search($search);
+
+    public function getBlogByComment($comment);
 }

@@ -36,12 +36,12 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
+      <!-- <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
           <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
         </div>
-      </div>
+      </div> -->
 
       <div class="text-center">
         <button type="submit" class="group relative flex w-full justify-center rounded-md border border-transparent bg-[#1ba39a] py-2 px-4 text-sm font-medium text-white hover:bg-[#1ba39aab] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -65,6 +65,8 @@
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import {ref} from 'vue'
+import axiosClient from '../axios';
+import { baseBlogData } from '../js/app.properties';
 const store = useStore();
 let error = ref()
   const user={
@@ -81,15 +83,33 @@ let error = ref()
     }
     store.dispatch('register',user)
     .then((res)=>{
+      console.log(res)
       if(!res.ok){
         errorData(res)
         store.state.loadingScreen.data = {
           show: false,
         }
       }else{
-        router.push({name:'home'})
+      store.state.loadingScreen.data = {
+        show: true,
+        title: 'Analyzing Informations...'
       }
-    }).catch(err=>{
+      axiosClient.post(`/app/data`,baseBlogData).then((res)=>{
+        if(res.data.ok){
+          router.push({
+            name: 'home'
+          })
+        }
+      }).catch((err)=>{
+        errorData({ok:false,error: 'Something went wrong'})
+        store.state.loadingScreen.data = {
+          show: false,
+        }
+        store.dispatch('logout')
+      })
+      }
+    })
+    .catch((err)=>{
       errorData({ok:false,error: 'Registration failed!'})
     })
   }

@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/me',[AuthController::class,'getUser']);
     Route::post('/logout',[AuthController::class, 'logout']);
     Route::get('/me/blogs',[PostController::class, 'getUserBlogs']);
-    
 
     //blog
     Route::post('/blogs',[PostController::class,'createBlog']);
@@ -52,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/notifications/unseen',[NotificationController::class, 'hasUnseen']);
     Route::post('/notifications/{id}/seen',[NotificationController::class,'seen']);
     Route::post('/notifications/{id}/delete',[NotificationController::class,'delete']);
+
+    //app
+    Route::post('/app/data',[PostController::class,'appData']);
 });
 
 Route::post('/register',[AuthController::class, 'register']);

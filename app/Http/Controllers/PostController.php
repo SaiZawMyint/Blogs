@@ -145,14 +145,8 @@ class PostController extends Controller
         }
     }
 
-    public function testImageUpload(Request $request){
-        echo $request['data']['data'];
-        // $filename = "test";
-        // try{
-        //     FileUtils::createImageFile($filename,$request['data']);
-        //     return true;
-        // }catch(Error $e){
-        //     return response(['ok'=>false,'message'=>$e->getMessage()]);
-        // }
+    public function appData(Request $request){
+        $prepData = $this->blogservice->appData($request);
+        return response($prepData);
     }
 }

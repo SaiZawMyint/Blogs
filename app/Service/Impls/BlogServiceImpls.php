@@ -53,13 +53,14 @@ class BlogServiceImpls implements BlogService{
 
         return $this->reponseData([$blogs],$extraData)[0];
     }
-    public function create($data){
+    public function create($data, $comment = ''){
         if($data['cover'] && !empty($data['cover'])){
             $filename = $this->generateFileName($data['cover']);
             FileUtils::createImageFile($filename,$data['cover']);
             $data['cover'] = $filename;
         }
-        $blog = $this->blogDao->create($data->only('title','type','description','body','cover','outlines'));
+        $data['comment'] = $comment;
+        $blog = $this->blogDao->create($data->only('title','type','description','body','cover','outlines','comment'));
 
         FileUtils::createDiskFile($data['body'].'.json',json_encode($data['data']));
 
@@ -126,13 +127,6 @@ class BlogServiceImpls implements BlogService{
                 'success'=>false
             ];
         }
-        // $deldata = $this->blogDao->delete($id);
-        // if($deldata['success']){
-
-        // }else{
-
-        // }
-        
     }
 
     private function reponseData($blogs,$extraData = []){
@@ -156,6 +150,19 @@ class BlogServiceImpls implements BlogService{
     {
         $blogs = $this->blogDao->search($search);
         return $this->reponseData($blogs);
+    }
+
+    public function appData($data)
+    {
+        $blog = $this->blogDao->getBlogByComment('WelcomeBlog');
+        if(!$blog){
+            return $this->create($data,$data['comment']);
+        }else{
+            return [
+                'ok'=>true,
+                'message'=>'Welcome blog already exist'
+            ];
+        }
     }
 
     private function generateFileName($base64){

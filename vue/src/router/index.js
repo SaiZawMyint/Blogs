@@ -144,11 +144,14 @@ router.beforeEach((to,from,next)=>{
             routeHistory(to, from)
             next()
         }
+    }).catch(err=>{
+        sessionStorage.removeItem('TOKEN')
+        next({name: 'login'})
     })
 
 })
 
-async function normalize(to,from){
+async function normalize(to,from,next){
     if(from.name == 'login' || from.name == 'registeration') 
         store.state.loadingScreen.data.show = true
     else 
@@ -217,14 +220,19 @@ async function normalize(to,from){
             }
         })
         .catch((err)=>{
+            
             //unauthorized case
             if(err.response.status == 401){
-                sessionStorage.removeItem('TOKEN')
                 clearAllFromStore()
             }
             if (from.name == 'login' || from.name == 'registeration')
                 store.state.loadingScreen.data.show = false
             store.state.loadingBar.data.show = false
+
+            sessionStorage.removeItem('TOKEN')
+            next({ name: 'login' })
+            
+            
         })
     }else{
         store.state.loadingScreen.data.show = false

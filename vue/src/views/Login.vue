@@ -7,9 +7,9 @@
     </p>
   </div>
   <form class="mt-8 space-y-6" @submit.prevent="login">
-    <div v-if="error" class="flex items-center justify-between px-2 py-3 bg-red-100 text-red-500 rounded">
-      {{error.error}}
-      <span @click="error = null" class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+    <div v-if="error" class="flex items-start justify-between px-2 py-3 bg-red-100 text-red-500 rounded">
+      <span class="max-w-[80%]" v-html="error.error"></span>
+      <span @click="error = null" class="w-8 h-8 flex itech-rotate-180 items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -32,13 +32,12 @@
           placeholder="Password">
       </div>
     </div>
-
     <div class="flex items-center justify-between">
-      <div class="flex items-center">
+      <!-- <div class="flex items-center">
         <input id="remember-me" name="remember-me" v-model="user.remember" type="checkbox"
           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
         <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
-      </div>
+      </div> -->
 
       <div class="text-sm">
         <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
@@ -70,6 +69,8 @@
 import store from '../store'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import {baseBlogData} from '../js/app.properties'
+import axiosClient from '../axios';
 const router = useRouter()
 let error = ref()
 const user = {
@@ -80,7 +81,7 @@ const user = {
 function login(){
   store.state.loadingScreen.data = {
     show: true,
-    title: 'Processing...'
+    title: 'Processing'
   }
   store.dispatch('login',user).then((res)=>{
     if(!res.ok){
@@ -89,8 +90,26 @@ function login(){
         show: false,
       }
     }else{
-      router.push({
-        name: 'home'
+      store.state.loadingScreen.data = {
+        show: true,
+        title: 'Analyzing Informations...'
+      }
+      axiosClient.post(`/app/data`,baseBlogData).then((res)=>{
+        console.log(res)
+        if(res.data.ok){
+          router.push({
+            name: 'home'
+          })
+        }
+      }).catch((err)=>{
+        console.log(err)
+        errorData({ok:false,error: 
+          `Something went wrong`
+        })
+        store.state.loadingScreen.data = {
+          show: false,
+        }
+        store.dispatch('logout')
       })
     }
   }).catch((err)=>{
