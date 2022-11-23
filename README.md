@@ -61,6 +61,7 @@ https://solar-trinity-410124.postman.co/workspace/New-Team-Workspace~9aae7a64-02
 # Thanks You..
 ----------
 ### Next release
+- Blogs outlines issues
 - Communications performance
 - Focus issue in CMS template
 - New tools on creating Blogs for best design
