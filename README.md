@@ -38,6 +38,10 @@ cd Blogs
 After cloned the project now let start on testing project. Before runing the server, let set up the database.
 
 ```sh
+composer install
+```
+
+```sh
 php artisan:migrate
 ```
 
