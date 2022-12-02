@@ -42,7 +42,7 @@ composer install
 ```
 
 ```sh
-php artisan:migrate
+php artisan migrate
 ```
 
 Now let start the API Server
