@@ -1,7 +1,6 @@
 <template v-if="store.state.notification.data.show">
     <div :class="[store.state.notification.data.cls, store.state.notification.data.error ? 'bg-[#c50034]':' bg-[#0a6373]']" class="px-1 py-2 text-gray-300 rounded-lg shadow-lg flex items-center justify-between pop-up">
-        <p class="pr-10 pl-2">
-            {{store.state.notification.data.message}}
+        <p class="pr-10 pl-2" v-html="store.state.notification.data.message">
         </p>
         <button @click="closeNoti"
         v-if="store.state.notification.data.done" class="w-8 h-8 rounded-full itech-rotate-180 close-btn flex items-center justify-center bg-[#0000004c] hover:bg-[#0000002c]">

@@ -10,7 +10,7 @@
                 <slot name="content"></slot>
             <slot name="footer"></slot>
             <button  @click="hadlerClose"
-                class="absolute top-1 right-1 w-8 h-8 rounded-full z-50 hover:bg-[#0000004c] flex items-center justify-center close-modal">
+                class="absolute top-1 right-1 w-8 h-8 rounded-full z-50 hover:bg-[#0000004c] itech-rotate-180 flex items-center justify-center close-modal">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

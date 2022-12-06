@@ -42,27 +42,33 @@ export const baseBlogData = {
     outlines: [
         {
             id: 1,
-            name: "Introduction"
+            name: "Introduction",
+            isUsed: true
         },
         {
             id: 2,
-            name: "What's Blog?"
+            name: "What's Blog?",
+            isUsed: true
         },
         {
             id: 3,
-            name: "About our service"
+            name: "About our service",
+            isUsed: true
         },
         {
             id: 4,
-            name: "Join Us"
+            name: "Join Us",
+            isUsed: true
         },
         {
             id: 5,
-            name: "Start your survey"
+            name: "Start your survey",
+            isUsed: true
         },
         {
             id: 6,
-            name: "Developer Contact"
+            name: "Developer Contact",
+            isUsed: true
         }
     ]
 };

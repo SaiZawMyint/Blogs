@@ -43,7 +43,7 @@
                         </div>
                         <div class="w-full p-2">
                             <label class="text-slate-500">Blog's Outlines</label>
-                            <a v-for="outline in data.outlines" :href="`#${generateOutlineId(outline)}`"
+                            <a v-for="outline in data.outlines" href="#" @click.prevent="scroll(`#${generateOutlineId(outline)}`)"
                                 class="w-full p-2 bg-gray-200/30 rounded-lg hover:bg-gray-400/20 my-1 block flex items-center">
                                 <i
                                     class="fa-solid fa-hashtag text-sm text-green-500 flex items-center justify-center w-6 h-6 bg-green-400/30 rounded-full"></i>
@@ -204,7 +204,7 @@ import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
 import AlertBoxVue from '../lightui/AlertBox.vue';
 import itech from '../../js/itech';
-import { blog_data, generateOutlineId, getBlogTypeIcon } from '../../js/blogs';
+import { blog_data, generateOutlineId, getBlogTypeIcon, showNotification } from '../../js/blogs';
 import {convertDate} from '../../js/blogs'
 
 const store = useStore()
@@ -230,10 +230,27 @@ store.dispatch('getBlogById',id).then((res)=>{
 const like = function(id){
     store.dispatch('postlike',id)
 }
-const comment = function(id){
-    store.dispatch('postComment',{id: id,data: inputData.value}).then(()=>{
-        inputData.value.comment = ''
-    })
+const comment = function (id) {
+    if (inputData.value.comment.length > 0) {
+        store.dispatch('postComment', { id: id, data: inputData.value }).then(() => {
+            inputData.value.comment = ''
+        })
+    }else{
+        showNotification(
+            {
+                show: true,
+                message: 'Comment cannot be empty',
+                done: true,
+                error: true,
+                cls: 'show'
+            },
+            {
+                
+            },
+            4000
+        )
+    }
+
 }
 
 const alertBox = ref({
@@ -295,5 +312,13 @@ const commentdelete = function(){
         })
     })
 }
-
+const scroll = function(id){
+    const el = document.querySelector(id)
+    itech().wait(500,()=>{
+        el.classList.add("flash-light")
+    },()=>{
+        el.classList.remove("flash-light")
+    })
+    itech().scrollTo(el, 70)
+}
 </script>

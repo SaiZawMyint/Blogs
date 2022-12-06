@@ -102,23 +102,27 @@
                                     </svg>
                                     <span class="pr-2">Add</span>
                                 </button>
-                                <button
-                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200/50 ml-2 hover:bg-gray-200/40 hover:shadow hover:border-2">
-                                    <i class="fa-solid fa-question"></i>
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center text-purple-800 rounded-full bg-gray-200/50 ml-2 hover:bg-gray-200/40 hover:shadow hover:border-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                        class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+                                    </svg>
                                 </button>
                             </form>
                             <div class="rounded-lg my-2 px-2">
                                 <button
                                     class="rounded-lg mb-1 border-2 px-1 py-1 w-full flex items-center justify-between hover:bg-gray-100/20 hover:shadow hover:border-2"
                                     v-for="(outline, index) of outlines">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center w-[70%]">
                                         <i
                                             class="fa-solid fa-hashtag text-gray-500 w-8 h-8 bg-gray-200/30 rounded-full flex items-center justify-center"></i>
                                         <span class="px-2 truncate text-left">{{outline.name}}</span>
                                     </div>
                                     <button 
                                     @click="removeOutline(index)"
-                                    class="w-6 h-6 text-md text-red-600 bg-gray-200/30 rounded-full flex items-center justify-center hover:bg-gray-100/20 hover:shadow hover:border-2 transition-all delay-100 hover:rotate-180">
+                                    class="min-w-[30px] min-h-[30px]  text-md text-red-600 bg-gray-200/30 rounded-full flex items-center justify-center hover:bg-gray-100/20 hover:shadow hover:border-2 transition-all delay-100 hover:rotate-180">
                                         <i class="fa-solid fa-xmark "></i>
                                     </button>
                                 </button>
@@ -137,7 +141,7 @@
                 <div class="flex flex-wrap mb-6">
                     <div class="w-full md:w-1/1 px-3">
                         <Template title="Create Your Blog" :autosave="true" @module="cmsModule"
-                            :cms-data="inputData.data" height="h-[550px]"></Template>
+                            :cms-data="inputData.data" height="h-[550px]" />
                     </div>
                 </div>
 
@@ -154,7 +158,6 @@
             </div>
         </template>
     </DashboardLayout>
-
     <Transition name="alert">
         <AlertBox title="Preview" width="50%" v-if="alertBox.show" :show="alertBox.show"
             @on-close="alertBox.show = false">
@@ -257,6 +260,7 @@ const selectedType = ref(type[props.data.type])
 const router = useRouter()
 const store = useStore()
 const inputData = toRef(props, 'data') //props.jsonData
+const validationMessage = ref([])
 const preview = ref()
 const cmsData = ref();
 
@@ -281,14 +285,62 @@ const cmsModule = function(data){
 const renderPreview = function(){
     let blogtypeicon = selectedType.value.icon
     let title = inputData.value.title.trim().length == 0 ? `<span class='text-red-400'>Please insert title</span>`: inputData.value.title
+
     inputData.value.type = selectedType.value.id
-    let data = cmsData.value ? cmsData.value:`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
-    rule.value.disabled = inputData.value.title.trim().length == 0 || !cmsData.value
+    let data = cmsData.value ? cmsData.value :`<i class='text-center p-3 text-red-400'>You need to create your blogs</i>`
+    
+    validate()
+    
     let template = itech().cms().blogTemplate(title,blogtypeicon,data)
     preview.value = template
     alertBox.value.show = true
 }
+function validate(){
+    validationMessage.value = []
+    rule.value.disabled = (validateContent() || validateCMS())
 
+    if(validationMessage.value.length > 0){
+        let message = ""
+        validationMessage.value.forEach(a=>{
+            message += a.message+"<br>";
+        })
+        showNotification(
+            {
+                show: true,
+                message: message,
+                done: true,
+                error: true,
+                cls: 'show'
+            },
+            {
+                
+            },
+            3000
+        )
+    }
+}
+function validateContent(){
+    if(inputData.value.title.trim().length == 0 || inputData.value.title.trim().length > 100){
+        validationMessage.value.push({
+            type: 'title',
+            message: inputData.value.title.trim().length == 0 ? 'Please insert blog title' : 'Blog title must lest than 100 characters'
+        })
+        return true;
+    }
+    return false;
+}
+function validateCMS(){
+    if (!cmsData.value || cmsData.value.length < 30){
+        validationMessage.value.push(
+            {
+                type: "cms",
+                message: "Please create your blog contents!"
+            }
+        )
+        return true;
+    }
+    return false
+}
 const cv = ref()
 const cvchoose = ref({
     is: false,
@@ -333,7 +385,6 @@ const startUpload = function(){
         done: false
     }
     let outlinedata = store.state.cms.outlines.filter(o => 'isUsed' in o && o['isUsed']);
-
     let requestBody = {
         title: inputData.value.title,
         description: inputData.value.description,
@@ -344,11 +395,11 @@ const startUpload = function(){
         outlines: outlinedata
     }
     let request = (props.id == 0)?requestBody:{id: props.id,data: requestBody}
-    let requetURL = (props.id == 0)?'createBlog':'updateBlog'
-    store.dispatch(requetURL,request).then(res=>{
-        
+    let requestURL = (props.id == 0)?'createBlog':'updateBlog'
+    store.dispatch(requestURL,request).then(res=>{
         if(res.ok){
             loading.value = false
+            inputData.value = {}
             //
             router.push(store.state.page.history.route)
             itech().wait(2000, function () {
@@ -362,6 +413,20 @@ const startUpload = function(){
                 store.state.notification.data.cls = 'hide'
                 store.state.notification.data = {}
             })
+        }else{
+            showNotification(
+            {
+                show: true,
+                message: res.message,
+                done: true,
+                error: true,
+                cls: 'show'
+            },
+            {
+                
+            },
+            4000
+        )
         }
     }).catch((err)=>{
         console.log(err)
@@ -399,7 +464,7 @@ const outlines = store.state.cms.outlines
 const addOutline = ()=>{
     if(outline.value.trim().length > 0){
         let id = outlines.length + 1
-        if(itechObject(outlines).find(outline.value,'name') > -1){
+        if(itechObject(outlines).find(outline.value,'name',true) > -1){
             showNotification(
                 {
                     show: true,
@@ -426,8 +491,13 @@ const addOutline = ()=>{
 const removeOutline = (index)=>{
     let id = store.state.cms.outlines[index].name.replace(/[^a-zA-Z0-9]/g, '').concat(`-${store.state.cms.outlines[index].id}`)
     let ele = document.getElementById(id)
-    if(ele) ele.remove()
-    store.dispatch('deleteOutline',index)
+    if(ele)
+        ele.closest(".itech-cms-text-editor").firstChild.focus()
+    store.dispatch('deleteOutline',index).then(()=>{
+        if(!ele) return false;
+        ele.remove()
+    })
+    
 }
 </script>
 <style>

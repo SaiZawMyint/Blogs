@@ -29,9 +29,9 @@
          * @param {*} key 
          * @return Index of find
          */
-        find: (search,key)=>{
+        find: (search,key,casesensitive = false)=>{
             
-            return iObj.find(search,key)
+            return iObj.find(search,key,casesensitive)
         },
         /**
          * Add value to object.
@@ -529,10 +529,13 @@ class IObject {
                     typeof object == 'number' ? new Number(object) : 
                     typeof object == 'object' ? Object.assign({},object) : null
     }
-    find(search,key){
-        console.log(search)
+    find(search,key,casesensitive = false){
         if(this.obj instanceof Array){
+            let serachKeyword = casesensitive ? search.toLowerCase() : search;
             if(key){
+                if(casesensitive){
+                    return this.obj.findIndex(s=> s[key].toLowerCase() == serachKeyword)
+                }
                 return this.obj.findIndex(s=> s[key] == search)
             }else{
                 return this.obj.findIndex(s=> s == search)

@@ -194,7 +194,7 @@ const postdelete = function(){
         done: false
     }
     alertBox.value.show = false
-    store.dispatch('deleteBlog',target.value.id).then((res)=>{
+    store.dispatch('deleteMyBlog',target.value.id).then((res)=>{
         itech().wait(4000, function () {
             store.state.notification.data = {
                 show: true,
@@ -206,7 +206,6 @@ const postdelete = function(){
             store.state.notification.data.cls = 'hide'
             store.state.notification.data = {}
         })
-        router.push({name: 'top'})
     })
 }
 </script>

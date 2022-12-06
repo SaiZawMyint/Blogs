@@ -11,7 +11,7 @@
         <div v-if="editorData.show" @mousedown.prevent="" class="bg-gray-100 itech-cms-te-pop rounded-bl rounded flex items-center justify-end">
             <div class="flex items-center justify-end">
                 <button 
-                @click="showOutlines"
+                @click=""
                 class="relative ml-1 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-100/40 hover:shadow">
                     <i class="fa-solid fa-hashtag text-[.7em]"></i>
                 </button>

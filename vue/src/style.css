@@ -186,4 +186,55 @@ input::-webkit-inner-spin-button {
 .blog-cov:hover > img{
     transform: scale(1.2);
 }
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.25s ease-out;
+}
 
+.slide-left-enter-from,
+.slide-left-leave-to{
+  opacity: 0;
+  margin-left: -50px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.fade-enter-from,
+.fade-leave-to{
+  opacity: 0;
+}
+.alert-enter-active {
+    animation: fade 0.3s;
+}
+.alert-leave-active {
+    animation: fade 0.3s reverse;
+}
+.alert-enter-active .modal-box {
+    animation: alert 0.3s;
+}
+.alert-leave-active .modal-box {
+    animation: alert 0.3s reverse;
+}
+@keyframes fade {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+@keyframes alert {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

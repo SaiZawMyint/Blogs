@@ -14,9 +14,12 @@ const userModule = {
     actions: {
         async register({ commit }, user) {
             return axiosClient.post('/register', user)
-                .then(({ data }) => {
-                    commit('setUser', data)
+                .then((res) => {
+                    console.log(res)
+                    commit('setUser', res.data)
                     return data;
+                }).catch(err=>{
+                    return {ok:false,error: err.response.data.message}
                 })
         },
         async login({ commit }, user,
@@ -85,18 +88,24 @@ const blogs = {
             return axiosClient.post('/blogs',data).then((res)=>{
                 if(res.data.ok)commit('add',res.data.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async getBlogs({commit}){
             return axiosClient.get('/blogs').then((res)=>{
                 if(res.data.ok) commit('put',res.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async searchBlogs({commit},data){
             return axiosClient.get(`/blogs/search?s=${data.s}`).then((res)=>{
                 if(res.data.ok) commit('put',res.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async updateBlog({commit},data){
@@ -105,12 +114,16 @@ const blogs = {
                     commit('updateBlog', res.data.data)
                 }
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async deleteBlog({commit}, id){
             return axiosClient.delete(`/blogs/${id}`).then((res)=>{
                 if(res.data.ok) commit('deleteBlog', id)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         like: async function({commit},id){
@@ -183,6 +196,8 @@ const post = {
             return axiosClient.get(`/blogs/${id}`).then((res)=>{
                 if(res.data.ok) commit('postdata',res.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async editionRequest({commit},id){
@@ -190,24 +205,32 @@ const post = {
                 if(res.data.ok) commit('postdata',res.data)
                 else commit('permissionLock')
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async postlike({commit},id){
             return axiosClient.post(`/blogs/${id}/like`).then(res=>{
                 if(res.data.ok) commit('like',{id: id,uid: res.data.uid,data:res.data.data})
                 return res.data.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async postComment({commit},data){
             return axiosClient.post(`/blogs/${data.id}/comment`, data.data).then(res=>{
                 if(res.data.ok) commit('comment',res.data)
                 return res.data.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         deleteComment: async function({commit},data){
             return axiosClient.delete(`/blogs/${data.blogId}/comment/${data.id}`).then(res=>{
                 if(res.data.ok) commit('deleteCommentState',data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         }
     },
@@ -286,14 +309,26 @@ const profile = {
                 
                 if(res.data.ok) commit('putMe',res.data.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async getMyBlogs({commit}){
             return axiosClient.get(`/me/blogs`).then(res=>{
                 if(res.data.ok) commit('putBlogData',res.data)
                 return res.data;
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
-        }
+        },
+        async deleteMyBlog({commit}, id){
+            return axiosClient.delete(`/blogs/${id}`).then((res)=>{
+                if(res.data.ok) commit('deleteMyBlog', id)
+                return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
+            })
+        },
     },
     mutations: {
         putMe: (state,data)=>{
@@ -307,7 +342,11 @@ const profile = {
                 }
             }
             state.blogs = xdata
-        }
+        },
+        deleteMyBlog:(state,id)=>{
+            let index = state.blogs.findIndex((blog)=> blog.id == id)
+            state.blogs.splice(index,1)
+        },
     }
 }
 const loadingScreen = {
@@ -344,24 +383,32 @@ const userNotification = {
             return axiosClient.get('/notifications/get').then((res)=>{
                 if(res.data.ok) commit('putNoti',res.data.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async seen({commit},id){
             return axiosClient.post(`/notifications/${id}/seen`).then(res=>{
                 if(res.data.ok) commit('seen',{id: id,status: true})
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async hasUnseen({commit}){
             return axiosClient.get(`/notifications/unseen`).then(res=>{
                 if(res.data.ok) commit('putUnseen',res.data.data)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         },
         async deleteNoti({commit},id){
             return axiosClient.post(`notifications/${id}/delete`).then((res)=>{
                 if(res.data.ok) commit('removeNoti',id)
                 return res.data
+            }).catch(err=>{
+                return {ok:false,error: err.response.data.message}
             })
         }
     },

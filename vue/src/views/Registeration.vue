@@ -7,15 +7,18 @@
       </p>
     </div>
     <form class="mt-8 space-y-6" @submit.prevent="register">
+      <Transition name="fade">
       <div v-if="error" class="flex items-center justify-between px-2 py-3 bg-red-100 text-red-500 rounded">
-      <span class="max-w-[70%]">{{error.error}}</span>
-      <span @click="error = null" class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </span>
-    </div>
+        <span class="max-w-[70%]">{{error.error}}</span>
+        <span @click="error = null"
+          class="w-8 h-8 flex items-center itech-rotate-180 justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </span>
+      </div>
+    </Transition>
       <input type="hidden" name="remember" value="true">
       <div class="-space-y-px rounded-md shadow-sm">
         <div>

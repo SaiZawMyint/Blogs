@@ -68,7 +68,7 @@
                             d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                     </svg>
                 </router-link>
-                <button @click="logout"
+                <button @click="(logoutAlert.show = true)"
                     class="w-8 h-8 ml-2 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-200/50">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -80,15 +80,44 @@
             </div>
         </div>
     </div>
+    <Transition name="alert">
+        <AlertBoxVue title="Logout" v-if="logoutAlert.show" :show="logoutAlert.show"
+            @on-close="logoutAlert.show = false">
+            <template v-slot:icon>
+                <div class="w-10 h-10 mt-7 flex items-center bg-red-600/80 text-gray-100 justify-center rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                        </path>
+                    </svg>
+                </div>
+            </template>
+            <template v-slot:content>
+                <p class="p-2 text-center text-red-400">Are you sure?</p>
+            </template>
+            <template v-slot:footer>
+                <div class="flex items-center justify-center my-2 text-sm pt-3">
+                    <button class="px-3 py-2 rounded mx-2 hover:bg-[#0000004c]"
+                        @click="logoutAlert.show = false">Cancel</button>
+                    <button class="px-3 py-2 rounded mx-2 bg-red-500 hover:bg-red-300 text-white"
+                        @click="logout">Logout</button>
+                </div>
+            </template>
+        </AlertBoxVue>
+    </Transition>
 </template>
 
 <script setup>
+import { ref,onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-
+import AlertBoxVue from '../lightui/AlertBox.vue';
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
+
+const logoutAlert = ref({show:false})
 
 const logout = function(){
     store.dispatch('logout').then(()=>{
@@ -101,7 +130,12 @@ const search = function(){
         router.push({name: 'search'})
     })
 }
-
+const historyDir = ref(store.state.page.history.route)
+onMounted(() => {
+    if(store.state.page.history.route.name == route.name){
+        store.state.page.history.route.name = 'top'
+    }
+});
 </script>
 
 <style lang="scss" scoped>

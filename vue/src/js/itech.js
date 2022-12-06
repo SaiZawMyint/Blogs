@@ -100,6 +100,16 @@ const itech = function(){
                 }
             }
         },
+        /**
+         * 
+         * @param {Element} element 
+         * @param {Number} offset 
+         * @param {Function} callback 
+         */
+        scrollTo: function(element, offset = 10,behavior = 'smooth'){
+            let top = (element.getBoundingClientRect().top + window.pageYOffset) - offset
+            window.scrollTo({top: top ,behavior: behavior})
+        },
         wait: function(time,action,callback){
             let id = null
             let p = 0
